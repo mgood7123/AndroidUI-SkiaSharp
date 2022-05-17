@@ -115,6 +115,41 @@ namespace SkiaSharp
 		protected override void DisposeNative () =>
 			SkiaApi.sk_bitmap_destructor (Handle);
 
+		// Other
+
+		public bool SetInfo(SKImageInfo info)
+		{
+			// bool 	setInfo (const SkImageInfo &imageInfo, size_t rowBytes=0)
+			return SetInfo(info, 0);
+		}
+
+		public bool SetInfo(SKImageInfo info, int rowBytes)
+		{
+			var cinfo = SKImageInfoNative.FromManaged(ref info);
+			return SkiaApi.sk_bitmap_set_info(Handle, &cinfo, (IntPtr)rowBytes);
+		}
+
+		public bool ComputeIsOpaque()
+		{
+			return SkiaApi.sk_bitmap_compute_is_opaque(Handle);
+		}
+
+		public void AllocPixels()
+        {
+			if (Info == null)
+            {
+				throw new NullReferenceException("Info must be set before allocating pixels");
+            }
+			if (!TryAllocPixels(Info))
+            {
+				SKImageInfo info = Info;
+				throw new System.OutOfMemoryException("SkBitmap::tryAllocPixels failed "
+					+ "ColorType:" + info.ColorType + "AlphaType:" + info.AlphaType +
+					"[w:" + info.Width + " h:" + info.Height + "] rb:" + RowBytes
+				);
+			}
+		}
+
 		// TryAllocPixels
 
 		public bool TryAllocPixels (SKImageInfo info)
@@ -359,6 +394,10 @@ namespace SkiaSharp
 
 		public int ByteCount {
 			get { return (int)SkiaApi.sk_bitmap_get_byte_count (Handle); }
+		}
+
+		public uint GenerationId {
+			get { return (uint)SkiaApi.sk_bitmap_get_generation_id(Handle); }
 		}
 
 		// *Pixels*
