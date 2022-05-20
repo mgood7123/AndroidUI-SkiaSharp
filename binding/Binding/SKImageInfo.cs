@@ -63,52 +63,52 @@ namespace SkiaSharp
 
 		public SKColorSpace ColorSpace { get; set; }
 
-        public static SKImageInfo Make(int width, int height, SKColorType colorType, SKAlphaType alphaType)
+        public static SKImageInfo Create(int width, int height, SKColorType colorType, SKAlphaType alphaType)
         {
             return new SKImageInfo(width, height, colorType, alphaType);
         }
 
-		public static SKImageInfo Make(int width, int height, SKColorType colorType, SKAlphaType alphaType, SKColorSpace colorSpace)
+		public static SKImageInfo Create(int width, int height, SKColorType colorType, SKAlphaType alphaType, SKColorSpace colorSpace)
 		{
 			return new SKImageInfo(width, height, colorType, alphaType, colorSpace);
 		}
 
-		public static SKImageInfo MakeN32(int width, int height, SKAlphaType alphaType)
+		public static SKImageInfo CreateN32(int width, int height, SKAlphaType alphaType)
 		{
 			return new SKImageInfo(width, height, alphaType);
 		}
 
-		public static SKImageInfo MakeN32(int width, int height, SKAlphaType alphaType, SKColorSpace colorSpace)
+		public static SKImageInfo CreateN32(int width, int height, SKAlphaType alphaType, SKColorSpace colorSpace)
 		{
 			return new SKImageInfo(width, height, alphaType, colorSpace);
 		}
 
-		public static SKImageInfo MakeS32(int width, int height, SKAlphaType alphaType)
+		public static SKImageInfo CreateS32(int width, int height, SKAlphaType alphaType)
 		{
 			return new SKImageInfo(width, height, alphaType, SKColorSpace.CreateSrgb());
 		}
 
-		public static SKImageInfo MakeN32Premul(int width, int height)
+		public static SKImageInfo CreateN32Premul(int width, int height)
 		{
 			return new SKImageInfo(width, height, SKAlphaType.Premul);
 		}
 
-		public static SKImageInfo MakeN32Premul(int width, int height, SKColorSpace colorSpace)
+		public static SKImageInfo CreateN32Premul(int width, int height, SKColorSpace colorSpace)
 		{
 			return new SKImageInfo(width, height, SKAlphaType.Premul, colorSpace);
 		}
 
-		public static SKImageInfo MakeA8(int width, int height)
+		public static SKImageInfo CreateA8(int width, int height)
 		{
 			return new SKImageInfo(width, height, SKColorType.Alpha8);
 		}
 
-		public static SKImageInfo MakeUnknown(int width, int height)
+		public static SKImageInfo CreateUnknown(int width, int height)
 		{
 			return new SKImageInfo(width, height, SKColorType.Unknown, SKAlphaType.Unknown);
 		}
 
-		public static SKImageInfo MakeUnknown()
+		public static SKImageInfo CreateUnknown()
 		{
 			return new SKImageInfo(0, 0, SKColorType.Unknown, SKAlphaType.Unknown);
 		}
