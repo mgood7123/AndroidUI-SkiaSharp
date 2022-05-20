@@ -46,6 +46,8 @@ USER_SRCS = $(skia_root)/src/xamarin/sk_xamarin.cpp                 \
             $(skia_root)/src/xamarin/SkiaKeeper.c                   \
             $(skia_root)/src/xamarin/sk_compatpaint.cpp             \
             $(skia_root)/src/xamarin/SkCompatPaint.cpp              \
+            $(skia_root)/src/xamarin/sk_managedallocator.cpp        \
+            $(skia_root)/src/xamarin/SkManagedAllocator.cpp         \
             $(skia_root)/src/xamarin/sk_managedstream.cpp           \
             $(skia_root)/src/xamarin/SkManagedStream.cpp            \
             $(skia_root)/src/xamarin/sk_manageddrawable.cpp         \

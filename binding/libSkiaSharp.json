@@ -324,6 +324,10 @@
         "cs": "SKRunBufferInternal",
         "internal": true
       },
+      "sk_managedallocator_procs_t": {
+        "cs": "SKManagedAllocatorDelegates",
+        "internal": true
+      },
       "sk_managedstream_procs_t": {
         "cs": "SKManagedStreamDelegates",
         "internal": true
@@ -373,6 +377,9 @@
         "parameters": {
           "-1": "IntPtr"
         }
+      },
+      "sk_managedallocator_allocPixelRef_proc": {
+        "cs": "SKManagedAllocatorAllocpixelrefProxyDelegate"
       },
       "sk_managedwstream_write_proc": {
         "cs": "SKManagedWStreamWriteProxyDelegate"

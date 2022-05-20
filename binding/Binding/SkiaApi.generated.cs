@@ -15,6 +15,7 @@ namespace SkiaSharp
 	using gr_vkinterface_t = IntPtr;
 	using sk_3dview_t = IntPtr;
 	using sk_bitmap_t = IntPtr;
+	using sk_bitmapallocator_t = IntPtr;
 	using sk_canvas_t = IntPtr;
 	using sk_codec_t = IntPtr;
 	using sk_colorfilter_t = IntPtr;
@@ -32,6 +33,7 @@ namespace SkiaSharp
 	using sk_image_t = IntPtr;
 	using sk_imagefilter_croprect_t = IntPtr;
 	using sk_imagefilter_t = IntPtr;
+	using sk_managedallocator_t = IntPtr;
 	using sk_manageddrawable_t = IntPtr;
 	using sk_managedtracememorydump_t = IntPtr;
 	using sk_maskfilter_t = IntPtr;
@@ -1160,6 +1162,22 @@ namespace SkiaSharp
 			(sk_bitmap_get_row_bytes_delegate ??= GetSymbol<Delegates.sk_bitmap_get_row_bytes> ("sk_bitmap_get_row_bytes")).Invoke (cbitmap);
 		#endif
 
+		// bool sk_bitmap_heapalloc(sk_bitmap_t* cbitmap)
+		#if !USE_DELEGATES
+		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
+		[return: MarshalAs (UnmanagedType.I1)]
+		internal static extern bool sk_bitmap_heapalloc (sk_bitmap_t cbitmap);
+		#else
+		private partial class Delegates {
+			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+			[return: MarshalAs (UnmanagedType.I1)]
+			internal delegate bool sk_bitmap_heapalloc (sk_bitmap_t cbitmap);
+		}
+		private static Delegates.sk_bitmap_heapalloc sk_bitmap_heapalloc_delegate;
+		internal static bool sk_bitmap_heapalloc (sk_bitmap_t cbitmap) =>
+			(sk_bitmap_heapalloc_delegate ??= GetSymbol<Delegates.sk_bitmap_heapalloc> ("sk_bitmap_heapalloc")).Invoke (cbitmap);
+		#endif
+
 		// bool sk_bitmap_install_mask_pixels(sk_bitmap_t* cbitmap, const sk_mask_t* cmask)
 		#if !USE_DELEGATES
 		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
@@ -1400,6 +1418,22 @@ namespace SkiaSharp
 		private static Delegates.sk_bitmap_try_alloc_pixels sk_bitmap_try_alloc_pixels_delegate;
 		internal static bool sk_bitmap_try_alloc_pixels (sk_bitmap_t cbitmap, SKImageInfoNative* requestedInfo, /* size_t */ IntPtr rowBytes) =>
 			(sk_bitmap_try_alloc_pixels_delegate ??= GetSymbol<Delegates.sk_bitmap_try_alloc_pixels> ("sk_bitmap_try_alloc_pixels")).Invoke (cbitmap, requestedInfo, rowBytes);
+		#endif
+
+		// bool sk_bitmap_try_alloc_pixels_with_allocator(sk_bitmap_t* cbitmap, sk_bitmapallocator_t* allocator)
+		#if !USE_DELEGATES
+		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
+		[return: MarshalAs (UnmanagedType.I1)]
+		internal static extern bool sk_bitmap_try_alloc_pixels_with_allocator (sk_bitmap_t cbitmap, sk_bitmapallocator_t allocator);
+		#else
+		private partial class Delegates {
+			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+			[return: MarshalAs (UnmanagedType.I1)]
+			internal delegate bool sk_bitmap_try_alloc_pixels_with_allocator (sk_bitmap_t cbitmap, sk_bitmapallocator_t allocator);
+		}
+		private static Delegates.sk_bitmap_try_alloc_pixels_with_allocator sk_bitmap_try_alloc_pixels_with_allocator_delegate;
+		internal static bool sk_bitmap_try_alloc_pixels_with_allocator (sk_bitmap_t cbitmap, sk_bitmapallocator_t allocator) =>
+			(sk_bitmap_try_alloc_pixels_with_allocator_delegate ??= GetSymbol<Delegates.sk_bitmap_try_alloc_pixels_with_allocator> ("sk_bitmap_try_alloc_pixels_with_allocator")).Invoke (cbitmap, allocator);
 		#endif
 
 		// bool sk_bitmap_try_alloc_pixels_with_flags(sk_bitmap_t* cbitmap, const sk_imageinfo_t* requestedInfo, uint32_t flags)
@@ -13200,6 +13234,52 @@ namespace SkiaSharp
 
 		#endregion
 
+		#region sk_managedallocator.h
+
+		// void sk_managedallocator_delete(sk_managedallocator_t*)
+		#if !USE_DELEGATES
+		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
+		internal static extern void sk_managedallocator_delete (sk_managedallocator_t param0);
+		#else
+		private partial class Delegates {
+			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+			internal delegate void sk_managedallocator_delete (sk_managedallocator_t param0);
+		}
+		private static Delegates.sk_managedallocator_delete sk_managedallocator_delete_delegate;
+		internal static void sk_managedallocator_delete (sk_managedallocator_t param0) =>
+			(sk_managedallocator_delete_delegate ??= GetSymbol<Delegates.sk_managedallocator_delete> ("sk_managedallocator_delete")).Invoke (param0);
+		#endif
+
+		// sk_managedallocator_t* sk_managedallocator_new(void* context)
+		#if !USE_DELEGATES
+		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
+		internal static extern sk_managedallocator_t sk_managedallocator_new (void* context);
+		#else
+		private partial class Delegates {
+			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+			internal delegate sk_managedallocator_t sk_managedallocator_new (void* context);
+		}
+		private static Delegates.sk_managedallocator_new sk_managedallocator_new_delegate;
+		internal static sk_managedallocator_t sk_managedallocator_new (void* context) =>
+			(sk_managedallocator_new_delegate ??= GetSymbol<Delegates.sk_managedallocator_new> ("sk_managedallocator_new")).Invoke (context);
+		#endif
+
+		// void sk_managedallocator_set_procs(sk_managedallocator_procs_t procs)
+		#if !USE_DELEGATES
+		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
+		internal static extern void sk_managedallocator_set_procs (SKManagedAllocatorDelegates procs);
+		#else
+		private partial class Delegates {
+			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+			internal delegate void sk_managedallocator_set_procs (SKManagedAllocatorDelegates procs);
+		}
+		private static Delegates.sk_managedallocator_set_procs sk_managedallocator_set_procs_delegate;
+		internal static void sk_managedallocator_set_procs (SKManagedAllocatorDelegates procs) =>
+			(sk_managedallocator_set_procs_delegate ??= GetSymbol<Delegates.sk_managedallocator_set_procs> ("sk_managedallocator_set_procs")).Invoke (procs);
+		#endif
+
+		#endregion
+
 		#region sk_manageddrawable.h
 
 		// sk_manageddrawable_t* sk_manageddrawable_new(void* context)
@@ -13419,6 +13499,11 @@ namespace SkiaSharp
 	// typedef void (*)(void* context)* sk_image_texture_release_proc
 	[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
 	internal unsafe delegate void SKImageTextureReleaseProxyDelegate(void* context);
+
+	// typedef bool (*)(sk_managedallocator_t* d, void* context, sk_bitmap_t* bitmap)* sk_managedallocator_allocpixelref_proc
+	[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+	[return: MarshalAs (UnmanagedType.I1)]
+	internal unsafe delegate bool SKManagedAllocatorAllocpixelrefProxyDelegate(sk_managedallocator_t d, void* context, sk_bitmap_t bitmap);
 
 	// typedef void (*)(sk_manageddrawable_t* d, void* context)* sk_manageddrawable_destroy_proc
 	[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
@@ -14903,6 +14988,33 @@ namespace SkiaSharp
 			hash.Add (fYCount);
 			hash.Add (fBounds);
 			hash.Add (fColors);
+			return hash.ToHashCode ();
+		}
+
+	}
+
+	// sk_managedallocator_procs_t
+	[StructLayout (LayoutKind.Sequential)]
+	internal unsafe partial struct SKManagedAllocatorDelegates : IEquatable<SKManagedAllocatorDelegates> {
+		// public sk_managedallocator_allocpixelref_proc fAllocPixelRef
+		public SKManagedAllocatorAllocpixelrefProxyDelegate fAllocPixelRef;
+
+		public readonly bool Equals (SKManagedAllocatorDelegates obj) =>
+			fAllocPixelRef == obj.fAllocPixelRef;
+
+		public readonly override bool Equals (object obj) =>
+			obj is SKManagedAllocatorDelegates f && Equals (f);
+
+		public static bool operator == (SKManagedAllocatorDelegates left, SKManagedAllocatorDelegates right) =>
+			left.Equals (right);
+
+		public static bool operator != (SKManagedAllocatorDelegates left, SKManagedAllocatorDelegates right) =>
+			!left.Equals (right);
+
+		public readonly override int GetHashCode ()
+		{
+			var hash = new HashCode ();
+			hash.Add (fAllocPixelRef);
 			return hash.ToHashCode ();
 		}
 
