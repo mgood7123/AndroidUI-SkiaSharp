@@ -328,6 +328,10 @@
         "cs": "SKManagedAllocatorDelegates",
         "internal": true
       },
+      "sk_id_change_listener_procs_t": {
+        "cs": "SKIDChangeListenerDelegates",
+        "internal": true
+      },
       "sk_managedstream_procs_t": {
         "cs": "SKManagedStreamDelegates",
         "internal": true
@@ -380,6 +384,10 @@
       },
       "sk_managedallocator_allocPixelRef_proc": {
         "cs": "SKManagedAllocatorAllocpixelrefProxyDelegate"
+      },
+      "sk_id_change_listener_changed_procs_t": {
+        "cs": "SKIDChangeListenerChangedProxyDelegates",
+        "internal": true
       },
       "sk_managedwstream_write_proc": {
         "cs": "SKManagedWStreamWriteProxyDelegate"

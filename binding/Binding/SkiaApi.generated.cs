@@ -30,6 +30,8 @@ namespace SkiaSharp
 	using sk_fontmgr_t = IntPtr;
 	using sk_fontstyle_t = IntPtr;
 	using sk_fontstyleset_t = IntPtr;
+	using sk_id_change_listener_list_t = IntPtr;
+	using sk_id_change_listener_t = IntPtr;
 	using sk_image_t = IntPtr;
 	using sk_imagefilter_croprect_t = IntPtr;
 	using sk_imagefilter_t = IntPtr;
@@ -13234,6 +13236,166 @@ namespace SkiaSharp
 
 		#endregion
 
+		#region sk_managed_id_change_listener.h
+
+		// void sk_managed_id_change_listener_delete(sk_id_change_listener_t*)
+		#if !USE_DELEGATES
+		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
+		internal static extern void sk_managed_id_change_listener_delete (sk_id_change_listener_t param0);
+		#else
+		private partial class Delegates {
+			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+			internal delegate void sk_managed_id_change_listener_delete (sk_id_change_listener_t param0);
+		}
+		private static Delegates.sk_managed_id_change_listener_delete sk_managed_id_change_listener_delete_delegate;
+		internal static void sk_managed_id_change_listener_delete (sk_id_change_listener_t param0) =>
+			(sk_managed_id_change_listener_delete_delegate ??= GetSymbol<Delegates.sk_managed_id_change_listener_delete> ("sk_managed_id_change_listener_delete")).Invoke (param0);
+		#endif
+
+		// void sk_managed_id_change_listener_list_add(sk_id_change_listener_list_t*, sk_id_change_listener_t*, bool single_threaded)
+		#if !USE_DELEGATES
+		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
+		internal static extern void sk_managed_id_change_listener_list_add (sk_id_change_listener_list_t param0, sk_id_change_listener_t param1, [MarshalAs (UnmanagedType.I1)] bool single_threaded);
+		#else
+		private partial class Delegates {
+			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+			internal delegate void sk_managed_id_change_listener_list_add (sk_id_change_listener_list_t param0, sk_id_change_listener_t param1, [MarshalAs (UnmanagedType.I1)] bool single_threaded);
+		}
+		private static Delegates.sk_managed_id_change_listener_list_add sk_managed_id_change_listener_list_add_delegate;
+		internal static void sk_managed_id_change_listener_list_add (sk_id_change_listener_list_t param0, sk_id_change_listener_t param1, [MarshalAs (UnmanagedType.I1)] bool single_threaded) =>
+			(sk_managed_id_change_listener_list_add_delegate ??= GetSymbol<Delegates.sk_managed_id_change_listener_list_add> ("sk_managed_id_change_listener_list_add")).Invoke (param0, param1, single_threaded);
+		#endif
+
+		// void sk_managed_id_change_listener_list_changed(sk_id_change_listener_list_t*, bool single_threaded)
+		#if !USE_DELEGATES
+		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
+		internal static extern void sk_managed_id_change_listener_list_changed (sk_id_change_listener_list_t param0, [MarshalAs (UnmanagedType.I1)] bool single_threaded);
+		#else
+		private partial class Delegates {
+			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+			internal delegate void sk_managed_id_change_listener_list_changed (sk_id_change_listener_list_t param0, [MarshalAs (UnmanagedType.I1)] bool single_threaded);
+		}
+		private static Delegates.sk_managed_id_change_listener_list_changed sk_managed_id_change_listener_list_changed_delegate;
+		internal static void sk_managed_id_change_listener_list_changed (sk_id_change_listener_list_t param0, [MarshalAs (UnmanagedType.I1)] bool single_threaded) =>
+			(sk_managed_id_change_listener_list_changed_delegate ??= GetSymbol<Delegates.sk_managed_id_change_listener_list_changed> ("sk_managed_id_change_listener_list_changed")).Invoke (param0, single_threaded);
+		#endif
+
+		// int32_t sk_managed_id_change_listener_list_count(sk_id_change_listener_list_t*)
+		#if !USE_DELEGATES
+		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
+		internal static extern Int32 sk_managed_id_change_listener_list_count (sk_id_change_listener_list_t param0);
+		#else
+		private partial class Delegates {
+			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+			internal delegate Int32 sk_managed_id_change_listener_list_count (sk_id_change_listener_list_t param0);
+		}
+		private static Delegates.sk_managed_id_change_listener_list_count sk_managed_id_change_listener_list_count_delegate;
+		internal static Int32 sk_managed_id_change_listener_list_count (sk_id_change_listener_list_t param0) =>
+			(sk_managed_id_change_listener_list_count_delegate ??= GetSymbol<Delegates.sk_managed_id_change_listener_list_count> ("sk_managed_id_change_listener_list_count")).Invoke (param0);
+		#endif
+
+		// void sk_managed_id_change_listener_list_delete(sk_id_change_listener_list_t*)
+		#if !USE_DELEGATES
+		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
+		internal static extern void sk_managed_id_change_listener_list_delete (sk_id_change_listener_list_t param0);
+		#else
+		private partial class Delegates {
+			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+			internal delegate void sk_managed_id_change_listener_list_delete (sk_id_change_listener_list_t param0);
+		}
+		private static Delegates.sk_managed_id_change_listener_list_delete sk_managed_id_change_listener_list_delete_delegate;
+		internal static void sk_managed_id_change_listener_list_delete (sk_id_change_listener_list_t param0) =>
+			(sk_managed_id_change_listener_list_delete_delegate ??= GetSymbol<Delegates.sk_managed_id_change_listener_list_delete> ("sk_managed_id_change_listener_list_delete")).Invoke (param0);
+		#endif
+
+		// sk_id_change_listener_list_t* sk_managed_id_change_listener_list_new(void* context)
+		#if !USE_DELEGATES
+		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
+		internal static extern sk_id_change_listener_list_t sk_managed_id_change_listener_list_new (void* context);
+		#else
+		private partial class Delegates {
+			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+			internal delegate sk_id_change_listener_list_t sk_managed_id_change_listener_list_new (void* context);
+		}
+		private static Delegates.sk_managed_id_change_listener_list_new sk_managed_id_change_listener_list_new_delegate;
+		internal static sk_id_change_listener_list_t sk_managed_id_change_listener_list_new (void* context) =>
+			(sk_managed_id_change_listener_list_new_delegate ??= GetSymbol<Delegates.sk_managed_id_change_listener_list_new> ("sk_managed_id_change_listener_list_new")).Invoke (context);
+		#endif
+
+		// void sk_managed_id_change_listener_list_reset(sk_id_change_listener_list_t*, bool single_threaded)
+		#if !USE_DELEGATES
+		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
+		internal static extern void sk_managed_id_change_listener_list_reset (sk_id_change_listener_list_t param0, [MarshalAs (UnmanagedType.I1)] bool single_threaded);
+		#else
+		private partial class Delegates {
+			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+			internal delegate void sk_managed_id_change_listener_list_reset (sk_id_change_listener_list_t param0, [MarshalAs (UnmanagedType.I1)] bool single_threaded);
+		}
+		private static Delegates.sk_managed_id_change_listener_list_reset sk_managed_id_change_listener_list_reset_delegate;
+		internal static void sk_managed_id_change_listener_list_reset (sk_id_change_listener_list_t param0, [MarshalAs (UnmanagedType.I1)] bool single_threaded) =>
+			(sk_managed_id_change_listener_list_reset_delegate ??= GetSymbol<Delegates.sk_managed_id_change_listener_list_reset> ("sk_managed_id_change_listener_list_reset")).Invoke (param0, single_threaded);
+		#endif
+
+		// void sk_managed_id_change_listener_mark_should_deregister(sk_id_change_listener_t*)
+		#if !USE_DELEGATES
+		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
+		internal static extern void sk_managed_id_change_listener_mark_should_deregister (sk_id_change_listener_t param0);
+		#else
+		private partial class Delegates {
+			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+			internal delegate void sk_managed_id_change_listener_mark_should_deregister (sk_id_change_listener_t param0);
+		}
+		private static Delegates.sk_managed_id_change_listener_mark_should_deregister sk_managed_id_change_listener_mark_should_deregister_delegate;
+		internal static void sk_managed_id_change_listener_mark_should_deregister (sk_id_change_listener_t param0) =>
+			(sk_managed_id_change_listener_mark_should_deregister_delegate ??= GetSymbol<Delegates.sk_managed_id_change_listener_mark_should_deregister> ("sk_managed_id_change_listener_mark_should_deregister")).Invoke (param0);
+		#endif
+
+		// sk_id_change_listener_t* sk_managed_id_change_listener_new(void* context)
+		#if !USE_DELEGATES
+		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
+		internal static extern sk_id_change_listener_t sk_managed_id_change_listener_new (void* context);
+		#else
+		private partial class Delegates {
+			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+			internal delegate sk_id_change_listener_t sk_managed_id_change_listener_new (void* context);
+		}
+		private static Delegates.sk_managed_id_change_listener_new sk_managed_id_change_listener_new_delegate;
+		internal static sk_id_change_listener_t sk_managed_id_change_listener_new (void* context) =>
+			(sk_managed_id_change_listener_new_delegate ??= GetSymbol<Delegates.sk_managed_id_change_listener_new> ("sk_managed_id_change_listener_new")).Invoke (context);
+		#endif
+
+		// void sk_managed_id_change_listener_set_procs(sk_id_change_listener_procs_t procs)
+		#if !USE_DELEGATES
+		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
+		internal static extern void sk_managed_id_change_listener_set_procs (SKIDChangeListenerDelegates procs);
+		#else
+		private partial class Delegates {
+			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+			internal delegate void sk_managed_id_change_listener_set_procs (SKIDChangeListenerDelegates procs);
+		}
+		private static Delegates.sk_managed_id_change_listener_set_procs sk_managed_id_change_listener_set_procs_delegate;
+		internal static void sk_managed_id_change_listener_set_procs (SKIDChangeListenerDelegates procs) =>
+			(sk_managed_id_change_listener_set_procs_delegate ??= GetSymbol<Delegates.sk_managed_id_change_listener_set_procs> ("sk_managed_id_change_listener_set_procs")).Invoke (procs);
+		#endif
+
+		// bool sk_managed_id_change_listener_should_deregister(sk_id_change_listener_t*)
+		#if !USE_DELEGATES
+		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
+		[return: MarshalAs (UnmanagedType.I1)]
+		internal static extern bool sk_managed_id_change_listener_should_deregister (sk_id_change_listener_t param0);
+		#else
+		private partial class Delegates {
+			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+			[return: MarshalAs (UnmanagedType.I1)]
+			internal delegate bool sk_managed_id_change_listener_should_deregister (sk_id_change_listener_t param0);
+		}
+		private static Delegates.sk_managed_id_change_listener_should_deregister sk_managed_id_change_listener_should_deregister_delegate;
+		internal static bool sk_managed_id_change_listener_should_deregister (sk_id_change_listener_t param0) =>
+			(sk_managed_id_change_listener_should_deregister_delegate ??= GetSymbol<Delegates.sk_managed_id_change_listener_should_deregister> ("sk_managed_id_change_listener_should_deregister")).Invoke (param0);
+		#endif
+
+		#endregion
+
 		#region sk_managedallocator.h
 
 		// void sk_managedallocator_delete(sk_managedallocator_t*)
@@ -13491,6 +13653,10 @@ namespace SkiaSharp
 	// typedef void (*)(const sk_path_t* pathOrNull, const sk_matrix_t* matrix, void* context)* sk_glyph_path_proc
 	[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
 	internal unsafe delegate void SKGlyphPathProxyDelegate(sk_path_t pathOrNull, SKMatrix* matrix, void* context);
+
+	// typedef void (*)(sk_id_change_listener_t* d, void* context)* sk_id_change_listener_changed_proc
+	[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+	internal unsafe delegate void SKIdChangeListenerChangedProxyDelegate(sk_id_change_listener_t d, void* context);
 
 	// typedef void (*)(const void* addr, void* context)* sk_image_raster_release_proc
 	[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
@@ -14714,6 +14880,33 @@ namespace SkiaSharp
 			hash.Add (fGrayscale);
 			hash.Add (fInvertStyle);
 			hash.Add (fContrast);
+			return hash.ToHashCode ();
+		}
+
+	}
+
+	// sk_id_change_listener_procs_t
+	[StructLayout (LayoutKind.Sequential)]
+	internal unsafe partial struct SKIDChangeListenerDelegates : IEquatable<SKIDChangeListenerDelegates> {
+		// public sk_id_change_listener_changed_proc fChanged
+		public SKIdChangeListenerChangedProxyDelegate fChanged;
+
+		public readonly bool Equals (SKIDChangeListenerDelegates obj) =>
+			fChanged == obj.fChanged;
+
+		public readonly override bool Equals (object obj) =>
+			obj is SKIDChangeListenerDelegates f && Equals (f);
+
+		public static bool operator == (SKIDChangeListenerDelegates left, SKIDChangeListenerDelegates right) =>
+			left.Equals (right);
+
+		public static bool operator != (SKIDChangeListenerDelegates left, SKIDChangeListenerDelegates right) =>
+			!left.Equals (right);
+
+		public readonly override int GetHashCode ()
+		{
+			var hash = new HashCode ();
+			hash.Add (fChanged);
 			return hash.ToHashCode ();
 		}
 

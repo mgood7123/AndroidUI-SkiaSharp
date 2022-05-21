@@ -108,7 +108,7 @@ namespace SkiaSharp
 			return new SKImageInfo(width, height, SKColorType.Unknown, SKAlphaType.Unknown);
 		}
 
-		public static readonly SKImageInfo Unknown => new SKImageInfo(0, 0, SKColorType.Unknown, SKAlphaType.Unknown);
+		public static readonly SKImageInfo Unknown = new SKImageInfo(0, 0, SKColorType.Unknown, SKAlphaType.Unknown);
 
 		public SKImageInfo (int width, int height)
 		{

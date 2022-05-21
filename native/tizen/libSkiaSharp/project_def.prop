@@ -42,15 +42,18 @@ USER_C_OPTS = -fPIC -g -fno-exceptions -fstrict-aliasing -Wall -Wextra          
 
 USER_CPP_OPTS = $(USER_C_OPTS) -std=c++17 -fno-threadsafe-statics -Wnon-virtual-dtor
 
-USER_SRCS = $(skia_root)/src/xamarin/sk_xamarin.cpp                 \
-            $(skia_root)/src/xamarin/SkiaKeeper.c                   \
-            $(skia_root)/src/xamarin/sk_compatpaint.cpp             \
-            $(skia_root)/src/xamarin/SkCompatPaint.cpp              \
-            $(skia_root)/src/xamarin/sk_managedallocator.cpp        \
-            $(skia_root)/src/xamarin/SkManagedAllocator.cpp         \
-            $(skia_root)/src/xamarin/sk_managedstream.cpp           \
-            $(skia_root)/src/xamarin/SkManagedStream.cpp            \
-            $(skia_root)/src/xamarin/sk_manageddrawable.cpp         \
-            $(skia_root)/src/xamarin/SkManagedDrawable.cpp          \
-            $(skia_root)/src/xamarin/sk_managedtracememorydump.cpp  \
+USER_SRCS = $(skia_root)/src/xamarin/sk_xamarin.cpp                        \
+            $(skia_root)/src/xamarin/SkiaKeeper.c                          \
+            $(skia_root)/src/xamarin/sk_compatpaint.cpp                    \
+            $(skia_root)/src/xamarin/SkCompatPaint.cpp                     \
+            $(skia_root)/src/xamarin/sk_managedallocator.cpp               \
+            $(skia_root)/src/xamarin/SkManagedAllocator.cpp                \
+            $(skia_root)/src/xamarin/sk_managed_id_change_listener.cpp     \
+            $(skia_root)/src/xamarin/SkManaged_ID_Change_Listener.cpp      \
+            $(skia_root)/src/xamarin/SkManaged_ID_Change_Listener_List.cpp \
+            $(skia_root)/src/xamarin/sk_managedstream.cpp                  \
+            $(skia_root)/src/xamarin/SkManagedStream.cpp                   \
+            $(skia_root)/src/xamarin/sk_manageddrawable.cpp                \
+            $(skia_root)/src/xamarin/SkManagedDrawable.cpp                 \
+            $(skia_root)/src/xamarin/sk_managedtracememorydump.cpp         \
             $(skia_root)/src/xamarin/SkManagedTraceMemoryDump.cpp
