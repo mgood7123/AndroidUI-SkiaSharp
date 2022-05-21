@@ -109,7 +109,7 @@ namespace SkiaSharp
 				SkiaApi.sk_managed_id_change_listener_list_add(Handle, listener.Handle, singleThreaded);
 			}
 
-			/// <returns>The number of registered listeners (including deregisterd listeners that are yet-to-be removed.</returns>
+			/// <returns>The number of registered listeners (including deregisterd listeners that are yet-to-be removed).</returns>
 			public int Count()
 			{
 				return SkiaApi.sk_managed_id_change_listener_list_count(Handle);
