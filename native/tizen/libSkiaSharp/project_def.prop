@@ -51,6 +51,8 @@ USER_SRCS = $(skia_root)/src/xamarin/sk_xamarin.cpp                        \
             $(skia_root)/src/xamarin/sk_managed_id_change_listener.cpp     \
             $(skia_root)/src/xamarin/SkManaged_ID_Change_Listener.cpp      \
             $(skia_root)/src/xamarin/SkManaged_ID_Change_Listener_List.cpp \
+            $(skia_root)/src/xamarin/sk_managed_pixel_ref.cpp              \
+            $(skia_root)/src/xamarin/SkManagedPixelRef.cpp                 \
             $(skia_root)/src/xamarin/sk_managedstream.cpp                  \
             $(skia_root)/src/xamarin/SkManagedStream.cpp                   \
             $(skia_root)/src/xamarin/sk_manageddrawable.cpp                \
