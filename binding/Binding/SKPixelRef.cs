@@ -14,7 +14,7 @@ namespace SkiaSharp
 			: base(IntPtr.Zero, true)
 		{
 			userData = DelegateProxies.CreateUserData(this, true);
-			Handle = SkiaApi.sk_managed_id_change_listener_new((void*)userData, width, height, addr, rowBytes);
+			Handle = SkiaApi.sk_managed_pixel_ref_new((void*)userData, width, height, (void*)addr, rowBytes);
 
 			if (Handle == IntPtr.Zero)
 				throw new InvalidOperationException("Unable to create a new SKPixelRef instance.");
@@ -32,7 +32,7 @@ namespace SkiaSharp
 		public SKSizeI Dimensions => SkiaApi.sk_managed_pixel_ref_dimensions(Handle);
 		public int Width => SkiaApi.sk_managed_pixel_ref_width(Handle);
 		public int Height => SkiaApi.sk_managed_pixel_ref_height(Handle);
-		public IntPtr Pixels => SkiaApi.sk_managed_pixel_ref_pixels(Handle);
+		public IntPtr Pixels => (IntPtr)SkiaApi.sk_managed_pixel_ref_pixels(Handle);
 		public IntPtr RowBytes => SkiaApi.sk_managed_pixel_ref_rowBytes(Handle);
 
 		/// <summary>
