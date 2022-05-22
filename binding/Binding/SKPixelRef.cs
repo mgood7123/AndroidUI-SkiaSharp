@@ -29,7 +29,7 @@ namespace SkiaSharp
 			gch.Free();
 		}
 
-		public SKISize Dimensions => SkiaApi.sk_managed_pixel_ref_dimensions(Handle);
+		public SKSizeI Dimensions => SkiaApi.sk_managed_pixel_ref_dimensions(Handle);
 		public int Width => SkiaApi.sk_managed_pixel_ref_width(Handle);
 		public int Height => SkiaApi.sk_managed_pixel_ref_height(Handle);
 		public IntPtr Pixels => SkiaApi.sk_managed_pixel_ref_pixels(Handle);
