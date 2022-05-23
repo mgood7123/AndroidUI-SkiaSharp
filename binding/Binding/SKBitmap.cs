@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.IO;
+using System.Threading;
 
 namespace SkiaSharp
 {
@@ -144,12 +145,14 @@ namespace SkiaSharp
 		{
 			private static readonly SKManagedAllocatorDelegates delegates;
 			private readonly IntPtr userData;
+			private int fromNative;
 
 			static Allocator()
 			{
 				delegates = new SKManagedAllocatorDelegates
 				{
-					fAllocPixelRef = AllocPixelRefInternal
+					fAllocPixelRef = AllocPixelRefInternal,
+					fDestroy = DestroyInternal,
 				};
 
 				SkiaApi.sk_managedallocator_set_procs(delegates);
@@ -165,13 +168,15 @@ namespace SkiaSharp
 					throw new InvalidOperationException("Unable to create a new SKManagedAllocator instance.");
 			}
 
+			protected override void Dispose(bool disposing) =>
+				base.Dispose(disposing);
+
 			protected override void DisposeNative()
 			{
-				DelegateProxies.GetUserData<Allocator>(userData, out var gch);
-
-				SkiaApi.sk_managedallocator_delete(Handle);
-
-				gch.Free();
+				if (Interlocked.CompareExchange(ref fromNative, 0, 0) == 0)
+				{
+					SkiaApi.sk_managedallocator_delete(Handle);
+				}
 			}
 
 			/// <summary>
@@ -192,6 +197,18 @@ namespace SkiaSharp
 			{
 				var dump = DelegateProxies.GetUserData<Allocator>((IntPtr)context, out _);
 				return dump.AllocPixelRef(SKBitmap.GetObject(bitmap));
+			}
+
+			[MonoPInvokeCallback(typeof(SKManagedAllocatorDestroyProxyDelegate))]
+			private static void DestroyInternal(IntPtr s, void* context)
+			{
+				var id = DelegateProxies.GetUserData<Allocator>((IntPtr)context, out var gch);
+				if (id != null)
+				{
+					Interlocked.Exchange(ref id.fromNative, 1);
+					id.Dispose();
+				}
+				gch.Free();
 			}
 		}
 

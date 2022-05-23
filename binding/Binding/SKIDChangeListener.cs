@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 
 namespace SkiaSharp
 {
@@ -13,12 +14,14 @@ namespace SkiaSharp
 	{
 		private static readonly SKIDChangeListenerDelegates delegates;
 		private readonly IntPtr userData;
+		private int fromNative;
 
 		static SKIDChangeListener()
 		{
 			delegates = new SKIDChangeListenerDelegates
 			{
-				fChanged = ChangedInternal
+				fChanged = ChangedInternal,
+				fDestroy = DestroyInternal
 			};
 
 			SkiaApi.sk_managed_id_change_listener_set_procs(delegates);
@@ -34,14 +37,21 @@ namespace SkiaSharp
 				throw new InvalidOperationException("Unable to create a new SKIDChangeListener instance.");
 		}
 
+		~SKIDChangeListener()
+		{
+		}
+
+		protected override void Dispose(bool disposing) =>
+			base.Dispose(disposing);
+
 		protected override void DisposeNative()
 		{
-			DelegateProxies.GetUserData<SKIDChangeListener>(userData, out var gch);
-
-			SkiaApi.sk_managed_id_change_listener_delete(Handle);
-
-			gch.Free();
+			if (Interlocked.CompareExchange(ref fromNative, 0, 0) == 0)
+			{
+				SkiaApi.sk_managed_id_change_listener_delete(Handle);
+			}
 		}
+
 
 		/// <summary>
 		/// Called when a gen/unique ID is invalidated.
@@ -74,12 +84,36 @@ namespace SkiaSharp
 			dump.Changed();
 		}
 
+		[MonoPInvokeCallback(typeof(SKIdChangeListenerDestroyProxyDelegate))]
+		private static void DestroyInternal(IntPtr s, void* context)
+		{
+			var id = DelegateProxies.GetUserData<SKIDChangeListener>((IntPtr)context, out var gch);
+			if (id != null)
+			{
+				Interlocked.Exchange(ref id.fromNative, 1);
+				id.Dispose();
+			}
+			gch.Free();
+		}
+
 		/// <summary>
 		/// Manages a list of SkIDChangeListeners.
 		/// </summary>
 		public unsafe class List : SKObject, ISKSkipObjectRegistration
 		{
+			private static readonly SKIDChangeListenerListDelegates delegates;
 			private readonly IntPtr userData;
+			private int fromNative;
+
+			static List()
+			{
+				delegates = new SKIDChangeListenerListDelegates
+				{
+					fDestroy = DestroyInternal
+				};
+
+				SkiaApi.sk_managed_id_change_listener_list_set_procs(delegates);
+			}
 
 			public List()
 				: base(IntPtr.Zero, true)
@@ -91,12 +125,26 @@ namespace SkiaSharp
 					throw new InvalidOperationException("Unable to create a new SKIDChangeListener.List instance.");
 			}
 
+			protected override void Dispose(bool disposing) =>
+				base.Dispose(disposing);
+
 			protected override void DisposeNative()
 			{
-				DelegateProxies.GetUserData<List>(userData, out var gch);
+				if (Interlocked.CompareExchange(ref fromNative, 0, 0) == 0)
+				{
+					SkiaApi.sk_managed_id_change_listener_list_delete(Handle);
+				}
+			}
 
-				SkiaApi.sk_managed_id_change_listener_list_delete(Handle);
-
+			[MonoPInvokeCallback(typeof(SKIDChangeListenerListDestroyProxyDelegate))]
+			private static void DestroyInternal(IntPtr s, void* context)
+			{
+				var id = DelegateProxies.GetUserData<List>((IntPtr)context, out var gch);
+				if (id != null)
+				{
+					Interlocked.Exchange(ref id.fromNative, 1);
+					id.Dispose();
+				}
 				gch.Free();
 			}
 

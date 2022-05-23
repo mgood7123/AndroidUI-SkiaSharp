@@ -328,8 +328,16 @@
         "cs": "SKManagedAllocatorDelegates",
         "internal": true
       },
+      "sk_pixel_ref_procs_t": {
+        "cs": "SKPixelRefDelegates",
+        "internal": true
+      },
       "sk_id_change_listener_procs_t": {
         "cs": "SKIDChangeListenerDelegates",
+        "internal": true
+      },
+      "sk_id_change_listener_list_procs_t": {
+        "cs": "SKIDChangeListenerListDelegates",
         "internal": true
       },
       "sk_managedstream_procs_t": {
@@ -385,8 +393,24 @@
       "sk_managedallocator_allocPixelRef_proc": {
         "cs": "SKManagedAllocatorAllocpixelrefProxyDelegate"
       },
+      "sk_managedallocator_destroy_procs_t": {
+        "cs": "SKManagedAllocatorDestroyProxyDelegate",
+        "internal": true
+      },
+      "sk_managedpixelref_destroy_procs_t": {
+        "cs": "SKManagedPixelRefDestroyProxyDelegate",
+        "internal": true
+      },
       "sk_id_change_listener_changed_procs_t": {
-        "cs": "SKIDChangeListenerChangedProxyDelegates",
+        "cs": "SKIDChangeListenerChangedProxyDelegate",
+        "internal": true
+      },
+      "sk_id_change_listener_destroy_procs_t": {
+        "cs": "SKIDChangeListenerDestroyProxyDelegate",
+        "internal": true
+      },
+      "sk_id_change_listener_list_destroy_procs_t": {
+        "cs": "SKIDChangeListenerListDestroyProxyDelegate",
         "internal": true
       },
       "sk_managedwstream_write_proc": {

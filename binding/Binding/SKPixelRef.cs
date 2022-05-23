@@ -8,7 +8,19 @@ namespace SkiaSharp
 	/// </summary>
 	public unsafe class SKPixelRef : SKObject, ISKSkipObjectRegistration
 	{
+		private static readonly SKPixelRefDelegates delegates;
 		private readonly IntPtr userData;
+		private int fromNative;
+
+		static SKPixelRef()
+		{
+			delegates = new SKPixelRefDelegates
+			{
+				fDestroy = DestroyInternal
+			};
+
+			SkiaApi.sk_managed_pixel_ref_set_procs(delegates);
+		}
 
 		public SKPixelRef(int width, int height, IntPtr addr, IntPtr rowBytes)
 			: base(IntPtr.Zero, true)
@@ -20,12 +32,26 @@ namespace SkiaSharp
 				throw new InvalidOperationException("Unable to create a new SKPixelRef instance.");
 		}
 
+		protected override void Dispose(bool disposing) =>
+			base.Dispose(disposing);
+
 		protected override void DisposeNative()
 		{
-			DelegateProxies.GetUserData<SKPixelRef>(userData, out var gch);
+			if (Interlocked.CompareExchange(ref fromNative, 0, 0) == 0)
+			{
+				SkiaApi.sk_managed_pixel_ref_delete(Handle);
+			}
+		}
 
-			SkiaApi.sk_managed_id_change_listener_delete(Handle);
-
+		[MonoPInvokeCallback(typeof(SKPixelRefDestroyProxyDelegate))]
+		private static void DestroyInternal(IntPtr s, void* context)
+		{
+			var id = DelegateProxies.GetUserData<SKPixelRef>((IntPtr)context, out var gch);
+			if (id != null)
+			{
+				Interlocked.Exchange(ref id.fromNative, 1);
+				id.Dispose();
+			}
 			gch.Free();
 		}
 
