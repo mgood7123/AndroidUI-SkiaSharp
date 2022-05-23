@@ -136,7 +136,7 @@ namespace SkiaSharp
 				}
 			}
 
-			[MonoPInvokeCallback(typeof(SKIDChangeListenerListDestroyProxyDelegate))]
+			[MonoPInvokeCallback(typeof(SKIdChangeListenerListDestroyProxyDelegate))]
 			private static void DestroyInternal(IntPtr s, void* context)
 			{
 				var id = DelegateProxies.GetUserData<List>((IntPtr)context, out var gch);
