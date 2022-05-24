@@ -924,34 +924,6 @@ namespace SkiaSharp
 
 		#region sk_android_codec.h
 
-		// sk_codec_result_t sk_android_codec_android_get_pixels(sk_android_codec_t* codec, const sk_imageinfo_t* info, void* pixels, size_t rowBytes, const sk_android_codec_options_t* options)
-		#if !USE_DELEGATES
-		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
-		internal static extern SKCodecResult sk_android_codec_android_get_pixels (sk_android_codec_t codec, SKImageInfoNative* info, void* pixels, /* size_t */ IntPtr rowBytes, SKAndroidCodecOptions* options);
-		#else
-		private partial class Delegates {
-			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
-			internal delegate SKCodecResult sk_android_codec_android_get_pixels (sk_android_codec_t codec, SKImageInfoNative* info, void* pixels, /* size_t */ IntPtr rowBytes, SKAndroidCodecOptions* options);
-		}
-		private static Delegates.sk_android_codec_android_get_pixels sk_android_codec_android_get_pixels_delegate;
-		internal static SKCodecResult sk_android_codec_android_get_pixels (sk_android_codec_t codec, SKImageInfoNative* info, void* pixels, /* size_t */ IntPtr rowBytes, SKAndroidCodecOptions* options) =>
-			(sk_android_codec_android_get_pixels_delegate ??= GetSymbol<Delegates.sk_android_codec_android_get_pixels> ("sk_android_codec_android_get_pixels")).Invoke (codec, info, pixels, rowBytes, options);
-		#endif
-
-		// sk_codec_result_t sk_android_codec_android_get_pixels_simplified(sk_android_codec_t* codec, const sk_imageinfo_t* info, void* pixels, size_t rowBytes)
-		#if !USE_DELEGATES
-		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
-		internal static extern SKCodecResult sk_android_codec_android_get_pixels_simplified (sk_android_codec_t codec, SKImageInfoNative* info, void* pixels, /* size_t */ IntPtr rowBytes);
-		#else
-		private partial class Delegates {
-			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
-			internal delegate SKCodecResult sk_android_codec_android_get_pixels_simplified (sk_android_codec_t codec, SKImageInfoNative* info, void* pixels, /* size_t */ IntPtr rowBytes);
-		}
-		private static Delegates.sk_android_codec_android_get_pixels_simplified sk_android_codec_android_get_pixels_simplified_delegate;
-		internal static SKCodecResult sk_android_codec_android_get_pixels_simplified (sk_android_codec_t codec, SKImageInfoNative* info, void* pixels, /* size_t */ IntPtr rowBytes) =>
-			(sk_android_codec_android_get_pixels_simplified_delegate ??= GetSymbol<Delegates.sk_android_codec_android_get_pixels_simplified> ("sk_android_codec_android_get_pixels_simplified")).Invoke (codec, info, pixels, rowBytes);
-		#endif
-
 		// sk_alphatype_t sk_android_codec_compute_output_alpha(sk_android_codec_t* codec, bool requestedUnpremul)
 		#if !USE_DELEGATES
 		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
@@ -1022,6 +994,34 @@ namespace SkiaSharp
 			(sk_android_codec_destroy_delegate ??= GetSymbol<Delegates.sk_android_codec_destroy> ("sk_android_codec_destroy")).Invoke (codec);
 		#endif
 
+		// sk_codec_result_t sk_android_codec_get_android_pixels(sk_android_codec_t* codec, const sk_imageinfo_t* info, void* pixels, size_t rowBytes, const sk_android_codec_options_t* options)
+		#if !USE_DELEGATES
+		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
+		internal static extern SKCodecResult sk_android_codec_get_android_pixels (sk_android_codec_t codec, SKImageInfoNative* info, void* pixels, /* size_t */ IntPtr rowBytes, SKAndroidCodecOptions* options);
+		#else
+		private partial class Delegates {
+			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+			internal delegate SKCodecResult sk_android_codec_get_android_pixels (sk_android_codec_t codec, SKImageInfoNative* info, void* pixels, /* size_t */ IntPtr rowBytes, SKAndroidCodecOptions* options);
+		}
+		private static Delegates.sk_android_codec_get_android_pixels sk_android_codec_get_android_pixels_delegate;
+		internal static SKCodecResult sk_android_codec_get_android_pixels (sk_android_codec_t codec, SKImageInfoNative* info, void* pixels, /* size_t */ IntPtr rowBytes, SKAndroidCodecOptions* options) =>
+			(sk_android_codec_get_android_pixels_delegate ??= GetSymbol<Delegates.sk_android_codec_get_android_pixels> ("sk_android_codec_get_android_pixels")).Invoke (codec, info, pixels, rowBytes, options);
+		#endif
+
+		// sk_codec_result_t sk_android_codec_get_android_pixels_simplified(sk_android_codec_t* codec, const sk_imageinfo_t* info, void* pixels, size_t rowBytes)
+		#if !USE_DELEGATES
+		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
+		internal static extern SKCodecResult sk_android_codec_get_android_pixels_simplified (sk_android_codec_t codec, SKImageInfoNative* info, void* pixels, /* size_t */ IntPtr rowBytes);
+		#else
+		private partial class Delegates {
+			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+			internal delegate SKCodecResult sk_android_codec_get_android_pixels_simplified (sk_android_codec_t codec, SKImageInfoNative* info, void* pixels, /* size_t */ IntPtr rowBytes);
+		}
+		private static Delegates.sk_android_codec_get_android_pixels_simplified sk_android_codec_get_android_pixels_simplified_delegate;
+		internal static SKCodecResult sk_android_codec_get_android_pixels_simplified (sk_android_codec_t codec, SKImageInfoNative* info, void* pixels, /* size_t */ IntPtr rowBytes) =>
+			(sk_android_codec_get_android_pixels_simplified_delegate ??= GetSymbol<Delegates.sk_android_codec_get_android_pixels_simplified> ("sk_android_codec_get_android_pixels_simplified")).Invoke (codec, info, pixels, rowBytes);
+		#endif
+
 		// sk_codec_t* sk_android_codec_get_codec(sk_android_codec_t* codec)
 		#if !USE_DELEGATES
 		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
@@ -1050,7 +1050,7 @@ namespace SkiaSharp
 			(sk_android_codec_get_encoded_format_delegate ??= GetSymbol<Delegates.sk_android_codec_get_encoded_format> ("sk_android_codec_get_encoded_format")).Invoke (codec);
 		#endif
 
-		// sk_colorspace_icc_profile_t* sk_android_codec_get_icc_profile(sk_android_codec_t* codec)
+		// const sk_colorspace_icc_profile_t* sk_android_codec_get_icc_profile(sk_android_codec_t* codec)
 		#if !USE_DELEGATES
 		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
 		internal static extern sk_colorspace_icc_profile_t sk_android_codec_get_icc_profile (sk_android_codec_t codec);
@@ -1106,18 +1106,18 @@ namespace SkiaSharp
 			(sk_android_codec_get_sampled_dimensions_delegate ??= GetSymbol<Delegates.sk_android_codec_get_sampled_dimensions> ("sk_android_codec_get_sampled_dimensions")).Invoke (codec, sampleSize, dimensions);
 		#endif
 
-		// void sk_android_codec_get_sampled_subset_dimensions(sk_android_codec_t* codec, int32_t sampleSize, sk_isize_t* dimensions)
+		// void sk_android_codec_get_sampled_subset_dimensions(sk_android_codec_t* codec, int32_t sampleSize, sk_isize_t* dimensions, sk_irect_t* subset)
 		#if !USE_DELEGATES
 		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
-		internal static extern void sk_android_codec_get_sampled_subset_dimensions (sk_android_codec_t codec, Int32 sampleSize, SKSizeI* dimensions);
+		internal static extern void sk_android_codec_get_sampled_subset_dimensions (sk_android_codec_t codec, Int32 sampleSize, SKSizeI* dimensions, SKRectI* subset);
 		#else
 		private partial class Delegates {
 			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
-			internal delegate void sk_android_codec_get_sampled_subset_dimensions (sk_android_codec_t codec, Int32 sampleSize, SKSizeI* dimensions);
+			internal delegate void sk_android_codec_get_sampled_subset_dimensions (sk_android_codec_t codec, Int32 sampleSize, SKSizeI* dimensions, SKRectI* subset);
 		}
 		private static Delegates.sk_android_codec_get_sampled_subset_dimensions sk_android_codec_get_sampled_subset_dimensions_delegate;
-		internal static void sk_android_codec_get_sampled_subset_dimensions (sk_android_codec_t codec, Int32 sampleSize, SKSizeI* dimensions) =>
-			(sk_android_codec_get_sampled_subset_dimensions_delegate ??= GetSymbol<Delegates.sk_android_codec_get_sampled_subset_dimensions> ("sk_android_codec_get_sampled_subset_dimensions")).Invoke (codec, sampleSize, dimensions);
+		internal static void sk_android_codec_get_sampled_subset_dimensions (sk_android_codec_t codec, Int32 sampleSize, SKSizeI* dimensions, SKRectI* subset) =>
+			(sk_android_codec_get_sampled_subset_dimensions_delegate ??= GetSymbol<Delegates.sk_android_codec_get_sampled_subset_dimensions> ("sk_android_codec_get_sampled_subset_dimensions")).Invoke (codec, sampleSize, dimensions, subset);
 		#endif
 
 		// bool sk_android_codec_get_supported_subset(sk_android_codec_t* codec, sk_irect_t* desiredSubset)
@@ -1136,17 +1136,17 @@ namespace SkiaSharp
 			(sk_android_codec_get_supported_subset_delegate ??= GetSymbol<Delegates.sk_android_codec_get_supported_subset> ("sk_android_codec_get_supported_subset")).Invoke (codec, desiredSubset);
 		#endif
 
-		// sk_android_codec_t* sk_android_codec_new_from_codec(sk_android_codec_t* codec, sk_android_codec_exif_orientation_behavior_t* behaviour)
+		// sk_android_codec_t* sk_android_codec_new_from_codec(sk_android_codec_t* codec, sk_android_codec_exif_orientation_behavior_t behaviour)
 		#if !USE_DELEGATES
 		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
-		internal static extern sk_android_codec_t sk_android_codec_new_from_codec (sk_android_codec_t codec, SKAndroidCodecExifOrientationBehavior* behaviour);
+		internal static extern sk_android_codec_t sk_android_codec_new_from_codec (sk_android_codec_t codec, SKAndroidCodecExifOrientationBehavior behaviour);
 		#else
 		private partial class Delegates {
 			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
-			internal delegate sk_android_codec_t sk_android_codec_new_from_codec (sk_android_codec_t codec, SKAndroidCodecExifOrientationBehavior* behaviour);
+			internal delegate sk_android_codec_t sk_android_codec_new_from_codec (sk_android_codec_t codec, SKAndroidCodecExifOrientationBehavior behaviour);
 		}
 		private static Delegates.sk_android_codec_new_from_codec sk_android_codec_new_from_codec_delegate;
-		internal static sk_android_codec_t sk_android_codec_new_from_codec (sk_android_codec_t codec, SKAndroidCodecExifOrientationBehavior* behaviour) =>
+		internal static sk_android_codec_t sk_android_codec_new_from_codec (sk_android_codec_t codec, SKAndroidCodecExifOrientationBehavior behaviour) =>
 			(sk_android_codec_new_from_codec_delegate ??= GetSymbol<Delegates.sk_android_codec_new_from_codec> ("sk_android_codec_new_from_codec")).Invoke (codec, behaviour);
 		#endif
 
@@ -2914,18 +2914,18 @@ namespace SkiaSharp
 			(sk_codec_new_from_data_delegate ??= GetSymbol<Delegates.sk_codec_new_from_data> ("sk_codec_new_from_data")).Invoke (data, chunk_reader);
 		#endif
 
-		// sk_codec_t* sk_codec_new_from_stream(sk_stream_t* stream, sk_png_chunk_reader_t* chunk_reader, sk_codec_result_t* result, sk_codec_selection_policy_t policy)
+		// sk_codec_t* sk_codec_new_from_stream(sk_stream_t* stream, sk_codec_result_t* result, sk_png_chunk_reader_t* chunk_reader, sk_codec_selection_policy_t policy)
 		#if !USE_DELEGATES
 		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
-		internal static extern sk_codec_t sk_codec_new_from_stream (sk_stream_t stream, sk_png_chunk_reader_t chunk_reader, SKCodecResult* result, SKCodecSelectionPolicy policy);
+		internal static extern sk_codec_t sk_codec_new_from_stream (sk_stream_t stream, SKCodecResult* result, sk_png_chunk_reader_t chunk_reader, SKCodecSelectionPolicy policy);
 		#else
 		private partial class Delegates {
 			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
-			internal delegate sk_codec_t sk_codec_new_from_stream (sk_stream_t stream, sk_png_chunk_reader_t chunk_reader, SKCodecResult* result, SKCodecSelectionPolicy policy);
+			internal delegate sk_codec_t sk_codec_new_from_stream (sk_stream_t stream, SKCodecResult* result, sk_png_chunk_reader_t chunk_reader, SKCodecSelectionPolicy policy);
 		}
 		private static Delegates.sk_codec_new_from_stream sk_codec_new_from_stream_delegate;
-		internal static sk_codec_t sk_codec_new_from_stream (sk_stream_t stream, sk_png_chunk_reader_t chunk_reader, SKCodecResult* result, SKCodecSelectionPolicy policy) =>
-			(sk_codec_new_from_stream_delegate ??= GetSymbol<Delegates.sk_codec_new_from_stream> ("sk_codec_new_from_stream")).Invoke (stream, chunk_reader, result, policy);
+		internal static sk_codec_t sk_codec_new_from_stream (sk_stream_t stream, SKCodecResult* result, sk_png_chunk_reader_t chunk_reader, SKCodecSelectionPolicy policy) =>
+			(sk_codec_new_from_stream_delegate ??= GetSymbol<Delegates.sk_codec_new_from_stream> ("sk_codec_new_from_stream")).Invoke (stream, result, chunk_reader, policy);
 		#endif
 
 		// int sk_codec_next_scanline(sk_codec_t* codec)
@@ -14216,7 +14216,7 @@ namespace SkiaSharp
 	[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
 	internal unsafe delegate void SKImageTextureReleaseProxyDelegate(void* context);
 
-	// typedef bool (*)(sk_managed_png_chunk_reader_t* d, void* context, char* tag, void* data, size_t length)* sk_managed_png_chunk_reader_read_chunk_proc
+	// typedef bool (*)(sk_managed_png_chunk_reader_t* d, void* context, const char[-1] tag, const void* data, size_t length)* sk_managed_png_chunk_reader_read_chunk_proc
 	[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
 	[return: MarshalAs (UnmanagedType.I1)]
 	internal unsafe delegate bool SKManagedPngChunkReaderReadChunkProxyDelegate(sk_managed_png_chunk_reader_t d, void* context, /* char */ void* tag, void* data, /* size_t */ IntPtr length);
