@@ -328,6 +328,10 @@
         "cs": "SKManagedAllocatorDelegates",
         "internal": true
       },
+      "sk_managed_png_chunk_reader_procs_t": {
+        "cs": "SKManagedPngChunkReaderDelegates",
+        "internal": true
+      },
       "sk_pixel_ref_procs_t": {
         "cs": "SKPixelRefDelegates",
         "internal": true
@@ -395,6 +399,13 @@
       },
       "sk_managedallocator_destroy_procs_t": {
         "cs": "SKManagedAllocatorDestroyProxyDelegate",
+        "internal": true
+      },
+      "sk_managed_png_chunk_reader_read_chunk_proc": {
+        "cs": "SKManagedPngChunkReaderReadChunkProxyDelegate"
+      },
+      "sk_managed_png_chunk_reader_destroy_procs_t": {
+        "cs": "SKManagedPngChunkReaderDestroyProxyDelegate",
         "internal": true
       },
       "sk_managedpixelref_destroy_procs_t": {

@@ -4,47 +4,26 @@ using System.IO;
 
 namespace SkiaSharp
 {
+	// TODO: `Create(...)` should have overloads that accept a SKPngChunkReader
 	// TODO: missing the `QueryYuv8` and `GetYuv8Planes` members
 
-	public unsafe class SKCodec : SKObject, ISKSkipObjectRegistration
+	public unsafe class SKAndroidCodec : SKObject, ISKSkipObjectRegistration
 	{
 		internal SKCodec (IntPtr handle, bool owns)
 			: base (handle, owns)
 		{
 		}
 
-		/// <summary>
-		/// For container formats that contain both still images and image sequences,
-		/// <br></br> instruct the decoder how the output should be selected. (Refer to comments
-		/// <br></br> for each value for more details.)
-		/// </summary>
-		enum SelectionPolicy
-		{
-			/// <summary>
-			/// If the container format contains both still images and image sequences,
-			/// <br></br> SKCodec should choose one of the still images. This is the default.
-			/// </summary>
-			preferStillImage,
-			/// <summary>
-			/// If the container format contains both still images and image sequences,
-			/// <br></br> SKCodec should choose one of the image sequences for animation.
-			/// </summary>
-			preferAnimation
-		}
-
 		protected override void Dispose (bool disposing) =>
 			base.Dispose (disposing);
 
 		protected override void DisposeNative () =>
-			SkiaApi.sk_codec_destroy (Handle);
-
-		public static int MinBufferedBytesNeeded =>
-			(int)SkiaApi.sk_codec_min_buffered_bytes_needed ();
+			SkiaApi.sk_android_codec_destroy (Handle);
 
 		public SKImageInfo Info {
 			get {
 				SKImageInfoNative cinfo;
-				SkiaApi.sk_codec_get_info (Handle, &cinfo);
+				SkiaApi.sk_android_codec_get_info (Handle, &cinfo);
 				return SKImageInfoNative.ToManaged (ref cinfo);
 			}
 		}
@@ -55,22 +34,22 @@ namespace SkiaSharp
 			(SKCodecOrigin)EncodedOrigin;
 
 		public SKEncodedOrigin EncodedOrigin =>
-			SkiaApi.sk_codec_get_origin (Handle);
+			SkiaApi.sk_android_codec_get_origin (Handle);
 
 		public SKEncodedImageFormat EncodedFormat =>
-			SkiaApi.sk_codec_get_encoded_format (Handle);
+			SkiaApi.sk_android_codec_get_encoded_format (Handle);
 
 		public SKSizeI GetScaledDimensions (float desiredScale)
 		{
 			SKSizeI dimensions;
-			SkiaApi.sk_codec_get_scaled_dimensions (Handle, desiredScale, &dimensions);
+			SkiaApi.sk_android_codec_get_scaled_dimensions (Handle, desiredScale, &dimensions);
 			return dimensions;
 		}
 
 		public bool GetValidSubset (ref SKRectI desiredSubset)
 		{
 			fixed (SKRectI* ds = &desiredSubset) {
-				return SkiaApi.sk_codec_get_valid_subset (Handle, ds);
+				return SkiaApi.sk_android_codec_get_valid_subset (Handle, ds);
 			}
 		}
 
@@ -87,17 +66,17 @@ namespace SkiaSharp
 		// frames
 
 		public int RepetitionCount =>
-			SkiaApi.sk_codec_get_repetition_count (Handle);
+			SkiaApi.sk_android_codec_get_repetition_count (Handle);
 
 		public int FrameCount =>
-			SkiaApi.sk_codec_get_frame_count (Handle);
+			SkiaApi.sk_android_codec_get_frame_count (Handle);
 
 		public SKCodecFrameInfo[] FrameInfo {
 			get {
-				var length = SkiaApi.sk_codec_get_frame_count (Handle);
+				var length = SkiaApi.sk_android_codec_get_frame_count (Handle);
 				var info = new SKCodecFrameInfo[length];
 				fixed (SKCodecFrameInfo* i = info) {
-					SkiaApi.sk_codec_get_frame_info (Handle, i);
+					SkiaApi.sk_android_codec_get_frame_info (Handle, i);
 				}
 				return info;
 			}
@@ -106,7 +85,7 @@ namespace SkiaSharp
 		public bool GetFrameInfo (int index, out SKCodecFrameInfo frameInfo)
 		{
 			fixed (SKCodecFrameInfo* f = &frameInfo) {
-				return SkiaApi.sk_codec_get_frame_info_for_index (Handle, index, f);
+				return SkiaApi.sk_android_codec_get_frame_info_for_index (Handle, index, f);
 			}
 		}
 
@@ -154,7 +133,7 @@ namespace SkiaSharp
 				subset = options.Subset.Value;
 				nOptions.fSubset = &subset;
 			}
-			return SkiaApi.sk_codec_get_pixels (Handle, &nInfo, (void*)pixels, (IntPtr)rowBytes, &nOptions);
+			return SkiaApi.sk_android_codec_get_pixels (Handle, &nInfo, (void*)pixels, (IntPtr)rowBytes, &nOptions);
 		}
 
 		[EditorBrowsable (EditorBrowsableState.Never)]
@@ -207,13 +186,13 @@ namespace SkiaSharp
 				nOptions.fSubset = &subset;
 			}
 
-			return SkiaApi.sk_codec_start_incremental_decode (Handle, &nInfo, (void*)pixels, (IntPtr)rowBytes, &nOptions);
+			return SkiaApi.sk_android_codec_start_incremental_decode (Handle, &nInfo, (void*)pixels, (IntPtr)rowBytes, &nOptions);
 		}
 
 		public SKCodecResult StartIncrementalDecode (SKImageInfo info, IntPtr pixels, int rowBytes)
 		{
 			var cinfo = SKImageInfoNative.FromManaged (ref info);
-			return SkiaApi.sk_codec_start_incremental_decode (Handle, &cinfo, (void*)pixels, (IntPtr)rowBytes, null);
+			return SkiaApi.sk_android_codec_start_incremental_decode (Handle, &cinfo, (void*)pixels, (IntPtr)rowBytes, null);
 		}
 
 		[EditorBrowsable (EditorBrowsableState.Never)]
@@ -231,12 +210,12 @@ namespace SkiaSharp
 		public SKCodecResult IncrementalDecode (out int rowsDecoded)
 		{
 			fixed (int* r = &rowsDecoded) {
-				return SkiaApi.sk_codec_incremental_decode (Handle, r);
+				return SkiaApi.sk_android_codec_incremental_decode (Handle, r);
 			}
 		}
 
 		public SKCodecResult IncrementalDecode () =>
-			SkiaApi.sk_codec_incremental_decode (Handle, null);
+			SkiaApi.sk_android_codec_incremental_decode (Handle, null);
 
 		// scanline (start)
 
@@ -255,13 +234,13 @@ namespace SkiaSharp
 				nOptions.fSubset = &subset;
 			}
 
-			return SkiaApi.sk_codec_start_scanline_decode (Handle, &nInfo, &nOptions);
+			return SkiaApi.sk_android_codec_start_scanline_decode (Handle, &nInfo, &nOptions);
 		}
 
 		public SKCodecResult StartScanlineDecode (SKImageInfo info)
 		{
 			var cinfo = SKImageInfoNative.FromManaged (ref info);
-			return SkiaApi.sk_codec_start_scanline_decode (Handle, &cinfo, null);
+			return SkiaApi.sk_android_codec_start_scanline_decode (Handle, &cinfo, null);
 		}
 
 		[EditorBrowsable (EditorBrowsableState.Never)]
@@ -281,46 +260,26 @@ namespace SkiaSharp
 			if (dst == IntPtr.Zero)
 				throw new ArgumentNullException (nameof (dst));
 
-			return SkiaApi.sk_codec_get_scanlines (Handle, (void*)dst, countLines, (IntPtr)rowBytes);
+			return SkiaApi.sk_android_codec_get_scanlines (Handle, (void*)dst, countLines, (IntPtr)rowBytes);
 		}
 
 		public bool SkipScanlines (int countLines) =>
-			SkiaApi.sk_codec_skip_scanlines (Handle, countLines);
+			SkiaApi.sk_android_codec_skip_scanlines (Handle, countLines);
 
 		public SKCodecScanlineOrder ScanlineOrder =>
-			SkiaApi.sk_codec_get_scanline_order (Handle);
+			SkiaApi.sk_android_codec_get_scanline_order (Handle);
 
-		public int NextScanline => SkiaApi.sk_codec_next_scanline (Handle);
+		public int NextScanline => SkiaApi.sk_android_codec_next_scanline (Handle);
 
 		public int GetOutputScanline (int inputScanline) =>
-			SkiaApi.sk_codec_output_scanline (Handle, inputScanline);
+			SkiaApi.sk_android_codec_output_scanline (Handle, inputScanline);
 
 		// create (streams)
 
 		public static SKCodec Create (string filename) =>
 			Create (filename, out var result);
 
-		public static SKCodec Create(string filename, SKPngChunkReader chunkReader) =>
-			Create(stream, out result, chunkReader, SelectionPolicy.preferStillImage);
-
-		public static SKCodec Create(string filename, SelectionPolicy selectionPolicy) =>
-			Create(stream, out result, null, selectionPolicy);
-
-		public static SKCodec Create(string filename, SKPngChunkReader chunkReader, SelectionPolicy selectionPolicy) =>
-			Create(stream, out result, chunkReader, selectionPolicy);
-
-
-
-		public static SKCodec Create(string filename, out SKCodecResult result) =>
-			Create(stream, out result, null, SelectionPolicy.preferStillImage);
-
-		public static SKCodec Create(string filename, out SKCodecResult result, SelectionPolicy selectionPolicy) =>
-			Create (stream, out result, chunkReader, SelectionPolicy.preferStillImage);
-
-		public static SKCodec Create(string filename, out SKCodecResult result, SelectionPolicy selectionPolicy) =>
-			Create (stream, out result, null, selectionPolicy);
-
-		public static SKCodec Create (string filename, out SKCodecResult result, SKPngChunkReader chunkReader, SelectionPolicy selectionPolicy)
+		public static SKCodec Create (string filename, out SKCodecResult result)
 		{
 			var stream = SKFileStream.OpenStream (filename);
 			if (stream == null) {
@@ -328,91 +287,40 @@ namespace SkiaSharp
 				return null;
 			}
 
-			return Create (stream, out result, chunkReader, selectionPolicy);
+			return Create (stream, out result);
 		}
-
-
 
 		public static SKCodec Create (Stream stream) =>
 			Create (stream, out var result);
 
-		public static SKCodec Create(Stream stream, SKPngChunkReader chunkReader) =>
-			Create(stream, out var result, chunkReader);
-
-		public static SKCodec Create(Stream stream, SelectionPolicy selectionPolicy) =>
-			Create(stream, out var result, selectionPolicy);
-
-		public static SKCodec Create(Stream stream, SKPngChunkReader chunkReader, SelectionPolicy selectionPolicy) =>
-			Create(stream, out var result, chunk_reader, selectionPolicy);
-
-
-
 		public static SKCodec Create (Stream stream, out SKCodecResult result) =>
 			Create (WrapManagedStream (stream), out result);
-
-		public static SKCodec Create(Stream stream, out SKCodecResult result, SKPngChunkReader chunkReader) =>
-			Create(WrapManagedStream(stream), out result, chunkReader);
-
-		public static SKCodec Create(Stream stream, out SKCodecResult result, SelectionPolicy selectionPolicy) =>
-			Create(WrapManagedStream(stream), out result, selectionPolicy);
-
-		public static SKCodec Create(Stream stream, out SKCodecResult result, SKPngChunkReader chunkReader, SelectionPolicy selectionPolicy) =>
-			Create(WrapManagedStream(stream), out result, chunkReader, selectionPolicy);
-
-
 
 		public static SKCodec Create (SKStream stream) =>
 			Create (stream, out var result);
 
-		public static SKCodec Create(SKStream stream, SKPngChunkReader chunkReader) =>
-			Create(stream, out var result, chunkReader);
-
-		public static SKCodec Create(SKStream stream, SelectionPolicy selectionPolicy) =>
-			Create(stream, out var result, selectionPolicy);
-
-		public static SKCodec Create(SKStream stream, SKPngChunkReader chunkReader, SelectionPolicy selectionPolicy) =>
-			Create(stream, out var result, chunkReader, selectionPolicy);
-
-
-
-		public static SKCodec Create(SKStream stream, out SKCodecResult result) =>
-			Create(stream, out result, null);
-
-		public static SKCodec Create(SKStream stream, out SKCodecResult result, SKPngChunkReader chunkReader) =>
-			Create(stream, out result, chunkReader, SelectionPolicy.preferStillImage);
-
-		public static SKCodec Create(SKStream stream, out SKCodecResult result, SelectionPolicy selectionPolicy) =>
-			Create(stream, out result, null, selectionPolicy);
-
-		public static SKCodec Create(SKStream stream, out SKCodecResult result, SKPngChunkReader chunkReader, SelectionPolicy selectionPolicy)
+		public static SKCodec Create (SKStream stream, out SKCodecResult result)
 		{
 			if (stream == null)
-				throw new ArgumentNullException(nameof(stream));
+				throw new ArgumentNullException (nameof (stream));
 			if (stream is SKFileStream filestream && !filestream.IsValid)
-				throw new ArgumentException("File stream was not valid.", nameof(stream));
+				throw new ArgumentException ("File stream was not valid.", nameof(stream));
 
-			fixed (SKCodecResult* r = &result)
-			{
-				var codec = GetObject(SkiaApi.sk_codec_new_from_stream(stream.Handle, r, chunkReader == null ? IntPtr.Zero : chunkReader.Handle, selectionPolicy));
-				stream.RevokeOwnership(codec);
+			fixed (SKCodecResult* r = &result) {
+				var codec = GetObject (SkiaApi.sk_android_codec_new_from_stream (stream.Handle, r));
+				stream.RevokeOwnership (codec);
 				return codec;
 			}
 		}
-
 
 		// create (data)
 
 		public static SKCodec Create (SKData data)
 		{
-			return Create(data, null);
-		}
-
-		public static SKCodec Create(SKData data, SKPngChunkReader chunkReader)
-		{
 			if (data == null)
-				throw new ArgumentNullException(nameof(data));
+				throw new ArgumentNullException (nameof (data));
 
-			return GetObject(SkiaApi.sk_codec_new_from_data(data.Handle, chunkReader == null ? IntPtr.Zero : chunkReader.Handle));
+			return GetObject (SkiaApi.sk_android_codec_new_from_data (data.Handle));
 		}
 
 		// utils
