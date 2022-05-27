@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 
 namespace SkiaSharp
 {
@@ -22,7 +23,17 @@ namespace SkiaSharp
 			SkiaApi.sk_managed_pixel_ref_set_procs(delegates);
 		}
 
-		public SKPixelRef(int width, int height, IntPtr addr, IntPtr rowBytes)
+		internal unsafe SKPixelRef (void* nativePixelRef)
+			: base (IntPtr.Zero, true)
+		{
+			userData = DelegateProxies.CreateUserData (this, true);
+			Handle = SkiaApi.sk_managed_pixel_ref_new_from_existing ((void*)userData, nativePixelRef);
+
+			if (Handle == IntPtr.Zero)
+				throw new InvalidOperationException ("Unable to create a new SKPixelRef instance.");
+		}
+
+		public SKPixelRef (int width, int height, IntPtr addr, IntPtr rowBytes)
 			: base(IntPtr.Zero, true)
 		{
 			userData = DelegateProxies.CreateUserData(this, true);
@@ -39,7 +50,9 @@ namespace SkiaSharp
 		{
 			if (Interlocked.CompareExchange(ref fromNative, 0, 0) == 0)
 			{
-				SkiaApi.sk_managed_pixel_ref_delete(Handle);
+				if (OwnsHandle) {
+					SkiaApi.sk_managed_pixel_ref_delete (Handle);
+				}
 			}
 		}
 
@@ -117,11 +130,6 @@ namespace SkiaSharp
 		public void NotifyAddedToCache()
 		{
 			SkiaApi.sk_managed_pixel_ref_notify_added_to_cache(Handle);
-		}
-
-		public void AndroidOnlyReset(int width, int height, IntPtr rowBytes)
-		{
-			SkiaApi.sk_managed_pixel_ref_android_only_reset(Handle, width, height, rowBytes);
 		}
 	}
 }

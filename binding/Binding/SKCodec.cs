@@ -18,7 +18,7 @@ namespace SkiaSharp
 		/// <br></br> instruct the decoder how the output should be selected. (Refer to comments
 		/// <br></br> for each value for more details.)
 		/// </summary>
-		enum SelectionPolicy
+		public enum SelectionPolicy
 		{
 			/// <summary>
 			/// If the container format contains both still images and image sequences,
@@ -59,6 +59,15 @@ namespace SkiaSharp
 
 		public SKEncodedImageFormat EncodedFormat =>
 			SkiaApi.sk_codec_get_encoded_format (Handle);
+
+		public SKSizeI Dimensions
+		{
+			get {
+				SKSizeI dimensions;
+				SkiaApi.sk_codec_get_dimensions (Handle, &dimensions);
+				return dimensions;
+			}
+		}
 
 		public SKSizeI GetScaledDimensions (float desiredScale)
 		{
@@ -301,24 +310,24 @@ namespace SkiaSharp
 			Create (filename, out var result);
 
 		public static SKCodec Create(string filename, SKPngChunkReader chunkReader) =>
-			Create(stream, out result, chunkReader, SelectionPolicy.preferStillImage);
+			Create(filename, out var result, chunkReader, SelectionPolicy.preferStillImage);
 
 		public static SKCodec Create(string filename, SelectionPolicy selectionPolicy) =>
-			Create(stream, out result, null, selectionPolicy);
+			Create(filename, out var result, null, selectionPolicy);
 
 		public static SKCodec Create(string filename, SKPngChunkReader chunkReader, SelectionPolicy selectionPolicy) =>
-			Create(stream, out result, chunkReader, selectionPolicy);
+			Create(filename, out var result, chunkReader, selectionPolicy);
 
 
 
 		public static SKCodec Create(string filename, out SKCodecResult result) =>
-			Create(stream, out result, null, SelectionPolicy.preferStillImage);
+			Create(filename, out result, null, SelectionPolicy.preferStillImage);
+
+		public static SKCodec Create(string filename, out SKCodecResult result, SKPngChunkReader chunkReader) =>
+			Create (filename, out result, chunkReader, SelectionPolicy.preferStillImage);
 
 		public static SKCodec Create(string filename, out SKCodecResult result, SelectionPolicy selectionPolicy) =>
-			Create (stream, out result, chunkReader, SelectionPolicy.preferStillImage);
-
-		public static SKCodec Create(string filename, out SKCodecResult result, SelectionPolicy selectionPolicy) =>
-			Create (stream, out result, null, selectionPolicy);
+			Create (filename, out result, null, selectionPolicy);
 
 		public static SKCodec Create (string filename, out SKCodecResult result, SKPngChunkReader chunkReader, SelectionPolicy selectionPolicy)
 		{
@@ -343,7 +352,7 @@ namespace SkiaSharp
 			Create(stream, out var result, selectionPolicy);
 
 		public static SKCodec Create(Stream stream, SKPngChunkReader chunkReader, SelectionPolicy selectionPolicy) =>
-			Create(stream, out var result, chunk_reader, selectionPolicy);
+			Create(stream, out var result, chunkReader, selectionPolicy);
 
 
 
@@ -393,7 +402,7 @@ namespace SkiaSharp
 
 			fixed (SKCodecResult* r = &result)
 			{
-				var codec = GetObject(SkiaApi.sk_codec_new_from_stream(stream.Handle, r, chunkReader == null ? IntPtr.Zero : chunkReader.Handle, selectionPolicy));
+				var codec = GetObject(SkiaApi.sk_codec_new_from_stream(stream.Handle, r, chunkReader == null ? IntPtr.Zero : chunkReader.Handle, (SKCodecSelectionPolicy)selectionPolicy));
 				stream.RevokeOwnership(codec);
 				return codec;
 			}

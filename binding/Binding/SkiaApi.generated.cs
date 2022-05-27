@@ -997,14 +997,14 @@ namespace SkiaSharp
 		// sk_codec_result_t sk_android_codec_get_android_pixels(sk_android_codec_t* codec, const sk_imageinfo_t* info, void* pixels, size_t rowBytes, const sk_android_codec_options_t* options)
 		#if !USE_DELEGATES
 		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
-		internal static extern SKCodecResult sk_android_codec_get_android_pixels (sk_android_codec_t codec, SKImageInfoNative* info, void* pixels, /* size_t */ IntPtr rowBytes, SKAndroidCodecOptions* options);
+		internal static extern SKCodecResult sk_android_codec_get_android_pixels (sk_android_codec_t codec, SKImageInfoNative* info, void* pixels, /* size_t */ IntPtr rowBytes, SKAndroidCodecOptionsInternal* options);
 		#else
 		private partial class Delegates {
 			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
-			internal delegate SKCodecResult sk_android_codec_get_android_pixels (sk_android_codec_t codec, SKImageInfoNative* info, void* pixels, /* size_t */ IntPtr rowBytes, SKAndroidCodecOptions* options);
+			internal delegate SKCodecResult sk_android_codec_get_android_pixels (sk_android_codec_t codec, SKImageInfoNative* info, void* pixels, /* size_t */ IntPtr rowBytes, SKAndroidCodecOptionsInternal* options);
 		}
 		private static Delegates.sk_android_codec_get_android_pixels sk_android_codec_get_android_pixels_delegate;
-		internal static SKCodecResult sk_android_codec_get_android_pixels (sk_android_codec_t codec, SKImageInfoNative* info, void* pixels, /* size_t */ IntPtr rowBytes, SKAndroidCodecOptions* options) =>
+		internal static SKCodecResult sk_android_codec_get_android_pixels (sk_android_codec_t codec, SKImageInfoNative* info, void* pixels, /* size_t */ IntPtr rowBytes, SKAndroidCodecOptionsInternal* options) =>
 			(sk_android_codec_get_android_pixels_delegate ??= GetSymbol<Delegates.sk_android_codec_get_android_pixels> ("sk_android_codec_get_android_pixels")).Invoke (codec, info, pixels, rowBytes, options);
 		#endif
 
@@ -1578,6 +1578,20 @@ namespace SkiaSharp
 		private static Delegates.sk_bitmap_peek_pixels sk_bitmap_peek_pixels_delegate;
 		internal static bool sk_bitmap_peek_pixels (sk_bitmap_t cbitmap, sk_pixmap_t cpixmap) =>
 			(sk_bitmap_peek_pixels_delegate ??= GetSymbol<Delegates.sk_bitmap_peek_pixels> ("sk_bitmap_peek_pixels")).Invoke (cbitmap, cpixmap);
+		#endif
+
+		// void* sk_bitmap_pixel_ref(sk_bitmap_t* cbitmap)
+		#if !USE_DELEGATES
+		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
+		internal static extern void* sk_bitmap_pixel_ref (sk_bitmap_t cbitmap);
+		#else
+		private partial class Delegates {
+			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+			internal delegate void* sk_bitmap_pixel_ref (sk_bitmap_t cbitmap);
+		}
+		private static Delegates.sk_bitmap_pixel_ref sk_bitmap_pixel_ref_delegate;
+		internal static void* sk_bitmap_pixel_ref (sk_bitmap_t cbitmap) =>
+			(sk_bitmap_pixel_ref_delegate ??= GetSymbol<Delegates.sk_bitmap_pixel_ref> ("sk_bitmap_pixel_ref")).Invoke (cbitmap);
 		#endif
 
 		// bool sk_bitmap_ready_to_draw(sk_bitmap_t* cbitmap)
@@ -2698,6 +2712,20 @@ namespace SkiaSharp
 		private static Delegates.sk_codec_destroy sk_codec_destroy_delegate;
 		internal static void sk_codec_destroy (sk_codec_t codec) =>
 			(sk_codec_destroy_delegate ??= GetSymbol<Delegates.sk_codec_destroy> ("sk_codec_destroy")).Invoke (codec);
+		#endif
+
+		// void sk_codec_get_dimensions(sk_codec_t* codec, sk_isize_t* dimensions)
+		#if !USE_DELEGATES
+		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
+		internal static extern void sk_codec_get_dimensions (sk_codec_t codec, SKSizeI* dimensions);
+		#else
+		private partial class Delegates {
+			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+			internal delegate void sk_codec_get_dimensions (sk_codec_t codec, SKSizeI* dimensions);
+		}
+		private static Delegates.sk_codec_get_dimensions sk_codec_get_dimensions_delegate;
+		internal static void sk_codec_get_dimensions (sk_codec_t codec, SKSizeI* dimensions) =>
+			(sk_codec_get_dimensions_delegate ??= GetSymbol<Delegates.sk_codec_get_dimensions> ("sk_codec_get_dimensions")).Invoke (codec, dimensions);
 		#endif
 
 		// sk_encoded_image_format_t sk_codec_get_encoded_format(sk_codec_t* codec)
@@ -13692,20 +13720,6 @@ namespace SkiaSharp
 			(sk_managed_pixel_ref_add_generation_id_listener_delegate ??= GetSymbol<Delegates.sk_managed_pixel_ref_add_generation_id_listener> ("sk_managed_pixel_ref_add_generation_id_listener")).Invoke (param0, param1);
 		#endif
 
-		// void sk_managed_pixel_ref_android_only_reset(sk_pixel_ref_t*, int, int, size_t)
-		#if !USE_DELEGATES
-		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
-		internal static extern void sk_managed_pixel_ref_android_only_reset (sk_pixel_ref_t param0, Int32 param1, Int32 param2, /* size_t */ IntPtr param3);
-		#else
-		private partial class Delegates {
-			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
-			internal delegate void sk_managed_pixel_ref_android_only_reset (sk_pixel_ref_t param0, Int32 param1, Int32 param2, /* size_t */ IntPtr param3);
-		}
-		private static Delegates.sk_managed_pixel_ref_android_only_reset sk_managed_pixel_ref_android_only_reset_delegate;
-		internal static void sk_managed_pixel_ref_android_only_reset (sk_pixel_ref_t param0, Int32 param1, Int32 param2, /* size_t */ IntPtr param3) =>
-			(sk_managed_pixel_ref_android_only_reset_delegate ??= GetSymbol<Delegates.sk_managed_pixel_ref_android_only_reset> ("sk_managed_pixel_ref_android_only_reset")).Invoke (param0, param1, param2, param3);
-		#endif
-
 		// void sk_managed_pixel_ref_delete(sk_pixel_ref_t*)
 		#if !USE_DELEGATES
 		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
@@ -13790,6 +13804,20 @@ namespace SkiaSharp
 		private static Delegates.sk_managed_pixel_ref_new sk_managed_pixel_ref_new_delegate;
 		internal static sk_pixel_ref_t sk_managed_pixel_ref_new (void* context, Int32 param1, Int32 param2, void* param3, /* size_t */ IntPtr param4) =>
 			(sk_managed_pixel_ref_new_delegate ??= GetSymbol<Delegates.sk_managed_pixel_ref_new> ("sk_managed_pixel_ref_new")).Invoke (context, param1, param2, param3, param4);
+		#endif
+
+		// sk_pixel_ref_t* sk_managed_pixel_ref_new_from_existing(void* context, void* pixelRef)
+		#if !USE_DELEGATES
+		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
+		internal static extern sk_pixel_ref_t sk_managed_pixel_ref_new_from_existing (void* context, void* pixelRef);
+		#else
+		private partial class Delegates {
+			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+			internal delegate sk_pixel_ref_t sk_managed_pixel_ref_new_from_existing (void* context, void* pixelRef);
+		}
+		private static Delegates.sk_managed_pixel_ref_new_from_existing sk_managed_pixel_ref_new_from_existing_delegate;
+		internal static sk_pixel_ref_t sk_managed_pixel_ref_new_from_existing (void* context, void* pixelRef) =>
+			(sk_managed_pixel_ref_new_from_existing_delegate ??= GetSymbol<Delegates.sk_managed_pixel_ref_new_from_existing> ("sk_managed_pixel_ref_new_from_existing")).Invoke (context, pixelRef);
 		#endif
 
 		// void sk_managed_pixel_ref_notify_added_to_cache(sk_pixel_ref_t*)
@@ -14879,38 +14907,26 @@ namespace SkiaSharp
 
 	// sk_android_codec_options_t
 	[StructLayout (LayoutKind.Sequential)]
-	public unsafe partial struct SKAndroidCodecOptions : IEquatable<SKAndroidCodecOptions> {
+	internal unsafe partial struct SKAndroidCodecOptionsInternal : IEquatable<SKAndroidCodecOptionsInternal> {
 		// public sk_codec_zero_initialized_t fZeroInitialized
-		private SKZeroInitialized fZeroInitialized;
-		public SKZeroInitialized ZeroInitialized {
-			readonly get => fZeroInitialized;
-			set => fZeroInitialized = value;
-		}
+		public SKZeroInitialized fZeroInitialized;
 
 		// public sk_irect_t* fSubset
-		private SKRectI* fSubset;
-		public SKRectI* Subset {
-			readonly get => fSubset;
-			set => fSubset = value;
-		}
+		public SKRectI* fSubset;
 
 		// public int fSampleSize
-		private Int32 fSampleSize;
-		public Int32 SampleSize {
-			readonly get => fSampleSize;
-			set => fSampleSize = value;
-		}
+		public Int32 fSampleSize;
 
-		public readonly bool Equals (SKAndroidCodecOptions obj) =>
+		public readonly bool Equals (SKAndroidCodecOptionsInternal obj) =>
 			fZeroInitialized == obj.fZeroInitialized && fSubset == obj.fSubset && fSampleSize == obj.fSampleSize;
 
 		public readonly override bool Equals (object obj) =>
-			obj is SKAndroidCodecOptions f && Equals (f);
+			obj is SKAndroidCodecOptionsInternal f && Equals (f);
 
-		public static bool operator == (SKAndroidCodecOptions left, SKAndroidCodecOptions right) =>
+		public static bool operator == (SKAndroidCodecOptionsInternal left, SKAndroidCodecOptionsInternal right) =>
 			left.Equals (right);
 
-		public static bool operator != (SKAndroidCodecOptions left, SKAndroidCodecOptions right) =>
+		public static bool operator != (SKAndroidCodecOptionsInternal left, SKAndroidCodecOptionsInternal right) =>
 			!left.Equals (right);
 
 		public readonly override int GetHashCode ()
