@@ -1594,6 +1594,38 @@ namespace SkiaSharp
 			(sk_bitmap_pixel_ref_delegate ??= GetSymbol<Delegates.sk_bitmap_pixel_ref> ("sk_bitmap_pixel_ref")).Invoke (cbitmap);
 		#endif
 
+		// bool sk_bitmap_read_pixels_at_location(sk_bitmap_t* cbitmap, const sk_pixmap_t* cpixmap, int x, int y)
+		#if !USE_DELEGATES
+		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
+		[return: MarshalAs (UnmanagedType.I1)]
+		internal static extern bool sk_bitmap_read_pixels_at_location (sk_bitmap_t cbitmap, sk_pixmap_t cpixmap, Int32 x, Int32 y);
+		#else
+		private partial class Delegates {
+			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+			[return: MarshalAs (UnmanagedType.I1)]
+			internal delegate bool sk_bitmap_read_pixels_at_location (sk_bitmap_t cbitmap, sk_pixmap_t cpixmap, Int32 x, Int32 y);
+		}
+		private static Delegates.sk_bitmap_read_pixels_at_location sk_bitmap_read_pixels_at_location_delegate;
+		internal static bool sk_bitmap_read_pixels_at_location (sk_bitmap_t cbitmap, sk_pixmap_t cpixmap, Int32 x, Int32 y) =>
+			(sk_bitmap_read_pixels_at_location_delegate ??= GetSymbol<Delegates.sk_bitmap_read_pixels_at_location> ("sk_bitmap_read_pixels_at_location")).Invoke (cbitmap, cpixmap, x, y);
+		#endif
+
+		// bool sk_bitmap_read_pixels_imageinfo(sk_bitmap_t* cbitmap, const sk_imageinfo_t* dstInfo, void* dstPixels, size_t rowBytes, int x, int y)
+		#if !USE_DELEGATES
+		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
+		[return: MarshalAs (UnmanagedType.I1)]
+		internal static extern bool sk_bitmap_read_pixels_imageinfo (sk_bitmap_t cbitmap, SKImageInfoNative* dstInfo, void* dstPixels, /* size_t */ IntPtr rowBytes, Int32 x, Int32 y);
+		#else
+		private partial class Delegates {
+			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+			[return: MarshalAs (UnmanagedType.I1)]
+			internal delegate bool sk_bitmap_read_pixels_imageinfo (sk_bitmap_t cbitmap, SKImageInfoNative* dstInfo, void* dstPixels, /* size_t */ IntPtr rowBytes, Int32 x, Int32 y);
+		}
+		private static Delegates.sk_bitmap_read_pixels_imageinfo sk_bitmap_read_pixels_imageinfo_delegate;
+		internal static bool sk_bitmap_read_pixels_imageinfo (sk_bitmap_t cbitmap, SKImageInfoNative* dstInfo, void* dstPixels, /* size_t */ IntPtr rowBytes, Int32 x, Int32 y) =>
+			(sk_bitmap_read_pixels_imageinfo_delegate ??= GetSymbol<Delegates.sk_bitmap_read_pixels_imageinfo> ("sk_bitmap_read_pixels_imageinfo")).Invoke (cbitmap, dstInfo, dstPixels, rowBytes, x, y);
+		#endif
+
 		// bool sk_bitmap_ready_to_draw(sk_bitmap_t* cbitmap)
 		#if !USE_DELEGATES
 		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
@@ -1728,22 +1760,6 @@ namespace SkiaSharp
 		private static Delegates.sk_bitmap_try_alloc_pixels_with_flags sk_bitmap_try_alloc_pixels_with_flags_delegate;
 		internal static bool sk_bitmap_try_alloc_pixels_with_flags (sk_bitmap_t cbitmap, SKImageInfoNative* requestedInfo, UInt32 flags) =>
 			(sk_bitmap_try_alloc_pixels_with_flags_delegate ??= GetSymbol<Delegates.sk_bitmap_try_alloc_pixels_with_flags> ("sk_bitmap_try_alloc_pixels_with_flags")).Invoke (cbitmap, requestedInfo, flags);
-		#endif
-
-		// bool sk_bitmap_write_pixels(sk_bitmap_t* cbitmap, const sk_pixmap_t* cpixmap)
-		#if !USE_DELEGATES
-		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		internal static extern bool sk_bitmap_write_pixels (sk_bitmap_t cbitmap, sk_pixmap_t cpixmap);
-		#else
-		private partial class Delegates {
-			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
-			[return: MarshalAs (UnmanagedType.I1)]
-			internal delegate bool sk_bitmap_write_pixels (sk_bitmap_t cbitmap, sk_pixmap_t cpixmap);
-		}
-		private static Delegates.sk_bitmap_write_pixels sk_bitmap_write_pixels_delegate;
-		internal static bool sk_bitmap_write_pixels (sk_bitmap_t cbitmap, sk_pixmap_t cpixmap) =>
-			(sk_bitmap_write_pixels_delegate ??= GetSymbol<Delegates.sk_bitmap_write_pixels> ("sk_bitmap_write_pixels")).Invoke (cbitmap, cpixmap);
 		#endif
 
 		// bool sk_bitmap_write_pixels_at_location(sk_bitmap_t* cbitmap, const sk_pixmap_t* cpixmap, int x, int y)

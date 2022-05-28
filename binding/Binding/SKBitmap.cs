@@ -912,14 +912,38 @@ namespace SkiaSharp
 			return SkiaApi.sk_bitmap_install_pixels (Handle, &cinfo, (void*)pixels, (IntPtr)rowBytes, proxy, (void*)ctx);
 		}
 
-		public bool WritePixels (SKPixmap pixmap, int x, int y)
+		public IntPtr GetPixels(out IntPtr length)
 		{
-			return SkiaApi.sk_bitmap_write_pixels_at_location (Handle, pixmap.Handle, x, y);
+			fixed (IntPtr* l = &length)
+			{
+				return (IntPtr)SkiaApi.sk_bitmap_get_pixels(Handle, l);
+			}
 		}
 
-		public bool WritePixels (SKPixmap pixmap)
+		public bool ReadPixels (out SKImageInfo dstinfo, out IntPtr dstpixels, int rowBytes, int x, int y)
 		{
-			return SkiaApi.sk_bitmap_write_pixels(Handle, pixmap.Handle);
+			SKImageInfoNative cinfo;
+			bool r;
+			fixed (IntPtr* dp = &dstpixels)
+			{
+				r = SkiaApi.sk_bitmap_read_pixels_imageinfo(Handle, &cinfo, dp, rowBytes, x, y);
+			}
+			dstinfo = SKImageInfoNative.ToManaged(ref cinfo);
+			return r;
+		}
+
+		public bool ReadPixels(SKPixmap dstPixmap) => ReadPixels(dstPixmap, 0, 0);
+
+		public bool ReadPixels(SKPixmap pixmap, int x, int y)
+		{
+			return SkiaApi.sk_bitmap_read_pixels_at_location(Handle, pixmap.Handle, x, y);
+		}
+
+		public bool WritePixels(SKPixmap pixmap) => WritePixels(pixmap, 0, 0);
+
+		public bool WritePixels(SKPixmap dstPixmap, int x, int y)
+		{
+			return SkiaApi.sk_bitmap_write_pixels_at_location(Handle, dstPixmap.Handle, x, y);
 		}
 
 		public bool InstallPixels (SKPixmap pixmap)
