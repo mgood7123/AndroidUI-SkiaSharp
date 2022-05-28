@@ -912,6 +912,16 @@ namespace SkiaSharp
 			return SkiaApi.sk_bitmap_install_pixels (Handle, &cinfo, (void*)pixels, (IntPtr)rowBytes, proxy, (void*)ctx);
 		}
 
+		public bool WritePixels (SKPixmap pixmap, int x, int y)
+		{
+			return SkiaApi.sk_bitmap_write_pixels_at_location (Handle, pixmap.Handle, x, y);
+		}
+
+		public bool WritePixels (SKPixmap pixmap)
+		{
+			return SkiaApi.sk_bitmap_write_pixels(Handle, pixmap.Handle);
+		}
+
 		public bool InstallPixels (SKPixmap pixmap)
 		{
 			return SkiaApi.sk_bitmap_install_pixels_with_pixmap (Handle, pixmap.Handle);
