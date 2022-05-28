@@ -918,7 +918,7 @@ namespace SkiaSharp
 			bool r;
 			fixed (IntPtr* dp = &dstpixels)
 			{
-				r = SkiaApi.sk_bitmap_read_pixels_imageinfo(Handle, &cinfo, dp, rowBytes, x, y);
+				r = SkiaApi.sk_bitmap_read_pixels_imageinfo(Handle, &cinfo, dp, (IntPtr)rowBytes, x, y);
 			}
 			dstinfo = SKImageInfoNative.ToManaged(ref cinfo);
 			return r;
