@@ -912,14 +912,6 @@ namespace SkiaSharp
 			return SkiaApi.sk_bitmap_install_pixels (Handle, &cinfo, (void*)pixels, (IntPtr)rowBytes, proxy, (void*)ctx);
 		}
 
-		public IntPtr GetPixels(out IntPtr length)
-		{
-			fixed (IntPtr* l = &length)
-			{
-				return (IntPtr)SkiaApi.sk_bitmap_get_pixels(Handle, l);
-			}
-		}
-
 		public bool ReadPixels (out SKImageInfo dstinfo, out IntPtr dstpixels, int rowBytes, int x, int y)
 		{
 			SKImageInfoNative cinfo;
