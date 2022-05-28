@@ -912,16 +912,13 @@ namespace SkiaSharp
 			return SkiaApi.sk_bitmap_install_pixels (Handle, &cinfo, (void*)pixels, (IntPtr)rowBytes, proxy, (void*)ctx);
 		}
 
-		public bool ReadPixels (out SKImageInfo dstinfo, out IntPtr dstpixels, int rowBytes, int x, int y)
+		public bool ReadPixels (SKImageInfo info, out IntPtr dstpixels, int rowBytes, int x, int y)
 		{
-			SKImageInfoNative cinfo;
-			bool r;
+			var cinfo = SKImageInfoNative.FromManaged(ref info);
 			fixed (IntPtr* dp = &dstpixels)
 			{
-				r = SkiaApi.sk_bitmap_read_pixels_imageinfo(Handle, &cinfo, dp, (IntPtr)rowBytes, x, y);
+				return SkiaApi.sk_bitmap_read_pixels_imageinfo(Handle, &cinfo, dp, (IntPtr)rowBytes, x, y);
 			}
-			dstinfo = SKImageInfoNative.ToManaged(ref cinfo);
-			return r;
 		}
 
 		public bool ReadPixels(SKPixmap dstPixmap) => ReadPixels(dstPixmap, 0, 0);
