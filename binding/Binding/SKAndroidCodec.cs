@@ -224,7 +224,7 @@ namespace SkiaSharp
 			if (codec == null)
 				throw new ArgumentNullException(nameof(codec));
 
-			return GetObject(SkiaApi.sk_android_codec_new_from_codec(codec.Handle, behavior));
+			return GetObject(SkiaApi.sk_android_codec_new_from_codec2(codec.Handle, &behavior));
 		}
 
 		// create (streams)
@@ -257,7 +257,7 @@ namespace SkiaSharp
 			if (stream is SKFileStream filestream && !filestream.IsValid)
 				throw new ArgumentException("File stream was not valid.", nameof(stream));
 
-			var codec = GetObject(SkiaApi.sk_android_codec_new_from_stream(stream.Handle, chunkReader == null ? IntPtr.Zero : chunkReader.Handle));
+			var codec = GetObject(SkiaApi.sk_android_codec_new_from_stream2(stream.Handle, chunkReader == null ? IntPtr.Zero : chunkReader.Handle));
 			stream.RevokeOwnership(codec);
 			return codec;
 		}
@@ -275,7 +275,7 @@ namespace SkiaSharp
 			if (data == null)
 				throw new ArgumentNullException(nameof(data));
 
-			return GetObject(SkiaApi.sk_android_codec_new_from_data(data.Handle, chunkReader == null ? IntPtr.Zero : chunkReader.Handle));
+			return GetObject(SkiaApi.sk_android_codec_new_from_data2(data.Handle, chunkReader == null ? IntPtr.Zero : chunkReader.Handle));
 		}
 
 		// utils

@@ -590,6 +590,14 @@ namespace SkiaSharp
 
 		// more properties
 
+		public SKPixmap Pixmap {
+			get {
+				var pixmap = new SKPixmap (SkiaApi.sk_bitmap_get_pixmap (Handle), false); // pixmap is owned by this
+				pixmap.pixelSource = this;
+				return pixmap;
+			}
+		}
+
 		public byte[] Bytes {
 			get {
 				var array = GetPixelSpan ().ToArray ();
