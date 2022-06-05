@@ -1,9 +1,12 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace SkiaSharp
-{
-	#region Class declarations
+#region Namespaces
+
+
+#endregion
+
+#region Class declarations
 
 	using gr_backendrendertarget_t = IntPtr;
 	using gr_backendtexture_t = IntPtr;
@@ -103,8 +106,12 @@ namespace SkiaSharp
 	using vk_physical_device_t = IntPtr;
 	using vk_queue_t = IntPtr;
 
-	#endregion
+#endregion
 
+#region Functions
+
+namespace SkiaSharp
+{
 	internal unsafe partial class SkiaApi
 	{
 		#region gr_context.h
@@ -14286,9 +14293,13 @@ namespace SkiaSharp
 		#endregion
 
 	}
+}
 
-	#region Delegates
+#endregion Functions
 
+#region Delegates
+
+namespace SkiaSharp {
 	// typedef void (*)()* gr_gl_func_ptr
 	[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
 	internal unsafe delegate void GRGlFuncPtr();
@@ -14458,9 +14469,13 @@ namespace SkiaSharp
 	[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
 	internal unsafe delegate void SKSurfaceRasterReleaseProxyDelegate(void* addr, void* context);
 
-	#endregion
+}
 
-	#region Structs
+#endregion
+
+#region Structs
+
+namespace SkiaSharp {
 
 	// gr_context_options_t
 	[StructLayout (LayoutKind.Sequential)]
@@ -16741,10 +16756,13 @@ namespace SkiaSharp
 		}
 
 	}
+}
 
-	#endregion
+#endregion
 
-	#region Enums
+#region Enums
+
+namespace SkiaSharp {
 
 	// gr_backend_t
 	internal enum GRBackendNative {
@@ -17472,6 +17490,7 @@ namespace SkiaSharp
 		// LOSSLESS_SK_WEBPENCODER_COMPTRESSION = 1
 		Lossless = 1,
 	}
+}
 
 	// skottie_animation_renderflags_t
 	public enum SkottieAnimationRenderflags {
