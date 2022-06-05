@@ -9,6 +9,10 @@ namespace SkiaSharp
 	/// </summary>
 	public unsafe class SKPixelRef : SKObject, ISKSkipObjectRegistration
 	{
+
+		// this is not meant to be anything but a GC reference to keep the actual pixel data alive
+		internal SKObject bitmapSource;
+
 		private static readonly SKPixelRefDelegates delegates;
 		private readonly IntPtr userData;
 		private int fromNative;
@@ -50,9 +54,7 @@ namespace SkiaSharp
 		{
 			if (Interlocked.CompareExchange(ref fromNative, 0, 0) == 0)
 			{
-				if (OwnsHandle) {
-					SkiaApi.sk_managed_pixel_ref_delete (Handle);
-				}
+				SkiaApi.sk_managed_pixel_ref_delete (Handle);
 			}
 		}
 
@@ -72,6 +74,7 @@ namespace SkiaSharp
 		public int Width => SkiaApi.sk_managed_pixel_ref_width(Handle);
 		public int Height => SkiaApi.sk_managed_pixel_ref_height(Handle);
 		public IntPtr Pixels => (IntPtr)SkiaApi.sk_managed_pixel_ref_pixels(Handle);
+		public IntPtr SkPixelRefHandle => (IntPtr)SkiaApi.sk_managed_pixel_ref_pixel_ref(Handle);
 		public IntPtr RowBytes => SkiaApi.sk_managed_pixel_ref_rowBytes(Handle);
 
 		/// <summary>

@@ -4,8 +4,6 @@ using System.IO;
 
 namespace SkiaSharp
 {
-	// TODO: missing the `QueryYuv8` and `GetYuv8Planes` members
-
 	public unsafe class SKAndroidCodec : SKObject, ISKSkipObjectRegistration
 	{
 		internal SKAndroidCodec(IntPtr handle, bool owns)
@@ -50,7 +48,7 @@ namespace SkiaSharp
 
 		public SKColorSpace ComputeOutputColorSpace(SKColorType outputColorType, SKColorSpace preferredColorSpace)
 		{
-			return SKColorSpace.GetObject(SkiaApi.sk_android_codec_compute_output_color_space(Handle, outputColorType.ToNative(), preferredColorSpace.Handle));
+			return SKColorSpace.GetObject(SkiaApi.sk_android_codec_compute_output_color_space(Handle, outputColorType.ToNative(), preferredColorSpace == null ? IntPtr.Zero : preferredColorSpace.Handle));
 		}
 
 		public SKSizeI GetSampledDimensions(int sampleSize)
@@ -223,8 +221,9 @@ namespace SkiaSharp
 		{
 			if (codec == null)
 				throw new ArgumentNullException(nameof(codec));
-
-			return GetObject(SkiaApi.sk_android_codec_new_from_codec2(codec.Handle, &behavior));
+			var handle = SkiaApi.sk_android_codec_new_from_codec(codec.Handle, behavior);
+			SKAndroidCodec c = GetObject(handle);
+			return c;
 		}
 
 		// create (streams)
@@ -257,7 +256,7 @@ namespace SkiaSharp
 			if (stream is SKFileStream filestream && !filestream.IsValid)
 				throw new ArgumentException("File stream was not valid.", nameof(stream));
 
-			var codec = GetObject(SkiaApi.sk_android_codec_new_from_stream2(stream.Handle, chunkReader == null ? IntPtr.Zero : chunkReader.Handle));
+			var codec = GetObject(SkiaApi.sk_android_codec_new_from_stream(stream.Handle, chunkReader == null ? IntPtr.Zero : chunkReader.Handle));
 			stream.RevokeOwnership(codec);
 			return codec;
 		}
@@ -275,7 +274,7 @@ namespace SkiaSharp
 			if (data == null)
 				throw new ArgumentNullException(nameof(data));
 
-			return GetObject(SkiaApi.sk_android_codec_new_from_data2(data.Handle, chunkReader == null ? IntPtr.Zero : chunkReader.Handle));
+			return GetObject(SkiaApi.sk_android_codec_new_from_data(data.Handle, chunkReader == null ? IntPtr.Zero : chunkReader.Handle));
 		}
 
 		// utils

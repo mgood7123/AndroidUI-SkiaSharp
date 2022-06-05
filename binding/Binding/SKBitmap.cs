@@ -495,7 +495,27 @@ namespace SkiaSharp
 
 		public SKImage AsImage () => SKImage.FromBitmap (this);
 
+		public void SetPixelRef(SKPixelRef pixelRef, int x, int y)
+		{
+			SkiaApi.sk_bitmap_set_pixel_ref(Handle, (void*)(pixelRef == null ? IntPtr.Zero : pixelRef.SkPixelRefHandle), x, y);
+		}
+
 		// properties
+
+		public SKPixelRef PixelRef
+		{
+			get
+            {
+                void* p = SkiaApi.sk_bitmap_get_pixel_ref(Handle);
+                if (p is null)
+                {
+                    return null;
+                }
+                SKPixelRef pr = new SKPixelRef(p);
+                pr.bitmapSource = this;
+                return pr;
+            }
+        }
 
 		public bool ReadyToDraw => SkiaApi.sk_bitmap_ready_to_draw (Handle);
 
@@ -504,13 +524,6 @@ namespace SkiaSharp
 				SKImageInfoNative cinfo;
 				SkiaApi.sk_bitmap_get_info (Handle, &cinfo);
 				return SKImageInfoNative.ToManaged (ref cinfo);
-			}
-		}
-
-		public SKPixelRef PixelRef {
-			get {
-				void* p = SkiaApi.sk_bitmap_pixel_ref (Handle);
-				return p is null ? null : new SKPixelRef (p);
 			}
 		}
 
