@@ -148,6 +148,20 @@ namespace SkiaSharp
 
 		// Create*
 
+		public static SKMatrix NativeCreateScale(float sx, float sy) => SkiaApi.sk_matrix_scale(sx, sy);
+
+		public static SKMatrix NativeCreateTranslate(float dx, float dy) => SkiaApi.sk_matrix_translate(dx, dy);
+
+		public static SKMatrix NativeCreateTranslate(SKPoint point) => SkiaApi.sk_matrix_translate_point(point);
+
+		public static SKMatrix NativeCreateTranslate(SKPointI point) => SkiaApi.sk_matrix_translate_ipoint(point);
+
+		public static SKMatrix NativeCreateRotateDeg(float deg) => SkiaApi.sk_matrix_rotate_deg(deg);
+
+		public static SKMatrix NativeCreateRotateDeg(float deg, SKPoint pivot) => SkiaApi.sk_matrix_rotate_deg_point(deg, pivot);
+
+		public static SKMatrix NativeCreateRotateRad(float rad) => SkiaApi.sk_matrix_rotate_rad(rad);
+
 		public static SKMatrix CreateIdentity () =>
 			new SKMatrix { scaleX = 1, scaleY = 1, persp2 = 1 };
 
@@ -625,83 +639,6 @@ namespace SkiaSharp
 			a * b - c * d;
 
 		// additional
-		public float Scale (float sx, float sy)
-		{
-			SKMatrix o;
-			float r;
-			fixed (SKMatrix* t = &this) {
-				r = SkiaApi.sk_matrix_scale (t, sx, sy, &o);
-			};
-			setFrom(ref o);
-			return r;
-		}
-
-		public float Translate (float dx, float dy)
-		{
-			SKMatrix o;
-			float r;
-			fixed (SKMatrix* t = &this) {
-				r = SkiaApi.sk_matrix_translate (t, dx, dy, &o);
-			};
-			setFrom (ref o);
-			return r;
-		}
-
-		public float Translate (SKPoint point)
-		{
-			SKMatrix o;
-			float r;
-			fixed (SKMatrix* t = &this) {
-				r = SkiaApi.sk_matrix_translate_point (t, point, &o);
-			};
-			setFrom (ref o);
-			return r;
-		}
-
-		public float Translate (SKPointI point)
-		{
-			SKMatrix o;
-			float r;
-			fixed (SKMatrix* t = &this) {
-				r = SkiaApi.sk_matrix_translate_ipoint (t, point, &o);
-			};
-			setFrom (ref o);
-			return r;
-		}
-
-		public float RotateDeg (float deg)
-		{
-			SKMatrix o;
-			float r;
-			fixed (SKMatrix* t = &this) {
-				r = SkiaApi.sk_matrix_rotate_deg (t, deg, &o);
-			};
-			setFrom (ref o);
-			return r;
-		}
-
-		public float RotateDeg (float deg, SKPoint pivot)
-		{
-			SKMatrix o;
-			float r;
-			fixed (SKMatrix* t = &this) {
-				r = SkiaApi.sk_matrix_rotate_deg_point (t, deg, pivot, &o);
-			};
-			setFrom (ref o);
-			return r;
-		}
-
-		public float RotateRad (float rad)
-		{
-			SKMatrix o;
-			float r;
-			fixed (SKMatrix* t = &this) {
-				r = SkiaApi.sk_matrix_rotate_rad (t, rad, &o);
-			};
-			setFrom (ref o);
-			return r;
-		}
-
 		public void SetAll (
 			float scaleX, float skewX, float transX,
 			float skewY, float scaleY, float transY,

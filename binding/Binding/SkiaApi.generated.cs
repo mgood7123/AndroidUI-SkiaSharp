@@ -7096,60 +7096,60 @@ namespace SkiaSharp
 			(sk_matrix_reset_delegate ??= GetSymbol<Delegates.sk_matrix_reset> ("sk_matrix_reset")).Invoke (matrix, result);
 		#endif
 
-		// float sk_matrix_rotate_deg(sk_matrix_t* matrix, float deg, sk_matrix_t* result)
+		// sk_matrix_t sk_matrix_rotate_deg(float deg)
 		#if !USE_DELEGATES
 		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
-		internal static extern Single sk_matrix_rotate_deg (SKMatrix* matrix, Single deg, SKMatrix* result);
+		internal static extern SKMatrix sk_matrix_rotate_deg (Single deg);
 		#else
 		private partial class Delegates {
 			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
-			internal delegate Single sk_matrix_rotate_deg (SKMatrix* matrix, Single deg, SKMatrix* result);
+			internal delegate SKMatrix sk_matrix_rotate_deg (Single deg);
 		}
 		private static Delegates.sk_matrix_rotate_deg sk_matrix_rotate_deg_delegate;
-		internal static Single sk_matrix_rotate_deg (SKMatrix* matrix, Single deg, SKMatrix* result) =>
-			(sk_matrix_rotate_deg_delegate ??= GetSymbol<Delegates.sk_matrix_rotate_deg> ("sk_matrix_rotate_deg")).Invoke (matrix, deg, result);
+		internal static SKMatrix sk_matrix_rotate_deg (Single deg) =>
+			(sk_matrix_rotate_deg_delegate ??= GetSymbol<Delegates.sk_matrix_rotate_deg> ("sk_matrix_rotate_deg")).Invoke (deg);
 		#endif
 
-		// float sk_matrix_rotate_deg_point(sk_matrix_t* matrix, float deg, sk_point_t t, sk_matrix_t* result)
+		// sk_matrix_t sk_matrix_rotate_deg_point(float deg, sk_point_t t)
 		#if !USE_DELEGATES
 		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
-		internal static extern Single sk_matrix_rotate_deg_point (SKMatrix* matrix, Single deg, SKPoint t, SKMatrix* result);
+		internal static extern SKMatrix sk_matrix_rotate_deg_point (Single deg, SKPoint t);
 		#else
 		private partial class Delegates {
 			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
-			internal delegate Single sk_matrix_rotate_deg_point (SKMatrix* matrix, Single deg, SKPoint t, SKMatrix* result);
+			internal delegate SKMatrix sk_matrix_rotate_deg_point (Single deg, SKPoint t);
 		}
 		private static Delegates.sk_matrix_rotate_deg_point sk_matrix_rotate_deg_point_delegate;
-		internal static Single sk_matrix_rotate_deg_point (SKMatrix* matrix, Single deg, SKPoint t, SKMatrix* result) =>
-			(sk_matrix_rotate_deg_point_delegate ??= GetSymbol<Delegates.sk_matrix_rotate_deg_point> ("sk_matrix_rotate_deg_point")).Invoke (matrix, deg, t, result);
+		internal static SKMatrix sk_matrix_rotate_deg_point (Single deg, SKPoint t) =>
+			(sk_matrix_rotate_deg_point_delegate ??= GetSymbol<Delegates.sk_matrix_rotate_deg_point> ("sk_matrix_rotate_deg_point")).Invoke (deg, t);
 		#endif
 
-		// float sk_matrix_rotate_rad(sk_matrix_t* matrix, float rad, sk_matrix_t* result)
+		// sk_matrix_t sk_matrix_rotate_rad(float rad)
 		#if !USE_DELEGATES
 		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
-		internal static extern Single sk_matrix_rotate_rad (SKMatrix* matrix, Single rad, SKMatrix* result);
+		internal static extern SKMatrix sk_matrix_rotate_rad (Single rad);
 		#else
 		private partial class Delegates {
 			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
-			internal delegate Single sk_matrix_rotate_rad (SKMatrix* matrix, Single rad, SKMatrix* result);
+			internal delegate SKMatrix sk_matrix_rotate_rad (Single rad);
 		}
 		private static Delegates.sk_matrix_rotate_rad sk_matrix_rotate_rad_delegate;
-		internal static Single sk_matrix_rotate_rad (SKMatrix* matrix, Single rad, SKMatrix* result) =>
-			(sk_matrix_rotate_rad_delegate ??= GetSymbol<Delegates.sk_matrix_rotate_rad> ("sk_matrix_rotate_rad")).Invoke (matrix, rad, result);
+		internal static SKMatrix sk_matrix_rotate_rad (Single rad) =>
+			(sk_matrix_rotate_rad_delegate ??= GetSymbol<Delegates.sk_matrix_rotate_rad> ("sk_matrix_rotate_rad")).Invoke (rad);
 		#endif
 
-		// float sk_matrix_scale(sk_matrix_t* matrix, float sx, float sy, sk_matrix_t* result)
+		// sk_matrix_t sk_matrix_scale(float sx, float sy)
 		#if !USE_DELEGATES
 		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
-		internal static extern Single sk_matrix_scale (SKMatrix* matrix, Single sx, Single sy, SKMatrix* result);
+		internal static extern SKMatrix sk_matrix_scale (Single sx, Single sy);
 		#else
 		private partial class Delegates {
 			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
-			internal delegate Single sk_matrix_scale (SKMatrix* matrix, Single sx, Single sy, SKMatrix* result);
+			internal delegate SKMatrix sk_matrix_scale (Single sx, Single sy);
 		}
 		private static Delegates.sk_matrix_scale sk_matrix_scale_delegate;
-		internal static Single sk_matrix_scale (SKMatrix* matrix, Single sx, Single sy, SKMatrix* result) =>
-			(sk_matrix_scale_delegate ??= GetSymbol<Delegates.sk_matrix_scale> ("sk_matrix_scale")).Invoke (matrix, sx, sy, result);
+		internal static SKMatrix sk_matrix_scale (Single sx, Single sy) =>
+			(sk_matrix_scale_delegate ??= GetSymbol<Delegates.sk_matrix_scale> ("sk_matrix_scale")).Invoke (sx, sy);
 		#endif
 
 		// void sk_matrix_set_identity(sk_matrix_t* matrix, sk_matrix_t* result)
@@ -7180,46 +7180,46 @@ namespace SkiaSharp
 			(sk_matrix_set9_delegate ??= GetSymbol<Delegates.sk_matrix_set9> ("sk_matrix_set9")).Invoke (matrix, buffer, result);
 		#endif
 
-		// float sk_matrix_translate(sk_matrix_t* matrix, float dx, float dy, sk_matrix_t* result)
+		// sk_matrix_t sk_matrix_translate(float dx, float dy)
 		#if !USE_DELEGATES
 		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
-		internal static extern Single sk_matrix_translate (SKMatrix* matrix, Single dx, Single dy, SKMatrix* result);
+		internal static extern SKMatrix sk_matrix_translate (Single dx, Single dy);
 		#else
 		private partial class Delegates {
 			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
-			internal delegate Single sk_matrix_translate (SKMatrix* matrix, Single dx, Single dy, SKMatrix* result);
+			internal delegate SKMatrix sk_matrix_translate (Single dx, Single dy);
 		}
 		private static Delegates.sk_matrix_translate sk_matrix_translate_delegate;
-		internal static Single sk_matrix_translate (SKMatrix* matrix, Single dx, Single dy, SKMatrix* result) =>
-			(sk_matrix_translate_delegate ??= GetSymbol<Delegates.sk_matrix_translate> ("sk_matrix_translate")).Invoke (matrix, dx, dy, result);
+		internal static SKMatrix sk_matrix_translate (Single dx, Single dy) =>
+			(sk_matrix_translate_delegate ??= GetSymbol<Delegates.sk_matrix_translate> ("sk_matrix_translate")).Invoke (dx, dy);
 		#endif
 
-		// float sk_matrix_translate_ipoint(sk_matrix_t* matrix, sk_ipoint_t t, sk_matrix_t* result)
+		// sk_matrix_t sk_matrix_translate_ipoint(sk_matrix_t* matrix, sk_ipoint_t t)
 		#if !USE_DELEGATES
 		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
-		internal static extern Single sk_matrix_translate_ipoint (SKMatrix* matrix, SKPointI t, SKMatrix* result);
+		internal static extern SKMatrix sk_matrix_translate_ipoint (SKMatrix* matrix, SKPointI t);
 		#else
 		private partial class Delegates {
 			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
-			internal delegate Single sk_matrix_translate_ipoint (SKMatrix* matrix, SKPointI t, SKMatrix* result);
+			internal delegate SKMatrix sk_matrix_translate_ipoint (SKMatrix* matrix, SKPointI t);
 		}
 		private static Delegates.sk_matrix_translate_ipoint sk_matrix_translate_ipoint_delegate;
-		internal static Single sk_matrix_translate_ipoint (SKMatrix* matrix, SKPointI t, SKMatrix* result) =>
-			(sk_matrix_translate_ipoint_delegate ??= GetSymbol<Delegates.sk_matrix_translate_ipoint> ("sk_matrix_translate_ipoint")).Invoke (matrix, t, result);
+		internal static SKMatrix sk_matrix_translate_ipoint (SKMatrix* matrix, SKPointI t) =>
+			(sk_matrix_translate_ipoint_delegate ??= GetSymbol<Delegates.sk_matrix_translate_ipoint> ("sk_matrix_translate_ipoint")).Invoke (matrix, t);
 		#endif
 
-		// float sk_matrix_translate_point(sk_matrix_t* matrix, sk_point_t t, sk_matrix_t* result)
+		// sk_matrix_t sk_matrix_translate_point(sk_point_t t)
 		#if !USE_DELEGATES
 		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
-		internal static extern Single sk_matrix_translate_point (SKMatrix* matrix, SKPoint t, SKMatrix* result);
+		internal static extern SKMatrix sk_matrix_translate_point (SKPoint t);
 		#else
 		private partial class Delegates {
 			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
-			internal delegate Single sk_matrix_translate_point (SKMatrix* matrix, SKPoint t, SKMatrix* result);
+			internal delegate SKMatrix sk_matrix_translate_point (SKPoint t);
 		}
 		private static Delegates.sk_matrix_translate_point sk_matrix_translate_point_delegate;
-		internal static Single sk_matrix_translate_point (SKMatrix* matrix, SKPoint t, SKMatrix* result) =>
-			(sk_matrix_translate_point_delegate ??= GetSymbol<Delegates.sk_matrix_translate_point> ("sk_matrix_translate_point")).Invoke (matrix, t, result);
+		internal static SKMatrix sk_matrix_translate_point (SKPoint t) =>
+			(sk_matrix_translate_point_delegate ??= GetSymbol<Delegates.sk_matrix_translate_point> ("sk_matrix_translate_point")).Invoke (t);
 		#endif
 
 		// bool sk_matrix_try_invert(sk_matrix_t* matrix, sk_matrix_t* result)
