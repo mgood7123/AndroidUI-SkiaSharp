@@ -797,7 +797,7 @@ namespace SkiaSharp
 			setFrom (ref o);
 		}
 
-		public static void SetAffine (float[] affine)
+		public static void SetIdentityAffine(float[] affine)
 		{
 			if (affine == null)
 				throw new ArgumentNullException (nameof (affine));
