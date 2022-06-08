@@ -92,7 +92,7 @@ namespace SkiaSharp
 
 		// Values
 
-		public float get(SKMatrixRowMajorMask index)
+		public float Get(SKMatrixRowMajorMask index)
 		{
 			fixed (SKMatrix* t = &this) {
 				return SkiaApi.sk_matrix_get (t, index);
@@ -164,6 +164,20 @@ namespace SkiaSharp
 
 		public static SKMatrix CreateIdentity () =>
 			new SKMatrix { scaleX = 1, scaleY = 1, persp2 = 1 };
+
+		public static SKMatrix CreateSinCos(float sin, float cos)
+		{
+			var matrix = Identity;
+			SetSinCos(ref matrix, sin, cos);
+			return matrix;
+		}
+
+		public static SKMatrix CreateSinCos(float sin, float cos, float pivotx, float pivoty)
+		{
+			var matrix = Identity;
+			SetSinCos(ref matrix, sin, cos, pivotx, pivoty);
+			return matrix;
+		}
 
 		public static SKMatrix CreateTranslation (float x, float y)
 		{
@@ -491,6 +505,47 @@ namespace SkiaSharp
 			}
 		}
 
+		// *Scale
+		public readonly SKMatrix PreScale(float sx, float sy)
+		{
+			SKMatrix o;
+			fixed (SKMatrix* t = &this)
+			{
+				SkiaApi.sk_matrix_pre_scale(&o, t, sx, sy);
+			};
+			setFrom(ref o);
+		}
+
+		public readonly SKMatrix PreScale(float sx, float sy, float px, float py)
+		{
+			SKMatrix o;
+			fixed (SKMatrix* t = &this)
+			{
+				SkiaApi.sk_matrix_pre_scale_with_pivot(&o, t, sx, sy, px, py);
+			};
+			setFrom(ref o);
+		}
+
+		public readonly SKMatrix PostScale(float sx, float sy)
+		{
+			SKMatrix o;
+			fixed (SKMatrix* t = &this)
+			{
+				SkiaApi.sk_matrix_post_scale(&o, t, sx, sy);
+			};
+			setFrom(ref o);
+		}
+
+		public readonly SKMatrix PostScale(float sx, float sy, float px, float py)
+		{
+			SKMatrix o;
+			fixed (SKMatrix* t = &this)
+			{
+				SkiaApi.sk_matrix_post_scale_with_pivot(&o, t, sx, sy, px, py);
+			};
+			setFrom(ref o);
+		}
+
 		// MapRect
 
 		public readonly SKRect MapRect (SKRect source)
@@ -774,7 +829,7 @@ namespace SkiaSharp
 			return true;
 		}
 
-		public void setAffine(float[] buffer) {
+		public void SetAffine(float[] buffer) {
 			if (buffer == null)
 				throw new ArgumentNullException (nameof (buffer));
 			if (buffer.Length != 6)

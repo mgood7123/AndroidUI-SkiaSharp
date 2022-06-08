@@ -7006,6 +7006,34 @@ namespace SkiaSharp
 			(sk_matrix_post_concat_delegate ??= GetSymbol<Delegates.sk_matrix_post_concat> ("sk_matrix_post_concat")).Invoke (result, matrix);
 		#endif
 
+		// void sk_matrix_post_scale(sk_matrix_t* result, sk_matrix_t* matrix, float sx, float sy)
+		#if !USE_DELEGATES
+		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
+		internal static extern void sk_matrix_post_scale (SKMatrix* result, SKMatrix* matrix, Single sx, Single sy);
+		#else
+		private partial class Delegates {
+			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+			internal delegate void sk_matrix_post_scale (SKMatrix* result, SKMatrix* matrix, Single sx, Single sy);
+		}
+		private static Delegates.sk_matrix_post_scale sk_matrix_post_scale_delegate;
+		internal static void sk_matrix_post_scale (SKMatrix* result, SKMatrix* matrix, Single sx, Single sy) =>
+			(sk_matrix_post_scale_delegate ??= GetSymbol<Delegates.sk_matrix_post_scale> ("sk_matrix_post_scale")).Invoke (result, matrix, sx, sy);
+		#endif
+
+		// void sk_matrix_post_scale_with_pivot(sk_matrix_t* result, sk_matrix_t* matrix, float sx, float sy, float px, float py)
+		#if !USE_DELEGATES
+		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
+		internal static extern void sk_matrix_post_scale_with_pivot (SKMatrix* result, SKMatrix* matrix, Single sx, Single sy, Single px, Single py);
+		#else
+		private partial class Delegates {
+			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+			internal delegate void sk_matrix_post_scale_with_pivot (SKMatrix* result, SKMatrix* matrix, Single sx, Single sy, Single px, Single py);
+		}
+		private static Delegates.sk_matrix_post_scale_with_pivot sk_matrix_post_scale_with_pivot_delegate;
+		internal static void sk_matrix_post_scale_with_pivot (SKMatrix* result, SKMatrix* matrix, Single sx, Single sy, Single px, Single py) =>
+			(sk_matrix_post_scale_with_pivot_delegate ??= GetSymbol<Delegates.sk_matrix_post_scale_with_pivot> ("sk_matrix_post_scale_with_pivot")).Invoke (result, matrix, sx, sy, px, py);
+		#endif
+
 		// void sk_matrix_pre_concat(sk_matrix_t* result, sk_matrix_t* matrix)
 		#if !USE_DELEGATES
 		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
@@ -7018,6 +7046,34 @@ namespace SkiaSharp
 		private static Delegates.sk_matrix_pre_concat sk_matrix_pre_concat_delegate;
 		internal static void sk_matrix_pre_concat (SKMatrix* result, SKMatrix* matrix) =>
 			(sk_matrix_pre_concat_delegate ??= GetSymbol<Delegates.sk_matrix_pre_concat> ("sk_matrix_pre_concat")).Invoke (result, matrix);
+		#endif
+
+		// void sk_matrix_pre_scale(sk_matrix_t* result, sk_matrix_t* matrix, float sx, float sy)
+		#if !USE_DELEGATES
+		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
+		internal static extern void sk_matrix_pre_scale (SKMatrix* result, SKMatrix* matrix, Single sx, Single sy);
+		#else
+		private partial class Delegates {
+			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+			internal delegate void sk_matrix_pre_scale (SKMatrix* result, SKMatrix* matrix, Single sx, Single sy);
+		}
+		private static Delegates.sk_matrix_pre_scale sk_matrix_pre_scale_delegate;
+		internal static void sk_matrix_pre_scale (SKMatrix* result, SKMatrix* matrix, Single sx, Single sy) =>
+			(sk_matrix_pre_scale_delegate ??= GetSymbol<Delegates.sk_matrix_pre_scale> ("sk_matrix_pre_scale")).Invoke (result, matrix, sx, sy);
+		#endif
+
+		// void sk_matrix_pre_scale_with_pivot(sk_matrix_t* result, sk_matrix_t* matrix, float sx, float sy, float px, float py)
+		#if !USE_DELEGATES
+		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
+		internal static extern void sk_matrix_pre_scale_with_pivot (SKMatrix* result, SKMatrix* matrix, Single sx, Single sy, Single px, Single py);
+		#else
+		private partial class Delegates {
+			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+			internal delegate void sk_matrix_pre_scale_with_pivot (SKMatrix* result, SKMatrix* matrix, Single sx, Single sy, Single px, Single py);
+		}
+		private static Delegates.sk_matrix_pre_scale_with_pivot sk_matrix_pre_scale_with_pivot_delegate;
+		internal static void sk_matrix_pre_scale_with_pivot (SKMatrix* result, SKMatrix* matrix, Single sx, Single sy, Single px, Single py) =>
+			(sk_matrix_pre_scale_with_pivot_delegate ??= GetSymbol<Delegates.sk_matrix_pre_scale_with_pivot> ("sk_matrix_pre_scale_with_pivot")).Invoke (result, matrix, sx, sy, px, py);
 		#endif
 
 		// bool sk_matrix_preserves_axis_alignment(sk_matrix_t* matrix)
