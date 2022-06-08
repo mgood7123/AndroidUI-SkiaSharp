@@ -815,9 +815,9 @@ namespace SkiaSharp
 				throw new ArgumentException ("Buffers must be the same size.");
 
 			fixed (SKMatrix* t = &this)
-			fixed (SKPoint3* rp = src)
-			fixed (SKPoint3* pp = dst) {
-				SkiaApi.sk_matrix_map_homogeneous_points3 (t, rp, pp, count);
+			fixed (SKPoint3* s = src)
+			fixed (SKPoint3* d = dst) {
+				SkiaApi.sk_matrix_map_homogeneous_points3 (t, d, s, count);
 			}
 		}
 
@@ -836,9 +836,9 @@ namespace SkiaSharp
 				throw new ArgumentException ("Buffers must be the same size.");
 
 			fixed (SKMatrix* t = &this)
-			fixed (SKPoint* rp = src)
-			fixed (SKPoint3* pp = dst) {
-				SkiaApi.sk_matrix_map_homogeneous_points (t, rp, pp, count);
+			fixed (SKPoint* s = src)
+			fixed (SKPoint3* d = dst) {
+				SkiaApi.sk_matrix_map_homogeneous_points (t, d, s, count);
 			}
 		}
 

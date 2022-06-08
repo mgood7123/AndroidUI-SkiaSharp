@@ -7194,18 +7194,18 @@ namespace SkiaSharp
 			(sk_matrix_translate_delegate ??= GetSymbol<Delegates.sk_matrix_translate> ("sk_matrix_translate")).Invoke (dx, dy);
 		#endif
 
-		// sk_matrix_t sk_matrix_translate_ipoint(sk_matrix_t* matrix, sk_ipoint_t t)
+		// sk_matrix_t sk_matrix_translate_ipoint(sk_ipoint_t t)
 		#if !USE_DELEGATES
 		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
-		internal static extern SKMatrix sk_matrix_translate_ipoint (SKMatrix* matrix, SKPointI t);
+		internal static extern SKMatrix sk_matrix_translate_ipoint (SKPointI t);
 		#else
 		private partial class Delegates {
 			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
-			internal delegate SKMatrix sk_matrix_translate_ipoint (SKMatrix* matrix, SKPointI t);
+			internal delegate SKMatrix sk_matrix_translate_ipoint (SKPointI t);
 		}
 		private static Delegates.sk_matrix_translate_ipoint sk_matrix_translate_ipoint_delegate;
-		internal static SKMatrix sk_matrix_translate_ipoint (SKMatrix* matrix, SKPointI t) =>
-			(sk_matrix_translate_ipoint_delegate ??= GetSymbol<Delegates.sk_matrix_translate_ipoint> ("sk_matrix_translate_ipoint")).Invoke (matrix, t);
+		internal static SKMatrix sk_matrix_translate_ipoint (SKPointI t) =>
+			(sk_matrix_translate_ipoint_delegate ??= GetSymbol<Delegates.sk_matrix_translate_ipoint> ("sk_matrix_translate_ipoint")).Invoke (t);
 		#endif
 
 		// sk_matrix_t sk_matrix_translate_point(sk_point_t t)
