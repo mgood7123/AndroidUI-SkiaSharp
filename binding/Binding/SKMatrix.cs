@@ -506,7 +506,7 @@ namespace SkiaSharp
 		}
 
 		// *Scale
-		public readonly SKMatrix PreScale(float sx, float sy)
+		public void PreScale(float sx, float sy)
 		{
 			SKMatrix o;
 			fixed (SKMatrix* t = &this)
@@ -516,7 +516,7 @@ namespace SkiaSharp
 			setFrom(ref o);
 		}
 
-		public readonly SKMatrix PreScale(float sx, float sy, float px, float py)
+		public void PreScale(float sx, float sy, float px, float py)
 		{
 			SKMatrix o;
 			fixed (SKMatrix* t = &this)
@@ -526,7 +526,7 @@ namespace SkiaSharp
 			setFrom(ref o);
 		}
 
-		public readonly SKMatrix PostScale(float sx, float sy)
+		public void PostScale(float sx, float sy)
 		{
 			SKMatrix o;
 			fixed (SKMatrix* t = &this)
@@ -536,7 +536,7 @@ namespace SkiaSharp
 			setFrom(ref o);
 		}
 
-		public readonly SKMatrix PostScale(float sx, float sy, float px, float py)
+		public void PostScale(float sx, float sy, float px, float py)
 		{
 			SKMatrix o;
 			fixed (SKMatrix* t = &this)
