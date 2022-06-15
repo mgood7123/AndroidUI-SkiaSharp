@@ -223,6 +223,7 @@ namespace SkiaSharp
 				throw new ArgumentNullException(nameof(codec));
 			var handle = SkiaApi.sk_android_codec_new_from_codec(codec.Handle, behavior);
 			SKAndroidCodec c = GetObject(handle);
+			codec.RevokeOwnership(c);
 			return c;
 		}
 
