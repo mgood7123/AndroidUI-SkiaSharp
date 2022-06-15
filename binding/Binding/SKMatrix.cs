@@ -162,20 +162,19 @@ namespace SkiaSharp
 
 		public static SKMatrix NativeCreateRotateRad(float rad) => SkiaApi.sk_matrix_rotate_rad(rad);
 
-		public static SKMatrix CreateIdentity () =>
-			new SKMatrix { scaleX = 1, scaleY = 1, persp2 = 1 };
+		public static SKMatrix CreateIdentity () => new SKMatrix { scaleX = 1, scaleY = 1, persp2 = 1 };
 
 		public static SKMatrix CreateSinCos(float sin, float cos)
 		{
-			var matrix = Identity;
-			SetSinCos(ref matrix, sin, cos);
+			SKMatrix matrix = Identity;
+			matrix.SetSinCos(sin, cos);
 			return matrix;
 		}
 
 		public static SKMatrix CreateSinCos(float sin, float cos, float pivotx, float pivoty)
 		{
-			var matrix = Identity;
-			SetSinCos(ref matrix, sin, cos, pivotx, pivoty);
+			SKMatrix matrix = Identity;
+			matrix.SetSinCos(sin, cos, pivotx, pivoty);
 			return matrix;
 		}
 
@@ -184,13 +183,9 @@ namespace SkiaSharp
 			if (x == 0 && y == 0)
 				return Identity;
 
-			return new SKMatrix {
-				scaleX = 1,
-				scaleY = 1,
-				transX = x,
-				transY = y,
-				persp2 = 1,
-			};
+			SKMatrix m = Identity;
+			m.SetTranslate(x, y);
+			return m;
 		}
 
 		public static SKMatrix CreateScale (float x, float y)
@@ -198,11 +193,9 @@ namespace SkiaSharp
 			if (x == 1 && y == 1)
 				return Identity;
 
-			return new SKMatrix {
-				scaleX = x,
-				scaleY = y,
-				persp2 = 1,
-			};
+			SKMatrix m = Identity;
+			m.SetScale(x, y);
+			return m;
 		}
 
 		public static SKMatrix CreateScale (float x, float y, float pivotX, float pivotY)
@@ -210,16 +203,9 @@ namespace SkiaSharp
 			if (x == 1 && y == 1)
 				return Identity;
 
-			var tx = pivotX - x * pivotX;
-			var ty = pivotY - y * pivotY;
-
-			return new SKMatrix {
-				scaleX = x,
-				scaleY = y,
-				transX = tx,
-				transY = ty,
-				persp2 = 1,
-			};
+			SKMatrix m = Identity;
+			m.SetScale(x, y, pivotX, pivotY);
+			return m;
 		}
 
 		public static SKMatrix CreateRotation (float radians)
@@ -231,7 +217,7 @@ namespace SkiaSharp
 			var cos = (float)Math.Cos (radians);
 
 			var matrix = Identity;
-			SetSinCos (ref matrix, sin, cos);
+			matrix.SetSinCos(sin, cos);
 			return matrix;
 		}
 
@@ -244,7 +230,7 @@ namespace SkiaSharp
 			var cos = (float)Math.Cos (radians);
 
 			var matrix = Identity;
-			SetSinCos (ref matrix, sin, cos, pivotX, pivotY);
+			matrix.SetSinCos(sin, cos, pivotX, pivotY);
 			return matrix;
 		}
 
@@ -283,19 +269,9 @@ namespace SkiaSharp
 			if (sx == 0 && sy == 0 && tx == 0 && ty == 0)
 				return Identity;
 
-			return new SKMatrix {
-				scaleX = sx,
-				skewX = 0,
-				transX = tx,
-
-				skewY = 0,
-				scaleY = sy,
-				transY = ty,
-
-				persp0 = 0,
-				persp1 = 0,
-				persp2 = 1,
-			};
+			SKMatrix m = new();
+			m.SetScaleTranslate(sx, sy, tx, ty);
+			return m;
 		}
 
 		// Make*
@@ -347,21 +323,35 @@ namespace SkiaSharp
 
 		// Set*
 
-		[EditorBrowsable (EditorBrowsableState.Never)]
-		[Obsolete ("Use CreateScaleTranslation(float, float, float, float) instead.")]
 		public void SetScaleTranslate (float sx, float sy, float tx, float ty)
 		{
-			scaleX = sx;
-			skewX = 0;
-			transX = tx;
+			SetAll(
+				sx, 0, tx,
+				0, sy, ty,
+				0, 0, 1
+			);
+		}
 
-			skewY = 0;
-			scaleY = sy;
-			transY = ty;
+		public void SetScale(float sx, float sy, float px, float py) {
+			if (1 == sx && 1 == sy) {
+				Reset();
+			} else {
+				SetScaleTranslate(sx, sy, px - sx * px, py - sy * py);
+			}
+		}
 
-			persp0 = 0;
-			persp1 = 0;
-			persp2 = 1;
+		public void SetScale(float sx, float sy) {
+			SetAll(sx, 0, 0,
+				   0, sy, 0,
+				   0, 0, 1
+			);
+		}
+
+		public void SetTranslate(float dx, float dy) {
+			SetAll(1, 0, dx,
+				   0, 1, dy,
+				   0, 0, 1
+			);
 		}
 
 		// Rotate
@@ -372,7 +362,7 @@ namespace SkiaSharp
 		{
 			var sin = (float)Math.Sin (radians);
 			var cos = (float)Math.Cos (radians);
-			SetSinCos (ref matrix, sin, cos, pivotx, pivoty);
+			matrix.SetSinCos(sin, cos, pivotx, pivoty);
 		}
 
 		[EditorBrowsable (EditorBrowsableState.Never)]
@@ -381,7 +371,7 @@ namespace SkiaSharp
 		{
 			var sin = (float)Math.Sin (degrees * DegreesToRadians);
 			var cos = (float)Math.Cos (degrees * DegreesToRadians);
-			SetSinCos (ref matrix, sin, cos, pivotx, pivoty);
+			matrix.SetSinCos(sin, cos, pivotx, pivoty);
 		}
 
 		[EditorBrowsable (EditorBrowsableState.Never)]
@@ -390,7 +380,7 @@ namespace SkiaSharp
 		{
 			var sin = (float)Math.Sin (radians);
 			var cos = (float)Math.Cos (radians);
-			SetSinCos (ref matrix, sin, cos);
+			matrix.SetSinCos(sin, cos);
 		}
 
 		[EditorBrowsable (EditorBrowsableState.Never)]
@@ -399,7 +389,7 @@ namespace SkiaSharp
 		{
 			var sin = (float)Math.Sin (degrees * DegreesToRadians);
 			var cos = (float)Math.Cos (degrees * DegreesToRadians);
-			SetSinCos (ref matrix, sin, cos);
+			matrix.SetSinCos(sin, cos);
 		}
 
 		// Invert
@@ -546,6 +536,37 @@ namespace SkiaSharp
 			setFrom(ref o);
 		}
 
+
+		public void PreTranslate(float dx, float dy)
+		{
+			SKMatrix o;
+			fixed (SKMatrix* t = &this)
+			{
+				SkiaApi.sk_matrix_post_translate(&o, t, dx, dy);
+			};
+			setFrom(ref o);
+		}
+
+		public void PostTranslate(float dx, float dy)
+		{
+			SKMatrix o;
+			fixed (SKMatrix* t = &this)
+			{
+				SkiaApi.sk_matrix_post_translate(&o, t, dx, dy);
+			};
+			setFrom(ref o);
+		}
+
+		public bool SetRectToRect(SKRect source, SKRect dest, SKMatrixScaleToFit scaleToFit)
+		{
+			SKMatrix o;
+			fixed (SKMatrix* m = &this)
+			{
+				return SkiaApi.sk_matrix_set_rect_to_rect(m, &o, &dest, &source, scaleToFit);
+			}
+			setFrom(ref o);
+		}
+
 		// MapRect
 
 		public readonly SKRect MapRect (SKRect source)
@@ -659,32 +680,24 @@ namespace SkiaSharp
 
 		// private
 
-		private static void SetSinCos (ref SKMatrix matrix, float sin, float cos)
+		public void SetSinCos (float sin, float cos)
 		{
-			matrix.scaleX = cos;
-			matrix.skewX = -sin;
-			matrix.transX = 0;
-			matrix.skewY = sin;
-			matrix.scaleY = cos;
-			matrix.transY = 0;
-			matrix.persp0 = 0;
-			matrix.persp1 = 0;
-			matrix.persp2 = 1;
+			SetAll(
+				cos, -sin, 0,
+				sin, cos, 0,
+				0, 0, 1
+			);
 		}
 
-		private static void SetSinCos (ref SKMatrix matrix, float sin, float cos, float pivotx, float pivoty)
+		public void SetSinCos (float sin, float cos, float pivotx, float pivoty)
 		{
 			float oneMinusCos = 1 - cos;
 
-			matrix.scaleX = cos;
-			matrix.skewX = -sin;
-			matrix.transX = Dot (sin, pivoty, oneMinusCos, pivotx);
-			matrix.skewY = sin;
-			matrix.scaleY = cos;
-			matrix.transY = Dot (-sin, pivotx, oneMinusCos, pivoty);
-			matrix.persp0 = 0;
-			matrix.persp1 = 0;
-			matrix.persp2 = 1;
+			SetAll(
+				cos, -sin, Dot(sin, pivoty, oneMinusCos, pivotx),
+				sin, cos, Dot(-sin, pivotx, oneMinusCos, pivoty),
+				0, 0, 1
+			);
 		}
 
 		private static float Dot (float a, float b, float c, float d) =>

@@ -7034,6 +7034,20 @@ namespace SkiaSharp
 			(sk_matrix_post_scale_with_pivot_delegate ??= GetSymbol<Delegates.sk_matrix_post_scale_with_pivot> ("sk_matrix_post_scale_with_pivot")).Invoke (result, matrix, sx, sy, px, py);
 		#endif
 
+		// void sk_matrix_post_translate(sk_matrix_t* result, sk_matrix_t* matrix, float dx, float dy)
+		#if !USE_DELEGATES
+		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
+		internal static extern void sk_matrix_post_translate (SKMatrix* result, SKMatrix* matrix, Single dx, Single dy);
+		#else
+		private partial class Delegates {
+			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+			internal delegate void sk_matrix_post_translate (SKMatrix* result, SKMatrix* matrix, Single dx, Single dy);
+		}
+		private static Delegates.sk_matrix_post_translate sk_matrix_post_translate_delegate;
+		internal static void sk_matrix_post_translate (SKMatrix* result, SKMatrix* matrix, Single dx, Single dy) =>
+			(sk_matrix_post_translate_delegate ??= GetSymbol<Delegates.sk_matrix_post_translate> ("sk_matrix_post_translate")).Invoke (result, matrix, dx, dy);
+		#endif
+
 		// void sk_matrix_pre_concat(sk_matrix_t* result, sk_matrix_t* matrix)
 		#if !USE_DELEGATES
 		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
@@ -7074,6 +7088,20 @@ namespace SkiaSharp
 		private static Delegates.sk_matrix_pre_scale_with_pivot sk_matrix_pre_scale_with_pivot_delegate;
 		internal static void sk_matrix_pre_scale_with_pivot (SKMatrix* result, SKMatrix* matrix, Single sx, Single sy, Single px, Single py) =>
 			(sk_matrix_pre_scale_with_pivot_delegate ??= GetSymbol<Delegates.sk_matrix_pre_scale_with_pivot> ("sk_matrix_pre_scale_with_pivot")).Invoke (result, matrix, sx, sy, px, py);
+		#endif
+
+		// void sk_matrix_pre_translate(sk_matrix_t* result, sk_matrix_t* matrix, float dx, float dy)
+		#if !USE_DELEGATES
+		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
+		internal static extern void sk_matrix_pre_translate (SKMatrix* result, SKMatrix* matrix, Single dx, Single dy);
+		#else
+		private partial class Delegates {
+			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+			internal delegate void sk_matrix_pre_translate (SKMatrix* result, SKMatrix* matrix, Single dx, Single dy);
+		}
+		private static Delegates.sk_matrix_pre_translate sk_matrix_pre_translate_delegate;
+		internal static void sk_matrix_pre_translate (SKMatrix* result, SKMatrix* matrix, Single dx, Single dy) =>
+			(sk_matrix_pre_translate_delegate ??= GetSymbol<Delegates.sk_matrix_pre_translate> ("sk_matrix_pre_translate")).Invoke (result, matrix, dx, dy);
 		#endif
 
 		// bool sk_matrix_preserves_axis_alignment(sk_matrix_t* matrix)
@@ -7220,6 +7248,22 @@ namespace SkiaSharp
 		private static Delegates.sk_matrix_set_identity sk_matrix_set_identity_delegate;
 		internal static void sk_matrix_set_identity (SKMatrix* matrix, SKMatrix* result) =>
 			(sk_matrix_set_identity_delegate ??= GetSymbol<Delegates.sk_matrix_set_identity> ("sk_matrix_set_identity")).Invoke (matrix, result);
+		#endif
+
+		// bool sk_matrix_set_rect_to_rect(sk_matrix_t* matrix, sk_matrix_t* result, sk_rect_t* dest, sk_rect_t* source, sk_matrix_scale_to_fit_t stf)
+		#if !USE_DELEGATES
+		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
+		[return: MarshalAs (UnmanagedType.I1)]
+		internal static extern bool sk_matrix_set_rect_to_rect (SKMatrix* matrix, SKMatrix* result, SKRect* dest, SKRect* source, SKMatrixScaleToFit stf);
+		#else
+		private partial class Delegates {
+			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+			[return: MarshalAs (UnmanagedType.I1)]
+			internal delegate bool sk_matrix_set_rect_to_rect (SKMatrix* matrix, SKMatrix* result, SKRect* dest, SKRect* source, SKMatrixScaleToFit stf);
+		}
+		private static Delegates.sk_matrix_set_rect_to_rect sk_matrix_set_rect_to_rect_delegate;
+		internal static bool sk_matrix_set_rect_to_rect (SKMatrix* matrix, SKMatrix* result, SKRect* dest, SKRect* source, SKMatrixScaleToFit stf) =>
+			(sk_matrix_set_rect_to_rect_delegate ??= GetSymbol<Delegates.sk_matrix_set_rect_to_rect> ("sk_matrix_set_rect_to_rect")).Invoke (matrix, result, dest, source, stf);
 		#endif
 
 		// void sk_matrix_set9(sk_matrix_t* matrix, float* buffer, sk_matrix_t* result)
@@ -17662,6 +17706,18 @@ namespace SkiaSharp {
 		Persp1 = 7,
 		// Persp2 = 8
 		Persp2 = 8,
+	}
+
+	// sk_matrix_scale_to_fit_t
+	public enum SKMatrixScaleToFit {
+		// Fill = 0
+		Fill = 0,
+		// Start = 1
+		Start = 1,
+		// Center = 2
+		Center = 2,
+		// End = 3
+		End = 3,
 	}
 
 	// sk_matrix_type_mask_t
