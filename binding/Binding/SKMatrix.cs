@@ -11,6 +11,8 @@ namespace SkiaSharp
 
 		public readonly static SKMatrix Identity = new SKMatrix { scaleX = 1, scaleY = 1, persp2 = 1 };
 
+		public SKMatrix() : this(1, 0, 0, 0, 1, 0, 0, 0, 1) {}
+
 		public SKMatrix (float[] values)
 		{
 			if (values == null)
