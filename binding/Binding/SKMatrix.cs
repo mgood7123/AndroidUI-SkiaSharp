@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices; // inlining
 using System.ComponentModel;
 
 namespace SkiaSharp
@@ -356,6 +357,41 @@ namespace SkiaSharp
 			);
 		}
 
+		internal const float SK_Scalar1 = 1.0f;
+		internal const float SK_ScalarNearlyZero = (SK_Scalar1 / (1 << 12));
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		internal static bool SkScalarNearlyZero(float x, float tolerance = SK_ScalarNearlyZero)
+		{
+			return Math.Abs(x) <= tolerance;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		internal static float SkScalarSinSnapToZero(float radians)
+		{
+			float v = (float)Math.Sin(radians);
+			return SkScalarNearlyZero(v) ? 0.0f : v;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		internal static float SkScalarCosSnapToZero(float radians)
+		{
+			float v = (float)Math.Cos(radians);
+			return SkScalarNearlyZero(v) ? 0.0f : v;
+		}
+
+		public void SetRotate(float degrees, float px, float py)
+		{
+			float rad = degrees * DegreesToRadians;
+			SetSinCos(SkScalarSinSnapToZero(rad), SkScalarCosSnapToZero(rad), px, py);
+		}
+
+		public void SetRotate(float degrees)
+		{
+			float rad = degrees * DegreesToRadians;
+			SetSinCos(SkScalarSinSnapToZero(rad), SkScalarCosSnapToZero(rad));
+		}
+
 		// Rotate
 
 		[EditorBrowsable (EditorBrowsableState.Never)]
@@ -371,8 +407,9 @@ namespace SkiaSharp
 		[Obsolete ("Use CreateRotationDegrees(float, float, float) instead.")]
 		public static void RotateDegrees (ref SKMatrix matrix, float degrees, float pivotx, float pivoty)
 		{
-			var sin = (float)Math.Sin (degrees * DegreesToRadians);
-			var cos = (float)Math.Cos (degrees * DegreesToRadians);
+			float rad = degrees * DegreesToRadians;
+			var sin = (float)Math.Sin (rad);
+			var cos = (float)Math.Cos (rad);
 			matrix.SetSinCos(sin, cos, pivotx, pivoty);
 		}
 
@@ -389,8 +426,9 @@ namespace SkiaSharp
 		[Obsolete ("Use CreateRotationDegrees(float) instead.")]
 		public static void RotateDegrees (ref SKMatrix matrix, float degrees)
 		{
-			var sin = (float)Math.Sin (degrees * DegreesToRadians);
-			var cos = (float)Math.Cos (degrees * DegreesToRadians);
+			float rad = degrees * DegreesToRadians;
+			var sin = (float)Math.Sin (rad);
+			var cos = (float)Math.Cos (rad);
 			matrix.SetSinCos(sin, cos);
 		}
 
