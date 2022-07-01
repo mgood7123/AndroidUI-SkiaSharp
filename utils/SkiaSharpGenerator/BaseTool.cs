@@ -270,6 +270,9 @@ namespace SkiaSharpGenerator
 				}
 			}
 
+			// edge case: trim _ from start of type after removing prefix
+			type = type.TrimStart('_');
+
 			string[] parts;
 
 			if (type.Any(c => char.IsLower(c)) && type.Any(c => char.IsUpper(c)))
