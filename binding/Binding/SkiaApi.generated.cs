@@ -17403,10 +17403,10 @@ namespace SkiaSharp {
 
 	// sk_codec_selection_policy_t
 	public enum SKCodecSelectionPolicy {
-		// kPreferStillImage = 0
-		KPreferStillImage = 0,
-		// kPreferAnimation = 1
-		KPreferAnimation = 1,
+		// PREFER_STILL_IMAGE_SK_CODEC_SELECTION_POLICY = 0
+		PreferStillImage = 0,
+		// PREFER_ANIMATION_SK_CODEC_SELECTION_POLICY = 1
+		PreferAnimation = 1,
 	}
 
 	// sk_codec_zero_initialized_t
