@@ -1408,20 +1408,6 @@ namespace SkiaSharp
 			(sk_bitmap_set_immutable_delegate ??= GetSymbol<Delegates.sk_bitmap_set_immutable> ("sk_bitmap_set_immutable")).Invoke (cbitmap);
 		#endif
 
-		// void sk_bitmap_set_pixel_ref(sk_bitmap_t* cbitmap, void* cpixelref, int x, int y)
-		#if !USE_DELEGATES
-		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
-		internal static extern void sk_bitmap_set_pixel_ref (sk_bitmap_t cbitmap, void* cpixelref, Int32 x, Int32 y);
-		#else
-		private partial class Delegates {
-			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
-			internal delegate void sk_bitmap_set_pixel_ref (sk_bitmap_t cbitmap, void* cpixelref, Int32 x, Int32 y);
-		}
-		private static Delegates.sk_bitmap_set_pixel_ref sk_bitmap_set_pixel_ref_delegate;
-		internal static void sk_bitmap_set_pixel_ref (sk_bitmap_t cbitmap, void* cpixelref, Int32 x, Int32 y) =>
-			(sk_bitmap_set_pixel_ref_delegate ??= GetSymbol<Delegates.sk_bitmap_set_pixel_ref> ("sk_bitmap_set_pixel_ref")).Invoke (cbitmap, cpixelref, x, y);
-		#endif
-
 		// bool sk_bitmap_set_info(sk_bitmap_t* cbitmap, const sk_imageinfo_t* requestedInfo, size_t rowBytes)
 		#if !USE_DELEGATES
 		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
@@ -1436,6 +1422,20 @@ namespace SkiaSharp
 		private static Delegates.sk_bitmap_set_info sk_bitmap_set_info_delegate;
 		internal static bool sk_bitmap_set_info (sk_bitmap_t cbitmap, SKImageInfoNative* requestedInfo, /* size_t */ IntPtr rowBytes) =>
 			(sk_bitmap_set_info_delegate ??= GetSymbol<Delegates.sk_bitmap_set_info> ("sk_bitmap_set_info")).Invoke (cbitmap, requestedInfo, rowBytes);
+		#endif
+
+		// void sk_bitmap_set_pixel_ref(sk_bitmap_t* cbitmap, void* cpixelref, int x, int y)
+		#if !USE_DELEGATES
+		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
+		internal static extern void sk_bitmap_set_pixel_ref (sk_bitmap_t cbitmap, void* cpixelref, Int32 x, Int32 y);
+		#else
+		private partial class Delegates {
+			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+			internal delegate void sk_bitmap_set_pixel_ref (sk_bitmap_t cbitmap, void* cpixelref, Int32 x, Int32 y);
+		}
+		private static Delegates.sk_bitmap_set_pixel_ref sk_bitmap_set_pixel_ref_delegate;
+		internal static void sk_bitmap_set_pixel_ref (sk_bitmap_t cbitmap, void* cpixelref, Int32 x, Int32 y) =>
+			(sk_bitmap_set_pixel_ref_delegate ??= GetSymbol<Delegates.sk_bitmap_set_pixel_ref> ("sk_bitmap_set_pixel_ref")).Invoke (cbitmap, cpixelref, x, y);
 		#endif
 
 		// void sk_bitmap_set_pixels(sk_bitmap_t* cbitmap, void* pixels)
@@ -14530,52 +14530,6 @@ namespace SkiaSharp
 
 		#endregion
 
-		#region sk_managed_png_chunk_reader.h
-
-		// void sk_managed_png_chunk_reader_delete(sk_managed_png_chunk_reader_t*)
-		#if !USE_DELEGATES
-		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
-		internal static extern void sk_managed_png_chunk_reader_delete (sk_managed_png_chunk_reader_t param0);
-		#else
-		private partial class Delegates {
-			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
-			internal delegate void sk_managed_png_chunk_reader_delete (sk_managed_png_chunk_reader_t param0);
-		}
-		private static Delegates.sk_managed_png_chunk_reader_delete sk_managed_png_chunk_reader_delete_delegate;
-		internal static void sk_managed_png_chunk_reader_delete (sk_managed_png_chunk_reader_t param0) =>
-			(sk_managed_png_chunk_reader_delete_delegate ??= GetSymbol<Delegates.sk_managed_png_chunk_reader_delete> ("sk_managed_png_chunk_reader_delete")).Invoke (param0);
-		#endif
-
-		// sk_managed_png_chunk_reader_t* sk_managed_png_chunk_reader_new(void* context)
-		#if !USE_DELEGATES
-		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
-		internal static extern sk_managed_png_chunk_reader_t sk_managed_png_chunk_reader_new (void* context);
-		#else
-		private partial class Delegates {
-			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
-			internal delegate sk_managed_png_chunk_reader_t sk_managed_png_chunk_reader_new (void* context);
-		}
-		private static Delegates.sk_managed_png_chunk_reader_new sk_managed_png_chunk_reader_new_delegate;
-		internal static sk_managed_png_chunk_reader_t sk_managed_png_chunk_reader_new (void* context) =>
-			(sk_managed_png_chunk_reader_new_delegate ??= GetSymbol<Delegates.sk_managed_png_chunk_reader_new> ("sk_managed_png_chunk_reader_new")).Invoke (context);
-		#endif
-
-		// void sk_managed_png_chunk_reader_set_procs(sk_managed_png_chunk_reader_procs_t procs)
-		#if !USE_DELEGATES
-		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
-		internal static extern void sk_managed_png_chunk_reader_set_procs (SKManagedPngChunkReaderProcs procs);
-		#else
-		private partial class Delegates {
-			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
-			internal delegate void sk_managed_png_chunk_reader_set_procs (SKManagedPngChunkReaderProcs procs);
-		}
-		private static Delegates.sk_managed_png_chunk_reader_set_procs sk_managed_png_chunk_reader_set_procs_delegate;
-		internal static void sk_managed_png_chunk_reader_set_procs (SKManagedPngChunkReaderProcs procs) =>
-			(sk_managed_png_chunk_reader_set_procs_delegate ??= GetSymbol<Delegates.sk_managed_png_chunk_reader_set_procs> ("sk_managed_png_chunk_reader_set_procs")).Invoke (procs);
-		#endif
-
-		#endregion
-
 		#region sk_manageddrawable.h
 
 		// sk_manageddrawable_t* sk_manageddrawable_new(void* context)
@@ -16465,37 +16419,6 @@ namespace SkiaSharp {
 
 	}
 
-	// sk_managedallocator_procs_t
-	[StructLayout (LayoutKind.Sequential)]
-	internal unsafe partial struct SKManagedAllocatorDelegates : IEquatable<SKManagedAllocatorDelegates> {
-		// public sk_managedallocator_allocpixelref_proc fAllocPixelRef
-		public SKManagedAllocatorAllocpixelrefProxyDelegate fAllocPixelRef;
-
-		// public sk_managedallocator_destroy_proc fDestroy
-		public SKManagedAllocatorDestroyProxyDelegate fDestroy;
-
-		public readonly bool Equals (SKManagedAllocatorDelegates obj) =>
-			fAllocPixelRef == obj.fAllocPixelRef && fDestroy == obj.fDestroy;
-
-		public readonly override bool Equals (object obj) =>
-			obj is SKManagedAllocatorDelegates f && Equals (f);
-
-		public static bool operator == (SKManagedAllocatorDelegates left, SKManagedAllocatorDelegates right) =>
-			left.Equals (right);
-
-		public static bool operator != (SKManagedAllocatorDelegates left, SKManagedAllocatorDelegates right) =>
-			!left.Equals (right);
-
-		public readonly override int GetHashCode ()
-		{
-			var hash = new HashCode ();
-			hash.Add (fAllocPixelRef);
-			hash.Add (fDestroy);
-			return hash.ToHashCode ();
-		}
-
-	}
-
 	// sk_managed_png_chunk_reader_procs_t
 	[StructLayout (LayoutKind.Sequential)]
 	internal unsafe partial struct SKManagedPngChunkReaderDelegates : IEquatable<SKManagedPngChunkReaderDelegates> {
@@ -16521,6 +16444,37 @@ namespace SkiaSharp {
 		{
 			var hash = new HashCode ();
 			hash.Add (fReadChunk);
+			hash.Add (fDestroy);
+			return hash.ToHashCode ();
+		}
+
+	}
+
+	// sk_managedallocator_procs_t
+	[StructLayout (LayoutKind.Sequential)]
+	internal unsafe partial struct SKManagedAllocatorDelegates : IEquatable<SKManagedAllocatorDelegates> {
+		// public sk_managedallocator_allocpixelref_proc fAllocPixelRef
+		public SKManagedAllocatorAllocpixelrefProxyDelegate fAllocPixelRef;
+
+		// public sk_managedallocator_destroy_proc fDestroy
+		public SKManagedAllocatorDestroyProxyDelegate fDestroy;
+
+		public readonly bool Equals (SKManagedAllocatorDelegates obj) =>
+			fAllocPixelRef == obj.fAllocPixelRef && fDestroy == obj.fDestroy;
+
+		public readonly override bool Equals (object obj) =>
+			obj is SKManagedAllocatorDelegates f && Equals (f);
+
+		public static bool operator == (SKManagedAllocatorDelegates left, SKManagedAllocatorDelegates right) =>
+			left.Equals (right);
+
+		public static bool operator != (SKManagedAllocatorDelegates left, SKManagedAllocatorDelegates right) =>
+			!left.Equals (right);
+
+		public readonly override int GetHashCode ()
+		{
+			var hash = new HashCode ();
+			hash.Add (fAllocPixelRef);
 			hash.Add (fDestroy);
 			return hash.ToHashCode ();
 		}
