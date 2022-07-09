@@ -14839,7 +14839,7 @@ namespace SkiaSharp {
 
 	// typedef void (*)(sk_managedpngchunkreader_t* d, void* context)* sk_managedpngchunkreader_destroy_proc
 	[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
-	internal unsafe delegate void SKManagedPngchunkreaderDestroyProxyDelegate(sk_managedpngchunkreader_t d, void* context);
+	internal unsafe delegate void SKManagedPngChunkReaderDestroyProxyDelegate(sk_managedpngchunkreader_t d, void* context);
 
 	// typedef bool (*)(sk_managedpngchunkreader_t* d, void* context, const char[-1] tag, const void* data, size_t length)* sk_managedpngchunkreader_read_chunk_proc
 	[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
@@ -16496,7 +16496,7 @@ namespace SkiaSharp {
 		public SKManagedPngChunkReaderReadChunkProxyDelegate fReadChunk;
 
 		// public sk_managedpngchunkreader_destroy_proc fDestroy
-		public SKManagedPngchunkreaderDestroyProxyDelegate fDestroy;
+		public SKManagedPngChunkReaderDestroyProxyDelegate fDestroy;
 
 		public readonly bool Equals (SKManagedPngChunkReaderDelegates obj) =>
 			fReadChunk == obj.fReadChunk && fDestroy == obj.fDestroy;
