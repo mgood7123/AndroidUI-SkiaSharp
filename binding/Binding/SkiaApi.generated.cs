@@ -14815,7 +14815,7 @@ namespace SkiaSharp {
 	// typedef bool (*)(sk_managedallocator_t* d, void* context, sk_bitmap_t* bitmap)* sk_managedallocator_allocpixelref_proc
 	[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
 	[return: MarshalAs (UnmanagedType.I1)]
-	internal unsafe delegate bool SKManagedAllocatorAllocpixelrefProxyDelegate(sk_managedallocator_t d, void* context, sk_bitmap_t bitmap);
+	internal unsafe delegate bool SKManagedAllocatorAllocPixelRefProxyDelegate(sk_managedallocator_t d, void* context, sk_bitmap_t bitmap);
 
 	// typedef void (*)(sk_managedallocator_t* d, void* context)* sk_managedallocator_destroy_proc
 	[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
@@ -16423,7 +16423,7 @@ namespace SkiaSharp {
 	[StructLayout (LayoutKind.Sequential)]
 	internal unsafe partial struct SKManagedAllocatorDelegates : IEquatable<SKManagedAllocatorDelegates> {
 		// public sk_managedallocator_allocpixelref_proc fAllocPixelRef
-		public SKManagedAllocatorAllocpixelrefProxyDelegate fAllocPixelRef;
+		public SKManagedAllocatorAllocPixelRefProxyDelegate fAllocPixelRef;
 
 		// public sk_managedallocator_destroy_proc fDestroy
 		public SKManagedAllocatorDestroyProxyDelegate fDestroy;
@@ -16803,7 +16803,7 @@ namespace SkiaSharp {
 	[StructLayout (LayoutKind.Sequential)]
 	internal unsafe partial struct SKPixelRefDelegates : IEquatable<SKPixelRefDelegates> {
 		// public sk_pixelref_destroy_proc fDestroy
-		public SKPixelrefDestroyProxyDelegate fDestroy;
+		public SKPixelRefDestroyProxyDelegate fDestroy;
 
 		public readonly bool Equals (SKPixelRefDelegates obj) =>
 			fDestroy == obj.fDestroy;
