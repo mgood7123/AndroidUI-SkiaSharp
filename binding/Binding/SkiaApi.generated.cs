@@ -14215,14 +14215,14 @@ namespace SkiaSharp
 		// void sk_managedidchangelistener_set_procs(sk_idchangelistener_procs_t procs)
 		#if !USE_DELEGATES
 		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
-		internal static extern void sk_managedidchangelistener_set_procs (SKIdchangelistenerProcs procs);
+		internal static extern void sk_managedidchangelistener_set_procs (SKIDChangeListenerDelegates procs);
 		#else
 		private partial class Delegates {
 			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
-			internal delegate void sk_managedidchangelistener_set_procs (SKIdchangelistenerProcs procs);
+			internal delegate void sk_managedidchangelistener_set_procs (SKIDChangeListenerDelegates procs);
 		}
 		private static Delegates.sk_managedidchangelistener_set_procs sk_managedidchangelistener_set_procs_delegate;
-		internal static void sk_managedidchangelistener_set_procs (SKIdchangelistenerProcs procs) =>
+		internal static void sk_managedidchangelistener_set_procs (SKIDChangeListenerDelegates procs) =>
 			(sk_managedidchangelistener_set_procs_delegate ??= GetSymbol<Delegates.sk_managedidchangelistener_set_procs> ("sk_managedidchangelistener_set_procs")).Invoke (procs);
 		#endif
 
@@ -14333,14 +14333,14 @@ namespace SkiaSharp
 		// void sk_managedidchangelistenerlist_set_procs(sk_idchangelistenerlist_procs_t procs)
 		#if !USE_DELEGATES
 		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
-		internal static extern void sk_managedidchangelistenerlist_set_procs (SKIdchangelistenerlistProcs procs);
+		internal static extern void sk_managedidchangelistenerlist_set_procs (SKIDChangeListenerListDelegates procs);
 		#else
 		private partial class Delegates {
 			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
-			internal delegate void sk_managedidchangelistenerlist_set_procs (SKIdchangelistenerlistProcs procs);
+			internal delegate void sk_managedidchangelistenerlist_set_procs (SKIDChangeListenerListDelegates procs);
 		}
 		private static Delegates.sk_managedidchangelistenerlist_set_procs sk_managedidchangelistenerlist_set_procs_delegate;
-		internal static void sk_managedidchangelistenerlist_set_procs (SKIdchangelistenerlistProcs procs) =>
+		internal static void sk_managedidchangelistenerlist_set_procs (SKIDChangeListenerListDelegates procs) =>
 			(sk_managedidchangelistenerlist_set_procs_delegate ??= GetSymbol<Delegates.sk_managedidchangelistenerlist_set_procs> ("sk_managedidchangelistenerlist_set_procs")).Invoke (procs);
 		#endif
 
@@ -14549,14 +14549,14 @@ namespace SkiaSharp
 		// void sk_managedpixelref_set_procs(sk_pixelref_procs_t procs)
 		#if !USE_DELEGATES
 		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
-		internal static extern void sk_managedpixelref_set_procs (SKPixelrefProcs procs);
+		internal static extern void sk_managedpixelref_set_procs (SKPixelRefDelegates procs);
 		#else
 		private partial class Delegates {
 			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
-			internal delegate void sk_managedpixelref_set_procs (SKPixelrefProcs procs);
+			internal delegate void sk_managedpixelref_set_procs (SKPixelRefDelegates procs);
 		}
 		private static Delegates.sk_managedpixelref_set_procs sk_managedpixelref_set_procs_delegate;
-		internal static void sk_managedpixelref_set_procs (SKPixelrefProcs procs) =>
+		internal static void sk_managedpixelref_set_procs (SKPixelRefDelegates procs) =>
 			(sk_managedpixelref_set_procs_delegate ??= GetSymbol<Delegates.sk_managedpixelref_set_procs> ("sk_managedpixelref_set_procs")).Invoke (procs);
 		#endif
 
@@ -14609,14 +14609,14 @@ namespace SkiaSharp
 		// void sk_managedpngchunkreader_set_procs(sk_managedpngchunkreader_procs_t procs)
 		#if !USE_DELEGATES
 		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
-		internal static extern void sk_managedpngchunkreader_set_procs (SKManagedPngchunkreaderProcs procs);
+		internal static extern void sk_managedpngchunkreader_set_procs (SKManagedPngChunkReaderDelegates procs);
 		#else
 		private partial class Delegates {
 			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
-			internal delegate void sk_managedpngchunkreader_set_procs (SKManagedPngchunkreaderProcs procs);
+			internal delegate void sk_managedpngchunkreader_set_procs (SKManagedPngChunkReaderDelegates procs);
 		}
 		private static Delegates.sk_managedpngchunkreader_set_procs sk_managedpngchunkreader_set_procs_delegate;
-		internal static void sk_managedpngchunkreader_set_procs (SKManagedPngchunkreaderProcs procs) =>
+		internal static void sk_managedpngchunkreader_set_procs (SKManagedPngChunkReaderDelegates procs) =>
 			(sk_managedpngchunkreader_set_procs_delegate ??= GetSymbol<Delegates.sk_managedpngchunkreader_set_procs> ("sk_managedpngchunkreader_set_procs")).Invoke (procs);
 		#endif
 
@@ -14844,7 +14844,7 @@ namespace SkiaSharp {
 	// typedef bool (*)(sk_managedpngchunkreader_t* d, void* context, const char[-1] tag, const void* data, size_t length)* sk_managedpngchunkreader_read_chunk_proc
 	[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
 	[return: MarshalAs (UnmanagedType.I1)]
-	internal unsafe delegate bool SKManagedPngchunkreaderReadChunkProxyDelegate(sk_managedpngchunkreader_t d, void* context, /* char */ void* tag, void* data, /* size_t */ IntPtr length);
+	internal unsafe delegate bool SKManagedPngChunkReaderReadChunkProxyDelegate(sk_managedpngchunkreader_t d, void* context, /* char */ void* tag, void* data, /* size_t */ IntPtr length);
 
 	// typedef void (*)(sk_stream_managedstream_t* s, void* context)* sk_managedstream_destroy_proc
 	[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
@@ -16089,31 +16089,23 @@ namespace SkiaSharp {
 
 	// sk_idchangelistener_procs_t
 	[StructLayout (LayoutKind.Sequential)]
-	public unsafe partial struct SKIdchangelistenerProcs : IEquatable<SKIdchangelistenerProcs> {
+	internal unsafe partial struct SKIDChangeListenerDelegates : IEquatable<SKIDChangeListenerDelegates> {
 		// public sk_idchangelistener_changed_proc fChanged
-		private SKIdchangelistenerChangedProxyDelegate fChanged;
-		public SKIdchangelistenerChangedProxyDelegate Changed {
-			readonly get => fChanged;
-			set => fChanged = value;
-		}
+		public SKIdchangelistenerChangedProxyDelegate fChanged;
 
 		// public sk_idchangelistener_destroy_proc fDestroy
-		private SKIdchangelistenerDestroyProxyDelegate fDestroy;
-		public SKIdchangelistenerDestroyProxyDelegate Destroy {
-			readonly get => fDestroy;
-			set => fDestroy = value;
-		}
+		public SKIdchangelistenerDestroyProxyDelegate fDestroy;
 
-		public readonly bool Equals (SKIdchangelistenerProcs obj) =>
+		public readonly bool Equals (SKIDChangeListenerDelegates obj) =>
 			fChanged == obj.fChanged && fDestroy == obj.fDestroy;
 
 		public readonly override bool Equals (object obj) =>
-			obj is SKIdchangelistenerProcs f && Equals (f);
+			obj is SKIDChangeListenerDelegates f && Equals (f);
 
-		public static bool operator == (SKIdchangelistenerProcs left, SKIdchangelistenerProcs right) =>
+		public static bool operator == (SKIDChangeListenerDelegates left, SKIDChangeListenerDelegates right) =>
 			left.Equals (right);
 
-		public static bool operator != (SKIdchangelistenerProcs left, SKIdchangelistenerProcs right) =>
+		public static bool operator != (SKIDChangeListenerDelegates left, SKIDChangeListenerDelegates right) =>
 			!left.Equals (right);
 
 		public readonly override int GetHashCode ()
@@ -16128,24 +16120,20 @@ namespace SkiaSharp {
 
 	// sk_idchangelistenerlist_procs_t
 	[StructLayout (LayoutKind.Sequential)]
-	public unsafe partial struct SKIdchangelistenerlistProcs : IEquatable<SKIdchangelistenerlistProcs> {
+	internal unsafe partial struct SKIDChangeListenerListDelegates : IEquatable<SKIDChangeListenerListDelegates> {
 		// public sk_idchangelistenerlist_destroy_proc fDestroy
-		private SKIdchangelistenerlistDestroyProxyDelegate fDestroy;
-		public SKIdchangelistenerlistDestroyProxyDelegate Destroy {
-			readonly get => fDestroy;
-			set => fDestroy = value;
-		}
+		public SKIdchangelistenerlistDestroyProxyDelegate fDestroy;
 
-		public readonly bool Equals (SKIdchangelistenerlistProcs obj) =>
+		public readonly bool Equals (SKIDChangeListenerListDelegates obj) =>
 			fDestroy == obj.fDestroy;
 
 		public readonly override bool Equals (object obj) =>
-			obj is SKIdchangelistenerlistProcs f && Equals (f);
+			obj is SKIDChangeListenerListDelegates f && Equals (f);
 
-		public static bool operator == (SKIdchangelistenerlistProcs left, SKIdchangelistenerlistProcs right) =>
+		public static bool operator == (SKIDChangeListenerListDelegates left, SKIDChangeListenerListDelegates right) =>
 			left.Equals (right);
 
-		public static bool operator != (SKIdchangelistenerlistProcs left, SKIdchangelistenerlistProcs right) =>
+		public static bool operator != (SKIDChangeListenerListDelegates left, SKIDChangeListenerListDelegates right) =>
 			!left.Equals (right);
 
 		public readonly override int GetHashCode ()
@@ -16503,31 +16491,23 @@ namespace SkiaSharp {
 
 	// sk_managedpngchunkreader_procs_t
 	[StructLayout (LayoutKind.Sequential)]
-	public unsafe partial struct SKManagedPngchunkreaderProcs : IEquatable<SKManagedPngchunkreaderProcs> {
+	internal unsafe partial struct SKManagedPngChunkReaderDelegates : IEquatable<SKManagedPngChunkReaderDelegates> {
 		// public sk_managedpngchunkreader_read_chunk_proc fReadChunk
-		private SKManagedPngchunkreaderReadChunkProxyDelegate fReadChunk;
-		public SKManagedPngchunkreaderReadChunkProxyDelegate ReadChunk {
-			readonly get => fReadChunk;
-			set => fReadChunk = value;
-		}
+		public SKManagedPngChunkReaderReadChunkProxyDelegate fReadChunk;
 
 		// public sk_managedpngchunkreader_destroy_proc fDestroy
-		private SKManagedPngchunkreaderDestroyProxyDelegate fDestroy;
-		public SKManagedPngchunkreaderDestroyProxyDelegate Destroy {
-			readonly get => fDestroy;
-			set => fDestroy = value;
-		}
+		public SKManagedPngchunkreaderDestroyProxyDelegate fDestroy;
 
-		public readonly bool Equals (SKManagedPngchunkreaderProcs obj) =>
+		public readonly bool Equals (SKManagedPngChunkReaderDelegates obj) =>
 			fReadChunk == obj.fReadChunk && fDestroy == obj.fDestroy;
 
 		public readonly override bool Equals (object obj) =>
-			obj is SKManagedPngchunkreaderProcs f && Equals (f);
+			obj is SKManagedPngChunkReaderDelegates f && Equals (f);
 
-		public static bool operator == (SKManagedPngchunkreaderProcs left, SKManagedPngchunkreaderProcs right) =>
+		public static bool operator == (SKManagedPngChunkReaderDelegates left, SKManagedPngChunkReaderDelegates right) =>
 			left.Equals (right);
 
-		public static bool operator != (SKManagedPngchunkreaderProcs left, SKManagedPngchunkreaderProcs right) =>
+		public static bool operator != (SKManagedPngChunkReaderDelegates left, SKManagedPngChunkReaderDelegates right) =>
 			!left.Equals (right);
 
 		public readonly override int GetHashCode ()
@@ -16821,24 +16801,20 @@ namespace SkiaSharp {
 
 	// sk_pixelref_procs_t
 	[StructLayout (LayoutKind.Sequential)]
-	public unsafe partial struct SKPixelrefProcs : IEquatable<SKPixelrefProcs> {
+	internal unsafe partial struct SKPixelRefDelegates : IEquatable<SKPixelRefDelegates> {
 		// public sk_pixelref_destroy_proc fDestroy
-		private SKPixelrefDestroyProxyDelegate fDestroy;
-		public SKPixelrefDestroyProxyDelegate Destroy {
-			readonly get => fDestroy;
-			set => fDestroy = value;
-		}
+		public SKPixelrefDestroyProxyDelegate fDestroy;
 
-		public readonly bool Equals (SKPixelrefProcs obj) =>
+		public readonly bool Equals (SKPixelRefDelegates obj) =>
 			fDestroy == obj.fDestroy;
 
 		public readonly override bool Equals (object obj) =>
-			obj is SKPixelrefProcs f && Equals (f);
+			obj is SKPixelRefDelegates f && Equals (f);
 
-		public static bool operator == (SKPixelrefProcs left, SKPixelrefProcs right) =>
+		public static bool operator == (SKPixelRefDelegates left, SKPixelRefDelegates right) =>
 			left.Equals (right);
 
-		public static bool operator != (SKPixelrefProcs left, SKPixelrefProcs right) =>
+		public static bool operator != (SKPixelRefDelegates left, SKPixelRefDelegates right) =>
 			!left.Equals (right);
 
 		public readonly override int GetHashCode ()
