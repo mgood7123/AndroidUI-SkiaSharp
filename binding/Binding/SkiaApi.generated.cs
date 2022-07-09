@@ -14931,7 +14931,7 @@ namespace SkiaSharp {
 
 	// typedef void (*)(sk_pixelref_t* d, void* context)* sk_pixelref_destroy_proc
 	[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
-	internal unsafe delegate void SKPixelrefDestroyProxyDelegate(sk_pixelref_t d, void* context);
+	internal unsafe delegate void SKPixelRefDestroyProxyDelegate(sk_pixelref_t d, void* context);
 
 	// typedef void (*)(void* addr, void* context)* sk_surface_raster_release_proc
 	[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
