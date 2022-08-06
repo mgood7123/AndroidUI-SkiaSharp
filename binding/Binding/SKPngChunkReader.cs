@@ -33,9 +33,6 @@ namespace SkiaSharp
 				throw new InvalidOperationException("Unable to create a new SKManagedAllocator instance.");
 		}
 
-		protected override void Dispose(bool disposing) =>
-			base.Dispose(disposing);
-
 		protected override void DisposeNative()
 		{
 			if (Interlocked.CompareExchange(ref fromNative, 0, 0) == 0)
@@ -44,9 +41,7 @@ namespace SkiaSharp
 			}
 		}
 
-		protected abstract bool ReadChunk (string tag, IntPtr data, IntPtr length)
-		{
-		}
+		protected abstract bool ReadChunk (string tag, IntPtr data, IntPtr length);
 
 		// impl
 
