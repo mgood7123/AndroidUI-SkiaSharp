@@ -98,27 +98,47 @@ next execute the following in an admin powershell
 ./scripts/install-android-platform.ps1 29
 ```
 
-execute the following in non-admin powershell
-```ps1
-# note you will need to execute ./scripts/install-tizen.ps1
-# multiple times due to bugs in waiting for process to finish
-./scripts/install-tizen.ps1 # install tizen studio
-# dont execute the next line until the above is done installing tizen studio
+execute the following in an admin powershell
 ```
-```ps1
-# note you will need to execute ./scripts/install-tizen.ps1
-# multiple times due to bugs in waiting for process to finish
-./scripts/install-tizen.ps1 # install packages from tizen studio package manager
-# dont execute the next line until the above is done installing packages from tizen studio package manager
+Invoke-WebRequest 'https://raw.githubusercontent.com/Samsung/Tizen.NET/main/workload/scripts/workload-install.ps1' -OutFile 'workload-install_tizen.ps1';
+.\workload-install_tizen.ps1
+
+./scripts/install-7zip.ps1 # required for llvm to extract
 ```
-```ps1
-# note you will need to execute ./scripts/install-tizen.ps1
-# multiple times due to bugs in waiting for process to finish
-./scripts/install-tizen.ps1 # patch llvm in tizen
+go to `System > Advanced System Settings > Environment Variables`
+add the following to system Path
+```
+value: C:\Program Files\7-zip
+```
+log out and log back in
+
+execute the following in an admin powershell
+```
 ./scripts/install-llvm.ps1 # windows llvm
-./scripts/install-gtk.ps1
+```
+go to `System > Advanced System Settings > Environment Variables`
+add the following
+```
+name: LLVM_HOME
+value: C:\Program Files\LLVM
+```
+add the following to system Path
+```
+value: C:\Program Files\LLVM\bin
+```
+log out and log back in
+
+execute the following in an admin powershell
+```
+./scripts/install-gtk.ps1  # windows gtk
+```
+
+execute the following in a non-admin powershell
+```
+python3 # needed for git sync deps, will take you to microsoft store if not installed, otherwise exit via `exit()`
 ./scrips/install-maui.ps1
 ./scrips/install-mono.ps1
+
 dotnet workload install --temp-dir K:\dotnet_workload_cache android ios tvos macos maccatalyst wasm-tools maui --source https://api.nuget.org/v3/index.json --source https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet6/nuget/v3/index.json --source https://pkgs.dev.azure.com/dnceng/public/_packaging/darc-pub-dotnet-runtime-bd261ea4/nuget/v3/index.json --source https://pkgs.dev.azure.com/dnceng/public/_packaging/darc-pub-dotnet-emsdk-52e9452f-3/nuget/v3/index.json
 ```
 

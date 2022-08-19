@@ -80,6 +80,16 @@ namespace SkiaSharp
 			return GetObject(SkiaApi.sk_path_effect_create_trim(start, stop, mode));
 		}
 
+		public SKData Serialize ()
+		{
+			return SKData.GetObject (SkiaApi.sk_path_effect_serialize (Handle));
+		}
+
+		public static SKPathEffect Deserialize (SKData data)
+		{
+			return GetObject (SkiaApi.sk_path_effect_deserialize (data.Handle));
+		}
+
 		internal static SKPathEffect GetObject (IntPtr handle) =>
 			GetOrAddObject (handle, (h, o) => new SKPathEffect (h, o));
 	}

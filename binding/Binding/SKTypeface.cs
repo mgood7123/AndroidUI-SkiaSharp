@@ -448,6 +448,16 @@ namespace SkiaSharp
 			return adjustments;
 		}
 
+		public SKData Serialize ()
+		{
+			return SKData.GetObject (SkiaApi.sk_typeface_serialize (Handle));
+		}
+
+		public static SKTypeface Deserialize (SKData data)
+		{
+			return GetObject(SkiaApi.sk_typeface_deserialize (data.Handle));
+		}
+
 		//
 
 		internal static SKTypeface GetObject (IntPtr handle) =>

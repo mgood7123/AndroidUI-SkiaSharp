@@ -130,6 +130,16 @@ namespace SkiaSharp
 			gch.Free ();
 		}
 
+		public SKData Serialize ()
+		{
+			return SKData.GetObject (SkiaApi.sk_drawable_serialize (Handle));
+		}
+
+		public static SKDrawable Deserialize (SKData data)
+		{
+			return GetObject (SkiaApi.sk_drawable_deserialize (data.Handle));
+		}
+
 		internal static SKDrawable GetObject (IntPtr handle) =>
 			GetOrAddObject (handle, (h, o) => new SKDrawable (h, o));
 	}

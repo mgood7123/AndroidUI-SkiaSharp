@@ -257,6 +257,16 @@ namespace SkiaSharp
 		public SKMatrix44 FromXyzD50 () =>
 			ToXyzD50 ()?.Invert ();
 
+		public SKData Serialize ()
+		{
+			return SKData.GetObject (SkiaApi.sk_colorspace_serialize (Handle));
+		}
+
+		public static SKColorSpace Deserialize (SKData data)
+		{
+			return GetObject (SkiaApi.sk_colorspace_deserialize (data.Handle));
+		}
+
 		//
 
 		internal static SKColorSpace GetObject (IntPtr handle, bool owns = true, bool unrefExisting = true) =>

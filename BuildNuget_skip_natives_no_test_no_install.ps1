@@ -11,10 +11,4 @@ if ($?) {
 	echo $build_number > BUILD_NUMBER.txt
 
 	dotnet cake --target=nuget --buildall=true --skipexternals=all --buildnumber=$build_number
-
-	if ($?) {
-		dotnet remove C:\Users\AndroidUI\Desktop\AndroidUI\AndroidUI\AndroidUI.csproj package SkiaSharp
-
-		dotnet add C:\Users\AndroidUI\Desktop\AndroidUI\AndroidUI\AndroidUI.csproj package SkiaSharp --version 2.88.1-preview.$build_number --source=K:\AndroidUI-SkiaSharp\output\nugets
-	}
 }

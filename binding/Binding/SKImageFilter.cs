@@ -342,6 +342,16 @@ namespace SkiaSharp
 			return GetObject(SkiaApi.sk_imagefilter_new_paint(paint.Handle, cropRect == null ? IntPtr.Zero : cropRect.Handle));
 		}
 
+		public SKData Serialize ()
+		{
+			return SKData.GetObject (SkiaApi.sk_imagefilter_serialize (Handle));
+		}
+
+		public static SKImageFilter Deserialize (SKData data)
+		{
+			return GetObject (SkiaApi.sk_imagefilter_deserialize (data.Handle));
+		}
+
 		internal static SKImageFilter GetObject (IntPtr handle) =>
 			GetOrAddObject (handle, (h, o) => new SKImageFilter (h, o));
 

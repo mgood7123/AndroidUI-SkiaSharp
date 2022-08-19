@@ -100,6 +100,16 @@ namespace SkiaSharp
 			return GetObject (SkiaApi.sk_maskfilter_new_clip (min, max));
 		}
 
+		public SKData Serialize ()
+		{
+			return SKData.GetObject (SkiaApi.sk_maskfilter_serialize (Handle));
+		}
+
+		public static SKMaskFilter Deserialize (SKData data)
+		{
+			return GetObject (SkiaApi.sk_maskfilter_deserialize (data.Handle));
+		}
+
 		internal static SKMaskFilter GetObject (IntPtr handle) =>
 			GetOrAddObject (handle, (h, o) => new SKMaskFilter (h, o));
 	}

@@ -32,6 +32,21 @@ namespace SkiaSharp
 			SetPath (path);
 		}
 
+		public SKData Serialize ()
+		{
+			return SKData.GetObject (SkiaApi.sk_region_serialize (Handle));
+		}
+
+		public static SKRegion Deserialize (SKData data)
+		{
+			return GetObject(SkiaApi.sk_region_deserialize (data.Handle));
+		}
+
+		//
+
+		internal static SKRegion GetObject (IntPtr handle) =>
+			handle == IntPtr.Zero ? null : new SKRegion (handle, true);
+
 		protected override void Dispose (bool disposing) =>
 			base.Dispose (disposing);
 

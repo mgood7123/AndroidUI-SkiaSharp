@@ -454,6 +454,16 @@ namespace SkiaSharp
 			return shader.WithLocalMatrix (localMatrix);
 		}
 
+		public SKData Serialize ()
+		{
+			return SKData.GetObject (SkiaApi.sk_shader_serialize (Handle));
+		}
+
+		public static SKShader Deserialize (SKData data)
+		{
+			return GetObject (SkiaApi.sk_shader_deserialize (data.Handle));
+		}
+
 		internal static SKShader GetObject (IntPtr handle) =>
 			GetOrAddObject (handle, (h, o) => new SKShader (h, o));
 	}

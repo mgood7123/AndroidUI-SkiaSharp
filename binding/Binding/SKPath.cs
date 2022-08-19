@@ -506,6 +506,16 @@ namespace SkiaSharp
 			}
 		}
 
+		public SKData Serialize ()
+		{
+			return SKData.GetObject (SkiaApi.sk_path_serialize (Handle));
+		}
+
+		public static SKPath Deserialize (SKData data)
+		{
+			return GetObject (SkiaApi.sk_path_deserialize (data.Handle));
+		}
+
 		//
 
 		internal static SKPath GetObject (IntPtr handle, bool owns = true) =>

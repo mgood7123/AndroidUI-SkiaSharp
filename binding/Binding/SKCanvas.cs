@@ -31,12 +31,12 @@ namespace SkiaSharp
 		protected override void DisposeNative () =>
 			SkiaApi.sk_canvas_destroy (Handle);
 
-		public void Discard () =>
+		virtual public void Discard () =>
 			SkiaApi.sk_canvas_discard (Handle);
 
 		// QuickReject
 
-		public bool QuickReject (SKRect rect)
+		virtual public bool QuickReject (SKRect rect)
 		{
 			return SkiaApi.sk_canvas_quick_reject (Handle, &rect);
 		}
@@ -50,19 +50,19 @@ namespace SkiaSharp
 
 		// Save*
 
-		public int Save ()
+		virtual public int Save ()
 		{
 			if (Handle == IntPtr.Zero)
 				throw new ObjectDisposedException ("SKCanvas");
 			return SkiaApi.sk_canvas_save (Handle);
 		}
 
-		public int SaveLayer (SKRect limit, SKPaint paint)
+		virtual public int SaveLayer (SKRect limit, SKPaint paint)
 		{
 			return SkiaApi.sk_canvas_save_layer (Handle, &limit, paint == null ? IntPtr.Zero : paint.Handle);
 		}
 
-		public int SaveLayer (SKPaint paint)
+		virtual public int SaveLayer (SKPaint paint)
 		{
 			return SkiaApi.sk_canvas_save_layer (Handle, null, paint == null ? IntPtr.Zero : paint.Handle);
 		}
@@ -72,10 +72,10 @@ namespace SkiaSharp
 
 		// DrawColor
 
-		public void DrawColor (SKColor color, SKBlendMode mode = SKBlendMode.Src) =>
+		virtual public void DrawColor (SKColor color, SKBlendMode mode = SKBlendMode.Src) =>
 			SkiaApi.sk_canvas_draw_color (Handle, (uint)color, mode);
 
-		public void DrawColor (SKColorF color, SKBlendMode mode = SKBlendMode.Src) =>
+		virtual public void DrawColor (SKColorF color, SKBlendMode mode = SKBlendMode.Src) =>
 			SkiaApi.sk_canvas_draw_color4f (Handle, color, mode);
 
 		// DrawLine
@@ -85,7 +85,7 @@ namespace SkiaSharp
 			DrawLine (p0.X, p0.Y, p1.X, p1.Y, paint);
 		}
 
-		public void DrawLine (float x0, float y0, float x1, float y1, SKPaint paint)
+		virtual public void DrawLine (float x0, float y0, float x1, float y1, SKPaint paint)
 		{
 			if (paint == null)
 				throw new ArgumentNullException (nameof (paint));
@@ -97,27 +97,27 @@ namespace SkiaSharp
 		public void Clear () =>
 			Clear (SKColors.Empty);
 
-		public void Clear (SKColor color) =>
+		virtual public void Clear (SKColor color) =>
 			SkiaApi.sk_canvas_clear (Handle, (uint)color);
 
-		public void Clear (SKColorF color) =>
+		virtual public void Clear (SKColorF color) =>
 			SkiaApi.sk_canvas_clear_color4f (Handle, color);
 
 		// Restore*
 
-		public void Restore ()
+		virtual public void Restore ()
 		{
 			SkiaApi.sk_canvas_restore (Handle);
 		}
 
-		public void RestoreToCount (int count)
+		virtual public void RestoreToCount (int count)
 		{
 			SkiaApi.sk_canvas_restore_to_count (Handle, count);
 		}
 
 		// Translate
 
-		public void Translate (float dx, float dy)
+		virtual public void Translate (float dx, float dy)
 		{
 			if (dx == 0 && dy == 0)
 				return;
@@ -125,7 +125,7 @@ namespace SkiaSharp
 			SkiaApi.sk_canvas_translate (Handle, dx, dy);
 		}
 
-		public void Translate (SKPoint point)
+		virtual public void Translate (SKPoint point)
 		{
 			if (point.IsEmpty)
 				return;
@@ -135,7 +135,7 @@ namespace SkiaSharp
 
 		// Scale
 
-		public void Scale (float s)
+		virtual public void Scale (float s)
 		{
 			if (s == 1)
 				return;
@@ -143,7 +143,7 @@ namespace SkiaSharp
 			SkiaApi.sk_canvas_scale (Handle, s, s);
 		}
 
-		public void Scale (float sx, float sy)
+		virtual public void Scale (float sx, float sy)
 		{
 			if (sx == 1 && sy == 1)
 				return;
@@ -151,7 +151,7 @@ namespace SkiaSharp
 			SkiaApi.sk_canvas_scale (Handle, sx, sy);
 		}
 
-		public void Scale (SKPoint size)
+		virtual public void Scale (SKPoint size)
 		{
 			if (size.IsEmpty)
 				return;
@@ -171,7 +171,7 @@ namespace SkiaSharp
 
 		// Rotate*
 
-		public void RotateDegrees (float degrees)
+		virtual public void RotateDegrees (float degrees)
 		{
 			if (degrees % DegreesCircle == 0)
 				return;
@@ -179,7 +179,7 @@ namespace SkiaSharp
 			SkiaApi.sk_canvas_rotate_degrees (Handle, degrees);
 		}
 
-		public void RotateRadians (float radians)
+		virtual public void RotateRadians (float radians)
 		{
 			if (radians % RadiansCircle == 0)
 				return;
@@ -209,7 +209,7 @@ namespace SkiaSharp
 
 		// Skew
 
-		public void Skew (float sx, float sy)
+		virtual public void Skew (float sx, float sy)
 		{
 			if (sx == 0 && sy == 0)
 				return;
@@ -217,7 +217,7 @@ namespace SkiaSharp
 			SkiaApi.sk_canvas_skew (Handle, sx, sy);
 		}
 
-		public void Skew (SKPoint skew)
+		virtual public void Skew (SKPoint skew)
 		{
 			if (skew.IsEmpty)
 				return;
@@ -227,7 +227,7 @@ namespace SkiaSharp
 
 		// Concat
 
-		public void Concat (ref SKMatrix m)
+		virtual public void Concat (ref SKMatrix m)
 		{
 			fixed (SKMatrix* ptr = &m) {
 				SkiaApi.sk_canvas_concat (Handle, ptr);
@@ -236,12 +236,12 @@ namespace SkiaSharp
 
 		// Clip*
 
-		public void ClipRect (SKRect rect, SKClipOperation operation = SKClipOperation.Intersect, bool antialias = false)
+		virtual public void ClipRect (SKRect rect, SKClipOperation operation = SKClipOperation.Intersect, bool antialias = false)
 		{
 			SkiaApi.sk_canvas_clip_rect_with_operation (Handle, &rect, operation, antialias);
 		}
 
-		public void ClipRoundRect (SKRoundRect rect, SKClipOperation operation = SKClipOperation.Intersect, bool antialias = false)
+		virtual public void ClipRoundRect (SKRoundRect rect, SKClipOperation operation = SKClipOperation.Intersect, bool antialias = false)
 		{
 			if (rect == null)
 				throw new ArgumentNullException (nameof (rect));
@@ -249,7 +249,7 @@ namespace SkiaSharp
 			SkiaApi.sk_canvas_clip_rrect_with_operation (Handle, rect.Handle, operation, antialias);
 		}
 
-		public void ClipPath (SKPath path, SKClipOperation operation = SKClipOperation.Intersect, bool antialias = false)
+		virtual public void ClipPath (SKPath path, SKClipOperation operation = SKClipOperation.Intersect, bool antialias = false)
 		{
 			if (path == null)
 				throw new ArgumentNullException (nameof (path));
@@ -257,7 +257,7 @@ namespace SkiaSharp
 			SkiaApi.sk_canvas_clip_path_with_operation (Handle, path.Handle, operation, antialias);
 		}
 
-		public void ClipRegion (SKRegion region, SKClipOperation operation = SKClipOperation.Intersect)
+		virtual public void ClipRegion (SKRegion region, SKClipOperation operation = SKClipOperation.Intersect)
 		{
 			if (region == null)
 				throw new ArgumentNullException (nameof (region));
@@ -279,18 +279,18 @@ namespace SkiaSharp
 			}
 		}
 
-		public bool IsClipEmpty => SkiaApi.sk_canvas_is_clip_empty (Handle);
+		virtual public bool IsClipEmpty => SkiaApi.sk_canvas_is_clip_empty (Handle);
 
-		public bool IsClipRect => SkiaApi.sk_canvas_is_clip_rect (Handle);
+		virtual public bool IsClipRect => SkiaApi.sk_canvas_is_clip_rect (Handle);
 
-		public bool GetLocalClipBounds (out SKRect bounds)
+		virtual public bool GetLocalClipBounds (out SKRect bounds)
 		{
 			fixed (SKRect* b = &bounds) {
 				return SkiaApi.sk_canvas_get_local_clip_bounds (Handle, b);
 			}
 		}
 
-		public bool GetDeviceClipBounds (out SKRectI bounds)
+		virtual public bool GetDeviceClipBounds (out SKRectI bounds)
 		{
 			fixed (SKRectI* b = &bounds) {
 				return SkiaApi.sk_canvas_get_device_clip_bounds (Handle, b);
@@ -299,7 +299,7 @@ namespace SkiaSharp
 
 		// DrawPaint
 
-		public void DrawPaint (SKPaint paint)
+		virtual public void DrawPaint (SKPaint paint)
 		{
 			if (paint == null)
 				throw new ArgumentNullException (nameof (paint));
@@ -308,7 +308,7 @@ namespace SkiaSharp
 
 		// DrawRegion
 
-		public void DrawRegion (SKRegion region, SKPaint paint)
+		virtual public void DrawRegion (SKRegion region, SKPaint paint)
 		{
 			if (region == null)
 				throw new ArgumentNullException (nameof (region));
@@ -319,12 +319,12 @@ namespace SkiaSharp
 
 		// DrawRect
 
-		public void DrawRect (float x, float y, float w, float h, SKPaint paint)
+		virtual public void DrawRect (float x, float y, float w, float h, SKPaint paint)
 		{
 			DrawRect (SKRect.Create (x, y, w, h), paint);
 		}
 
-		public void DrawRect (SKRect rect, SKPaint paint)
+		virtual public void DrawRect (SKRect rect, SKPaint paint)
 		{
 			if (paint == null)
 				throw new ArgumentNullException (nameof (paint));
@@ -333,7 +333,7 @@ namespace SkiaSharp
 
 		// DrawRoundRect
 
-		public void DrawRoundRect (SKRoundRect rect, SKPaint paint)
+		virtual public void DrawRoundRect (SKRoundRect rect, SKPaint paint)
 		{
 			if (rect == null)
 				throw new ArgumentNullException (nameof (rect));
@@ -347,7 +347,7 @@ namespace SkiaSharp
 			DrawRoundRect (SKRect.Create (x, y, w, h), rx, ry, paint);
 		}
 
-		public void DrawRoundRect (SKRect rect, float rx, float ry, SKPaint paint)
+		virtual public void DrawRoundRect (SKRect rect, float rx, float ry, SKPaint paint)
 		{
 			if (paint == null)
 				throw new ArgumentNullException (nameof (paint));
@@ -371,7 +371,7 @@ namespace SkiaSharp
 			DrawOval (c.X, c.Y, r.Width, r.Height, paint);
 		}
 
-		public void DrawOval (SKRect rect, SKPaint paint)
+		virtual public void DrawOval (SKRect rect, SKPaint paint)
 		{
 			if (paint == null)
 				throw new ArgumentNullException (nameof (paint));
@@ -380,7 +380,7 @@ namespace SkiaSharp
 
 		// DrawCircle
 
-		public void DrawCircle (float cx, float cy, float radius, SKPaint paint)
+		virtual public void DrawCircle (float cx, float cy, float radius, SKPaint paint)
 		{
 			if (paint == null)
 				throw new ArgumentNullException (nameof (paint));
@@ -394,7 +394,7 @@ namespace SkiaSharp
 
 		// DrawPath
 
-		public void DrawPath (SKPath path, SKPaint paint)
+		virtual public void DrawPath (SKPath path, SKPaint paint)
 		{
 			if (paint == null)
 				throw new ArgumentNullException (nameof (paint));
@@ -405,7 +405,7 @@ namespace SkiaSharp
 
 		// DrawPoints
 
-		public void DrawPoints (SKPointMode mode, SKPoint[] points, SKPaint paint)
+		virtual public void DrawPoints (SKPointMode mode, SKPoint[] points, SKPaint paint)
 		{
 			if (paint == null)
 				throw new ArgumentNullException (nameof (paint));
@@ -423,7 +423,7 @@ namespace SkiaSharp
 			DrawPoint (p.X, p.Y, paint);
 		}
 
-		public void DrawPoint (float x, float y, SKPaint paint)
+		virtual public void DrawPoint (float x, float y, SKPaint paint)
 		{
 			if (paint == null)
 				throw new ArgumentNullException (nameof (paint));
@@ -449,21 +449,21 @@ namespace SkiaSharp
 			DrawImage (image, p.X, p.Y, paint);
 		}
 
-		public void DrawImage (SKImage image, float x, float y, SKPaint paint = null)
+		virtual public void DrawImage (SKImage image, float x, float y, SKPaint paint = null)
 		{
 			if (image == null)
 				throw new ArgumentNullException (nameof (image));
 			SkiaApi.sk_canvas_draw_image (Handle, image.Handle, x, y, paint == null ? IntPtr.Zero : paint.Handle);
 		}
 
-		public void DrawImage (SKImage image, SKRect dest, SKPaint paint = null)
+		virtual public void DrawImage (SKImage image, SKRect dest, SKPaint paint = null)
 		{
 			if (image == null)
 				throw new ArgumentNullException (nameof (image));
 			SkiaApi.sk_canvas_draw_image_rect (Handle, image.Handle, null, &dest, paint == null ? IntPtr.Zero : paint.Handle);
 		}
 
-		public void DrawImage (SKImage image, SKRect source, SKRect dest, SKPaint paint = null)
+		virtual public void DrawImage (SKImage image, SKRect source, SKRect dest, SKPaint paint = null)
 		{
 			if (image == null)
 				throw new ArgumentNullException (nameof (image));
@@ -483,7 +483,7 @@ namespace SkiaSharp
 			DrawPicture (picture, p.X, p.Y, paint);
 		}
 
-		public void DrawPicture (SKPicture picture, ref SKMatrix matrix, SKPaint paint = null)
+		virtual public void DrawPicture (SKPicture picture, ref SKMatrix matrix, SKPaint paint = null)
 		{
 			if (picture == null)
 				throw new ArgumentNullException (nameof (picture));
@@ -492,7 +492,7 @@ namespace SkiaSharp
 			}
 		}
 
-		public void DrawPicture (SKPicture picture, SKPaint paint = null)
+		virtual public void DrawPicture (SKPicture picture, SKPaint paint = null)
 		{
 			if (picture == null)
 				throw new ArgumentNullException (nameof (picture));
@@ -501,7 +501,7 @@ namespace SkiaSharp
 
 		// DrawDrawable
 
-		public void DrawDrawable (SKDrawable drawable, ref SKMatrix matrix)
+		virtual public void DrawDrawable (SKDrawable drawable, ref SKMatrix matrix)
 		{
 			if (drawable == null)
 				throw new ArgumentNullException (nameof (drawable));
@@ -556,7 +556,7 @@ namespace SkiaSharp
 			DrawSurface (surface, p.X, p.Y, paint);
 		}
 
-		public void DrawSurface (SKSurface surface, float x, float y, SKPaint paint = null)
+		virtual public void DrawSurface (SKSurface surface, float x, float y, SKPaint paint = null)
 		{
 			if (surface == null)
 				throw new ArgumentNullException (nameof (surface));
@@ -566,7 +566,7 @@ namespace SkiaSharp
 
 		// DrawText (SKTextBlob)
 
-		public void DrawText (SKTextBlob text, float x, float y, SKPaint paint)
+		virtual public void DrawText (SKTextBlob text, float x, float y, SKPaint paint)
 		{
 			if (text == null)
 				throw new ArgumentNullException (nameof (text));
@@ -817,14 +817,14 @@ namespace SkiaSharp
 
 		// Flush
 
-		public void Flush ()
+		virtual public void Flush ()
 		{
 			SkiaApi.sk_canvas_flush (Handle);
 		}
 
 		// Draw*Annotation
 
-		public void DrawAnnotation (SKRect rect, string key, SKData value)
+		virtual public void DrawAnnotation (SKRect rect, string key, SKData value)
 		{
 			var bytes = StringUtilities.GetEncodedText (key, SKTextEncoding.Utf8, true);
 			fixed (byte* b = bytes) {
@@ -832,7 +832,7 @@ namespace SkiaSharp
 			}
 		}
 
-		public void DrawUrlAnnotation (SKRect rect, SKData value)
+		virtual public void DrawUrlAnnotation (SKRect rect, SKData value)
 		{
 			SkiaApi.sk_canvas_draw_url_annotation (Handle, &rect, value == null ? IntPtr.Zero : value.Handle);
 		}
@@ -844,7 +844,7 @@ namespace SkiaSharp
 			return data;
 		}
 
-		public void DrawNamedDestinationAnnotation (SKPoint point, SKData value)
+		virtual public void DrawNamedDestinationAnnotation (SKPoint point, SKData value)
 		{
 			SkiaApi.sk_canvas_draw_named_destination_annotation (Handle, &point, value == null ? IntPtr.Zero : value.Handle);
 		}
@@ -856,7 +856,7 @@ namespace SkiaSharp
 			return data;
 		}
 
-		public void DrawLinkDestinationAnnotation (SKRect rect, SKData value)
+		virtual public void DrawLinkDestinationAnnotation (SKRect rect, SKData value)
 		{
 			SkiaApi.sk_canvas_draw_link_destination_annotation (Handle, &rect, value == null ? IntPtr.Zero : value.Handle);
 		}
@@ -876,7 +876,7 @@ namespace SkiaSharp
 			DrawImageNinePatch (image, center, dst, paint);
 		}
 
-		public void DrawImageNinePatch (SKImage image, SKRectI center, SKRect dst, SKPaint paint = null)
+		virtual public void DrawImageNinePatch (SKImage image, SKRectI center, SKRect dst, SKPaint paint = null)
 		{
 			if (image == null)
 				throw new ArgumentNullException (nameof (image));
@@ -910,7 +910,7 @@ namespace SkiaSharp
 			DrawImageLattice (image, lattice, dst, paint);
 		}
 
-		public void DrawImageLattice (SKImage image, SKLattice lattice, SKRect dst, SKPaint paint = null)
+		virtual public void DrawImageLattice (SKImage image, SKLattice lattice, SKRect dst, SKPaint paint = null)
 		{
 			if (image == null)
 				throw new ArgumentNullException (nameof (image));
@@ -942,17 +942,17 @@ namespace SkiaSharp
 
 		// *Matrix
 
-		public void ResetMatrix ()
+		virtual public void ResetMatrix ()
 		{
 			SkiaApi.sk_canvas_reset_matrix (Handle);
 		}
 
-		public void SetMatrix (SKMatrix matrix)
+		virtual public void SetMatrix (SKMatrix matrix)
 		{
 			SkiaApi.sk_canvas_set_matrix (Handle, &matrix);
 		}
 
-		public SKMatrix TotalMatrix {
+		virtual public SKMatrix TotalMatrix {
 			get {
 				SKMatrix matrix;
 				SkiaApi.sk_canvas_get_total_matrix (Handle, &matrix);
@@ -962,7 +962,7 @@ namespace SkiaSharp
 
 		// SaveCount
 
-		public int SaveCount => SkiaApi.sk_canvas_get_save_count (Handle);
+		virtual public int SaveCount => SkiaApi.sk_canvas_get_save_count (Handle);
 
 		// DrawVertices
 
@@ -990,7 +990,7 @@ namespace SkiaSharp
 			DrawVertices (vert, mode, paint);
 		}
 
-		public void DrawVertices (SKVertices vertices, SKBlendMode mode, SKPaint paint)
+		virtual public void DrawVertices (SKVertices vertices, SKBlendMode mode, SKPaint paint)
 		{
 			if (vertices == null)
 				throw new ArgumentNullException (nameof (vertices));
@@ -1001,7 +1001,7 @@ namespace SkiaSharp
 
 		// DrawArc
 
-		public void DrawArc (SKRect oval, float startAngle, float sweepAngle, bool useCenter, SKPaint paint)
+		virtual public void DrawArc (SKRect oval, float startAngle, float sweepAngle, bool useCenter, SKPaint paint)
 		{
 			if (paint == null)
 				throw new ArgumentNullException (nameof (paint));
@@ -1010,7 +1010,7 @@ namespace SkiaSharp
 
 		// DrawRoundRectDifference
 
-		public void DrawRoundRectDifference (SKRoundRect outer, SKRoundRect inner, SKPaint paint)
+		virtual public void DrawRoundRectDifference (SKRoundRect outer, SKRoundRect inner, SKPaint paint)
 		{
 			if (outer == null)
 				throw new ArgumentNullException (nameof (outer));
@@ -1033,7 +1033,7 @@ namespace SkiaSharp
 		public void DrawAtlas (SKImage atlas, SKRect[] sprites, SKRotationScaleMatrix[] transforms, SKColor[] colors, SKBlendMode mode, SKRect cullRect, SKPaint paint) =>
 			DrawAtlas (atlas, sprites, transforms, colors, mode, &cullRect, paint);
 
-		private void DrawAtlas (SKImage atlas, SKRect[] sprites, SKRotationScaleMatrix[] transforms, SKColor[] colors, SKBlendMode mode, SKRect* cullRect, SKPaint paint)
+		virtual public void DrawAtlas (SKImage atlas, SKRect[] sprites, SKRotationScaleMatrix[] transforms, SKColor[] colors, SKBlendMode mode, SKRect* cullRect, SKPaint paint)
 		{
 			if (atlas == null)
 				throw new ArgumentNullException (nameof (atlas));
@@ -1059,7 +1059,7 @@ namespace SkiaSharp
 		public void DrawPatch (SKPoint[] cubics, SKColor[] colors, SKPoint[] texCoords, SKPaint paint) =>
 			DrawPatch (cubics, colors, texCoords, SKBlendMode.Modulate, paint);
 
-		public void DrawPatch (SKPoint[] cubics, SKColor[] colors, SKPoint[] texCoords, SKBlendMode mode, SKPaint paint)
+		virtual public void DrawPatch (SKPoint[] cubics, SKColor[] colors, SKPoint[] texCoords, SKBlendMode mode, SKPaint paint)
 		{
 			if (cubics == null)
 				throw new ArgumentNullException (nameof (cubics));
@@ -1084,6 +1084,379 @@ namespace SkiaSharp
 
 		internal static SKCanvas GetObject (IntPtr handle, bool owns = true, bool unrefExisting = true) =>
 			GetOrAddObject (handle, owns, unrefExisting, (h, o) => new SKCanvas (h, o));
+	}
+
+	public unsafe class SKCanvasForwarder : SKCanvas
+	{
+		SKCanvas canvasRef;
+		bool owns_canvas;
+
+		public override bool IsClipEmpty => canvasRef.IsClipEmpty;
+
+		public override bool IsClipRect => canvasRef.IsClipRect;
+
+		public override SKMatrix TotalMatrix => canvasRef.TotalMatrix;
+
+		public override int SaveCount => canvasRef.SaveCount;
+
+		internal SKCanvasForwarder (IntPtr handle)
+			: base (handle, true)
+		{
+		}
+
+		public SKCanvasForwarder ()
+			: this (IntPtr.Zero)
+		{
+			canvasRef = null;
+			owns_canvas = false;
+		}
+
+		public SKCanvasForwarder (SKCanvas canvas)
+			: this (IntPtr.Zero)
+		{
+			if (canvas == null)
+				throw new ArgumentNullException (nameof (canvas));
+			canvasRef = canvas;
+			owns_canvas = true;
+		}
+
+		public virtual void SetNativeObject (SKCanvas canvas)
+		{
+			if (canvas == null)
+				throw new ArgumentNullException (nameof (canvas));
+
+			if (canvasRef != null) {
+				throw new InvalidOperationException ("a canvas has already been assigned, please call ReleaseNativeObject() first");
+			}
+			canvasRef = canvas;
+			owns_canvas = true;
+		}
+
+		public SKCanvas GetNativeObject () => canvasRef;
+
+		/// <summary>
+		/// Releases the SKCanvas object, it will not be disposed nor discarded
+		/// <br></br>
+		/// it is UB to call any methods except SetNativeObject after calling this method
+		/// </summary>
+		public virtual SKCanvas ReleaseNativeObject ()
+		{
+			SKCanvas r = canvasRef;
+			canvasRef = null;
+			owns_canvas = false;
+			return r;
+		}
+
+		protected override void Dispose(bool disposing)
+		{
+			if (owns_canvas)
+				canvasRef.Dispose ();
+		}
+
+		public override void Discard()
+		{
+			canvasRef.Discard ();
+		}
+
+		public override bool QuickReject(SKRect rect)
+		{
+			return canvasRef.QuickReject (rect);
+		}
+
+		public override int Save()
+		{
+			return canvasRef.Save ();
+		}
+
+		public override int SaveLayer(SKRect limit, SKPaint paint)
+		{
+			return canvasRef.SaveLayer (limit, paint);
+		}
+
+		public override int SaveLayer(SKPaint paint)
+		{
+			return canvasRef.SaveLayer(paint);
+		}
+
+		public override void DrawColor(SKColor color, SKBlendMode mode = SKBlendMode.Src)
+		{
+			canvasRef.DrawColor(color, mode);
+		}
+
+		public override void DrawColor(SKColorF color, SKBlendMode mode = SKBlendMode.Src)
+		{
+			canvasRef.DrawColor(color, mode);
+		}
+
+		public override void DrawLine(float x0, float y0, float x1, float y1, SKPaint paint)
+		{
+			canvasRef.DrawLine(x0, y0, x1, y1, paint);
+		}
+
+		public override void Clear(SKColor color)
+		{
+			canvasRef.Clear(color);
+		}
+
+		public override void Clear(SKColorF color)
+		{
+			canvasRef.Clear(color);
+		}
+
+		public override void Restore()
+		{
+			canvasRef.Restore();
+		}
+
+		public override void RestoreToCount(int count)
+		{
+			canvasRef.RestoreToCount(count);
+		}
+
+		public override void Translate(float dx, float dy)
+		{
+			canvasRef.Translate(dx, dy);
+		}
+
+		public override void Translate(SKPoint point)
+		{
+			canvasRef.Translate(point);
+		}
+
+		public override void Scale(float s)
+		{
+			canvasRef.Scale(s);
+		}
+
+		public override void Scale(float sx, float sy)
+		{
+			canvasRef.Scale(sx, sy);
+		}
+
+		public override void Scale(SKPoint size)
+		{
+			canvasRef.Scale(size);
+		}
+
+		public override void RotateDegrees(float degrees)
+		{
+			canvasRef.RotateDegrees(degrees);
+		}
+
+		public override void RotateRadians(float radians)
+		{
+			canvasRef.RotateRadians(radians);
+		}
+
+		public override void Skew(float sx, float sy)
+		{
+			canvasRef.Skew(sx, sy);
+		}
+
+		public override void Skew(SKPoint skew)
+		{
+			canvasRef.Skew(skew);
+		}
+
+		public override void Concat(ref SKMatrix m)
+		{
+			canvasRef.Concat(ref m);
+		}
+
+		public override void ClipRect(SKRect rect, SKClipOperation operation = SKClipOperation.Intersect, bool antialias = false)
+		{
+			canvasRef.ClipRect(rect, operation, antialias);
+		}
+
+		public override void ClipRoundRect(SKRoundRect rect, SKClipOperation operation = SKClipOperation.Intersect, bool antialias = false)
+		{
+			canvasRef.ClipRoundRect(rect, operation, antialias);
+		}
+
+		public override void ClipPath(SKPath path, SKClipOperation operation = SKClipOperation.Intersect, bool antialias = false)
+		{
+			canvasRef.ClipPath(path, operation, antialias);
+		}
+
+		public override void ClipRegion(SKRegion region, SKClipOperation operation = SKClipOperation.Intersect)
+		{
+			canvasRef.ClipRegion(region, operation);
+		}
+
+		public override bool GetLocalClipBounds(out SKRect bounds)
+		{
+			return canvasRef.GetLocalClipBounds(out bounds);
+		}
+
+		public override bool GetDeviceClipBounds(out SKRectI bounds)
+		{
+			return canvasRef.GetDeviceClipBounds(out bounds);
+		}
+
+		public override void DrawPaint(SKPaint paint)
+		{
+			canvasRef.DrawPaint(paint);
+		}
+
+		public override void DrawRegion(SKRegion region, SKPaint paint)
+		{
+			canvasRef.DrawRegion(region, paint);
+		}
+
+		public override void DrawRect(float x, float y, float w, float h, SKPaint paint)
+		{
+			canvasRef.DrawRect(x, y, w, h, paint);
+		}
+
+		public override void DrawRect(SKRect rect, SKPaint paint)
+		{
+			canvasRef.DrawRect(rect, paint);
+		}
+
+		public override void DrawRoundRect(SKRoundRect rect, SKPaint paint)
+		{
+			canvasRef.DrawRoundRect(rect, paint);
+		}
+
+		public override void DrawRoundRect(SKRect rect, float rx, float ry, SKPaint paint)
+		{
+			canvasRef.DrawRoundRect(rect, rx, ry, paint);
+		}
+
+		public override void DrawOval(SKRect rect, SKPaint paint)
+		{
+			canvasRef.DrawOval(rect, paint);
+		}
+
+		public override void DrawCircle(float cx, float cy, float radius, SKPaint paint)
+		{
+			canvasRef.DrawCircle(cx, cy, radius, paint);
+		}
+
+		public override void DrawPath(SKPath path, SKPaint paint)
+		{
+			canvasRef.DrawPath(path, paint);
+		}
+
+		public override void DrawPoints(SKPointMode mode, SKPoint[] points, SKPaint paint)
+		{
+			canvasRef.DrawPoints(mode, points, paint);
+		}
+
+		public override void DrawPoint(float x, float y, SKPaint paint)
+		{
+			canvasRef.DrawPoint(x, y, paint);
+		}
+
+		public override void DrawImage(SKImage image, float x, float y, SKPaint paint = null)
+		{
+			canvasRef.DrawImage(image, x, y, paint);
+		}
+
+		public override void DrawImage(SKImage image, SKRect dest, SKPaint paint = null)
+		{
+			canvasRef.DrawImage(image, dest, paint);
+		}
+
+		public override void DrawImage(SKImage image, SKRect source, SKRect dest, SKPaint paint = null)
+		{
+			canvasRef.DrawImage(image, source, dest, paint);
+		}
+
+		public override void DrawPicture(SKPicture picture, ref SKMatrix matrix, SKPaint paint = null)
+		{
+			canvasRef.DrawPicture(picture, ref matrix, paint);
+		}
+
+		public override void DrawPicture(SKPicture picture, SKPaint paint = null)
+		{
+			canvasRef.DrawPicture(picture, paint);
+		}
+
+		public override void DrawDrawable(SKDrawable drawable, ref SKMatrix matrix)
+		{
+			canvasRef.DrawDrawable(drawable, ref matrix);
+		}
+
+		public override void DrawSurface(SKSurface surface, float x, float y, SKPaint paint = null)
+		{
+			canvasRef.DrawSurface(surface, x, y, paint);
+		}
+
+		public override void DrawText(SKTextBlob text, float x, float y, SKPaint paint)
+		{
+			canvasRef.DrawText(text, x, y, paint);
+		}
+
+		public override void Flush()
+		{
+			canvasRef.Flush();
+		}
+
+		public override void DrawAnnotation(SKRect rect, string key, SKData value)
+		{
+			canvasRef.DrawAnnotation(rect, key, value);
+		}
+
+		public override void DrawUrlAnnotation(SKRect rect, SKData value)
+		{
+			canvasRef.DrawUrlAnnotation(rect, value);
+		}
+
+		public override void DrawNamedDestinationAnnotation(SKPoint point, SKData value)
+		{
+			canvasRef.DrawNamedDestinationAnnotation(point, value);
+		}
+
+		public override void DrawLinkDestinationAnnotation(SKRect rect, SKData value)
+		{
+			canvasRef.DrawLinkDestinationAnnotation(rect, value);
+		}
+
+		public override void DrawImageNinePatch(SKImage image, SKRectI center, SKRect dst, SKPaint paint = null)
+		{
+			canvasRef.DrawImageNinePatch(image, center, dst, paint);
+		}
+
+		public override void DrawImageLattice(SKImage image, SKLattice lattice, SKRect dst, SKPaint paint = null)
+		{
+			canvasRef.DrawImageLattice(image, lattice, dst, paint);
+		}
+
+		public override void ResetMatrix()
+		{
+			canvasRef.ResetMatrix();
+		}
+
+		public override void SetMatrix(SKMatrix matrix)
+		{
+			canvasRef.SetMatrix(matrix);
+		}
+
+		public override void DrawVertices(SKVertices vertices, SKBlendMode mode, SKPaint paint)
+		{
+			canvasRef.DrawVertices(vertices, mode, paint);
+		}
+
+		public override void DrawArc(SKRect oval, float startAngle, float sweepAngle, bool useCenter, SKPaint paint)
+		{
+			canvasRef.DrawArc(oval, startAngle, sweepAngle, useCenter, paint);
+		}
+
+		public override void DrawRoundRectDifference(SKRoundRect outer, SKRoundRect inner, SKPaint paint)
+		{
+			canvasRef.DrawRoundRectDifference(outer, inner, paint);
+		}
+
+		public override unsafe void DrawAtlas(SKImage atlas, SKRect[] sprites, SKRotationScaleMatrix[] transforms, SKColor[] colors, SKBlendMode mode, SKRect* cullRect, SKPaint paint)
+		{
+			canvasRef.DrawAtlas(atlas, sprites, transforms, colors, mode, cullRect, paint);
+		}
+
+		public override void DrawPatch(SKPoint[] cubics, SKColor[] colors, SKPoint[] texCoords, SKBlendMode mode, SKPaint paint)
+		{
+			canvasRef.DrawPatch(cubics, colors, texCoords, mode, paint);
+		}
 	}
 
 	public class SKAutoCanvasRestore : IDisposable

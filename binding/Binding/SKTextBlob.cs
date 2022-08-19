@@ -254,6 +254,16 @@ namespace SkiaSharp
 			return SkiaApi.sk_textblob_get_intercepts (Handle, bounds, null, paint?.Handle ?? IntPtr.Zero);
 		}
 
+		public SKData Serialize ()
+		{
+			return SKData.GetObject (SkiaApi.sk_textblob_serialize (Handle));
+		}
+
+		public static SKTextBlob Deserialize (SKData data)
+		{
+			return GetObject (SkiaApi.sk_textblob_deserialize (data.Handle));
+		}
+
 		//
 
 		internal static SKTextBlob GetObject (IntPtr handle) =>

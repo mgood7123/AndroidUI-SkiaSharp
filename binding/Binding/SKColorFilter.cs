@@ -92,6 +92,16 @@ namespace SkiaSharp
 			return CreateHighContrast(new SKHighContrastConfig(grayscale, invertStyle, contrast));
 		}
 
+		public SKData Serialize()
+		{
+			return SKData.GetObject (SkiaApi.sk_colorfilter_serialize(Handle));
+		}
+
+		public static SKColorFilter Deserialize (SKData data)
+		{
+			return GetObject (SkiaApi.sk_colorfilter_deserialize (data.Handle));
+		}
+
 		internal static SKColorFilter GetObject (IntPtr handle) =>
 			GetOrAddObject (handle, (h, o) => new SKColorFilter (h, o));
 	}

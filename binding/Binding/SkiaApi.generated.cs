@@ -3100,6 +3100,20 @@ namespace SkiaSharp
 
 		#region sk_colorfilter.h
 
+		// sk_colorfilter_t* sk_colorfilter_deserialize(const sk_data_t* data)
+		#if !USE_DELEGATES
+		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
+		internal static extern sk_colorfilter_t sk_colorfilter_deserialize (sk_data_t data);
+		#else
+		private partial class Delegates {
+			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+			internal delegate sk_colorfilter_t sk_colorfilter_deserialize (sk_data_t data);
+		}
+		private static Delegates.sk_colorfilter_deserialize sk_colorfilter_deserialize_delegate;
+		internal static sk_colorfilter_t sk_colorfilter_deserialize (sk_data_t data) =>
+			(sk_colorfilter_deserialize_delegate ??= GetSymbol<Delegates.sk_colorfilter_deserialize> ("sk_colorfilter_deserialize")).Invoke (data);
+		#endif
+
 		// sk_colorfilter_t* sk_colorfilter_new_color_matrix(const float[20] array = 20)
 		#if !USE_DELEGATES
 		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
@@ -3212,6 +3226,20 @@ namespace SkiaSharp
 			(sk_colorfilter_new_table_argb_delegate ??= GetSymbol<Delegates.sk_colorfilter_new_table_argb> ("sk_colorfilter_new_table_argb")).Invoke (tableA, tableR, tableG, tableB);
 		#endif
 
+		// sk_data_t* sk_colorfilter_serialize(const sk_colorfilter_t* colorfilter)
+		#if !USE_DELEGATES
+		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
+		internal static extern sk_data_t sk_colorfilter_serialize (sk_colorfilter_t colorfilter);
+		#else
+		private partial class Delegates {
+			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+			internal delegate sk_data_t sk_colorfilter_serialize (sk_colorfilter_t colorfilter);
+		}
+		private static Delegates.sk_colorfilter_serialize sk_colorfilter_serialize_delegate;
+		internal static sk_data_t sk_colorfilter_serialize (sk_colorfilter_t colorfilter) =>
+			(sk_colorfilter_serialize_delegate ??= GetSymbol<Delegates.sk_colorfilter_serialize> ("sk_colorfilter_serialize")).Invoke (colorfilter);
+		#endif
+
 		// void sk_colorfilter_unref(sk_colorfilter_t* filter)
 		#if !USE_DELEGATES
 		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
@@ -3256,6 +3284,20 @@ namespace SkiaSharp
 		private static Delegates.sk_color4f_to_color sk_color4f_to_color_delegate;
 		internal static UInt32 sk_color4f_to_color (SKColorF* color4f) =>
 			(sk_color4f_to_color_delegate ??= GetSymbol<Delegates.sk_color4f_to_color> ("sk_color4f_to_color")).Invoke (color4f);
+		#endif
+
+		// sk_colorspace_t* sk_colorspace_deserialize(const sk_data_t* data)
+		#if !USE_DELEGATES
+		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
+		internal static extern sk_colorspace_t sk_colorspace_deserialize (sk_data_t data);
+		#else
+		private partial class Delegates {
+			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+			internal delegate sk_colorspace_t sk_colorspace_deserialize (sk_data_t data);
+		}
+		private static Delegates.sk_colorspace_deserialize sk_colorspace_deserialize_delegate;
+		internal static sk_colorspace_t sk_colorspace_deserialize (sk_data_t data) =>
+			(sk_colorspace_deserialize_delegate ??= GetSymbol<Delegates.sk_colorspace_deserialize> ("sk_colorspace_deserialize")).Invoke (data);
 		#endif
 
 		// bool sk_colorspace_equals(const sk_colorspace_t* src, const sk_colorspace_t* dst)
@@ -3524,6 +3566,20 @@ namespace SkiaSharp
 		private static Delegates.sk_colorspace_ref sk_colorspace_ref_delegate;
 		internal static void sk_colorspace_ref (sk_colorspace_t colorspace) =>
 			(sk_colorspace_ref_delegate ??= GetSymbol<Delegates.sk_colorspace_ref> ("sk_colorspace_ref")).Invoke (colorspace);
+		#endif
+
+		// sk_data_t* sk_colorspace_serialize(const sk_colorspace_t* colorspace)
+		#if !USE_DELEGATES
+		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
+		internal static extern sk_data_t sk_colorspace_serialize (sk_colorspace_t colorspace);
+		#else
+		private partial class Delegates {
+			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+			internal delegate sk_data_t sk_colorspace_serialize (sk_colorspace_t colorspace);
+		}
+		private static Delegates.sk_colorspace_serialize sk_colorspace_serialize_delegate;
+		internal static sk_data_t sk_colorspace_serialize (sk_colorspace_t colorspace) =>
+			(sk_colorspace_serialize_delegate ??= GetSymbol<Delegates.sk_colorspace_serialize> ("sk_colorspace_serialize")).Invoke (colorspace);
 		#endif
 
 		// void sk_colorspace_to_profile(const sk_colorspace_t* colorspace, sk_colorspace_icc_profile_t* profile)
@@ -4136,6 +4192,20 @@ namespace SkiaSharp
 
 		#region sk_drawable.h
 
+		// sk_drawable_t* sk_drawable_deserialize(const sk_data_t* data)
+		#if !USE_DELEGATES
+		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
+		internal static extern sk_drawable_t sk_drawable_deserialize (sk_data_t data);
+		#else
+		private partial class Delegates {
+			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+			internal delegate sk_drawable_t sk_drawable_deserialize (sk_data_t data);
+		}
+		private static Delegates.sk_drawable_deserialize sk_drawable_deserialize_delegate;
+		internal static sk_drawable_t sk_drawable_deserialize (sk_data_t data) =>
+			(sk_drawable_deserialize_delegate ??= GetSymbol<Delegates.sk_drawable_deserialize> ("sk_drawable_deserialize")).Invoke (data);
+		#endif
+
 		// void sk_drawable_draw(sk_drawable_t*, sk_canvas_t*, const sk_matrix_t*)
 		#if !USE_DELEGATES
 		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
@@ -4204,6 +4274,20 @@ namespace SkiaSharp
 		private static Delegates.sk_drawable_notify_drawing_changed sk_drawable_notify_drawing_changed_delegate;
 		internal static void sk_drawable_notify_drawing_changed (sk_drawable_t param0) =>
 			(sk_drawable_notify_drawing_changed_delegate ??= GetSymbol<Delegates.sk_drawable_notify_drawing_changed> ("sk_drawable_notify_drawing_changed")).Invoke (param0);
+		#endif
+
+		// sk_data_t* sk_drawable_serialize(const sk_drawable_t* drawable)
+		#if !USE_DELEGATES
+		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
+		internal static extern sk_data_t sk_drawable_serialize (sk_drawable_t drawable);
+		#else
+		private partial class Delegates {
+			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+			internal delegate sk_data_t sk_drawable_serialize (sk_drawable_t drawable);
+		}
+		private static Delegates.sk_drawable_serialize sk_drawable_serialize_delegate;
+		internal static sk_data_t sk_drawable_serialize (sk_drawable_t drawable) =>
+			(sk_drawable_serialize_delegate ??= GetSymbol<Delegates.sk_drawable_serialize> ("sk_drawable_serialize")).Invoke (drawable);
 		#endif
 
 		// void sk_drawable_unref(sk_drawable_t*)
@@ -5828,6 +5912,20 @@ namespace SkiaSharp
 			(sk_imagefilter_croprect_new_with_rect_delegate ??= GetSymbol<Delegates.sk_imagefilter_croprect_new_with_rect> ("sk_imagefilter_croprect_new_with_rect")).Invoke (rect, flags);
 		#endif
 
+		// sk_imagefilter_t* sk_imagefilter_deserialize(const sk_data_t* data)
+		#if !USE_DELEGATES
+		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
+		internal static extern sk_imagefilter_t sk_imagefilter_deserialize (sk_data_t data);
+		#else
+		private partial class Delegates {
+			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+			internal delegate sk_imagefilter_t sk_imagefilter_deserialize (sk_data_t data);
+		}
+		private static Delegates.sk_imagefilter_deserialize sk_imagefilter_deserialize_delegate;
+		internal static sk_imagefilter_t sk_imagefilter_deserialize (sk_data_t data) =>
+			(sk_imagefilter_deserialize_delegate ??= GetSymbol<Delegates.sk_imagefilter_deserialize> ("sk_imagefilter_deserialize")).Invoke (data);
+		#endif
+
 		// sk_imagefilter_t* sk_imagefilter_new_alpha_threshold(const sk_region_t* region, float innerThreshold, float outerThreshold, sk_imagefilter_t* input)
 		#if !USE_DELEGATES
 		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
@@ -6220,6 +6318,20 @@ namespace SkiaSharp
 			(sk_imagefilter_new_xfermode_delegate ??= GetSymbol<Delegates.sk_imagefilter_new_xfermode> ("sk_imagefilter_new_xfermode")).Invoke (mode, background, foreground, cropRect);
 		#endif
 
+		// sk_data_t* sk_imagefilter_serialize(const sk_imagefilter_t* imagefilter)
+		#if !USE_DELEGATES
+		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
+		internal static extern sk_data_t sk_imagefilter_serialize (sk_imagefilter_t imagefilter);
+		#else
+		private partial class Delegates {
+			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+			internal delegate sk_data_t sk_imagefilter_serialize (sk_imagefilter_t imagefilter);
+		}
+		private static Delegates.sk_imagefilter_serialize sk_imagefilter_serialize_delegate;
+		internal static sk_data_t sk_imagefilter_serialize (sk_imagefilter_t imagefilter) =>
+			(sk_imagefilter_serialize_delegate ??= GetSymbol<Delegates.sk_imagefilter_serialize> ("sk_imagefilter_serialize")).Invoke (imagefilter);
+		#endif
+
 		// void sk_imagefilter_unref(sk_imagefilter_t*)
 		#if !USE_DELEGATES
 		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
@@ -6384,6 +6496,20 @@ namespace SkiaSharp
 
 		#region sk_maskfilter.h
 
+		// sk_maskfilter_t* sk_maskfilter_deserialize(const sk_data_t* data)
+		#if !USE_DELEGATES
+		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
+		internal static extern sk_maskfilter_t sk_maskfilter_deserialize (sk_data_t data);
+		#else
+		private partial class Delegates {
+			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+			internal delegate sk_maskfilter_t sk_maskfilter_deserialize (sk_data_t data);
+		}
+		private static Delegates.sk_maskfilter_deserialize sk_maskfilter_deserialize_delegate;
+		internal static sk_maskfilter_t sk_maskfilter_deserialize (sk_data_t data) =>
+			(sk_maskfilter_deserialize_delegate ??= GetSymbol<Delegates.sk_maskfilter_deserialize> ("sk_maskfilter_deserialize")).Invoke (data);
+		#endif
+
 		// sk_maskfilter_t* sk_maskfilter_new_blur(sk_blurstyle_t, float sigma)
 		#if !USE_DELEGATES
 		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
@@ -6480,6 +6606,20 @@ namespace SkiaSharp
 		private static Delegates.sk_maskfilter_ref sk_maskfilter_ref_delegate;
 		internal static void sk_maskfilter_ref (sk_maskfilter_t param0) =>
 			(sk_maskfilter_ref_delegate ??= GetSymbol<Delegates.sk_maskfilter_ref> ("sk_maskfilter_ref")).Invoke (param0);
+		#endif
+
+		// sk_data_t* sk_maskfilter_serialize(const sk_maskfilter_t* maskfilter)
+		#if !USE_DELEGATES
+		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
+		internal static extern sk_data_t sk_maskfilter_serialize (sk_maskfilter_t maskfilter);
+		#else
+		private partial class Delegates {
+			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+			internal delegate sk_data_t sk_maskfilter_serialize (sk_maskfilter_t maskfilter);
+		}
+		private static Delegates.sk_maskfilter_serialize sk_maskfilter_serialize_delegate;
+		internal static sk_data_t sk_maskfilter_serialize (sk_maskfilter_t maskfilter) =>
+			(sk_maskfilter_serialize_delegate ??= GetSymbol<Delegates.sk_maskfilter_serialize> ("sk_maskfilter_serialize")).Invoke (maskfilter);
 		#endif
 
 		// void sk_maskfilter_unref(sk_maskfilter_t*)
@@ -8800,6 +8940,20 @@ namespace SkiaSharp
 			(sk_path_delete_delegate ??= GetSymbol<Delegates.sk_path_delete> ("sk_path_delete")).Invoke (param0);
 		#endif
 
+		// sk_path_t* sk_path_deserialize(const sk_data_t* data)
+		#if !USE_DELEGATES
+		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
+		internal static extern sk_path_t sk_path_deserialize (sk_data_t data);
+		#else
+		private partial class Delegates {
+			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+			internal delegate sk_path_t sk_path_deserialize (sk_data_t data);
+		}
+		private static Delegates.sk_path_deserialize sk_path_deserialize_delegate;
+		internal static sk_path_t sk_path_deserialize (sk_data_t data) =>
+			(sk_path_deserialize_delegate ??= GetSymbol<Delegates.sk_path_deserialize> ("sk_path_deserialize")).Invoke (data);
+		#endif
+
 		// void sk_path_get_bounds(const sk_path_t*, sk_rect_t*)
 		#if !USE_DELEGATES
 		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
@@ -9276,6 +9430,20 @@ namespace SkiaSharp
 			(sk_path_rquad_to_delegate ??= GetSymbol<Delegates.sk_path_rquad_to> ("sk_path_rquad_to")).Invoke (param0, dx0, dy0, dx1, dy1);
 		#endif
 
+		// sk_data_t* sk_path_serialize(const sk_path_t* path)
+		#if !USE_DELEGATES
+		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
+		internal static extern sk_data_t sk_path_serialize (sk_path_t path);
+		#else
+		private partial class Delegates {
+			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+			internal delegate sk_data_t sk_path_serialize (sk_path_t path);
+		}
+		private static Delegates.sk_path_serialize sk_path_serialize_delegate;
+		internal static sk_data_t sk_path_serialize (sk_path_t path) =>
+			(sk_path_serialize_delegate ??= GetSymbol<Delegates.sk_path_serialize> ("sk_path_serialize")).Invoke (path);
+		#endif
+
 		// void sk_path_set_filltype(sk_path_t*, sk_path_filltype_t)
 		#if !USE_DELEGATES
 		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
@@ -9674,6 +9842,34 @@ namespace SkiaSharp
 		private static Delegates.sk_path_effect_create_trim sk_path_effect_create_trim_delegate;
 		internal static sk_path_effect_t sk_path_effect_create_trim (Single start, Single stop, SKTrimPathEffectMode mode) =>
 			(sk_path_effect_create_trim_delegate ??= GetSymbol<Delegates.sk_path_effect_create_trim> ("sk_path_effect_create_trim")).Invoke (start, stop, mode);
+		#endif
+
+		// sk_path_effect_t* sk_path_effect_deserialize(const sk_data_t* data)
+		#if !USE_DELEGATES
+		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
+		internal static extern sk_path_effect_t sk_path_effect_deserialize (sk_data_t data);
+		#else
+		private partial class Delegates {
+			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+			internal delegate sk_path_effect_t sk_path_effect_deserialize (sk_data_t data);
+		}
+		private static Delegates.sk_path_effect_deserialize sk_path_effect_deserialize_delegate;
+		internal static sk_path_effect_t sk_path_effect_deserialize (sk_data_t data) =>
+			(sk_path_effect_deserialize_delegate ??= GetSymbol<Delegates.sk_path_effect_deserialize> ("sk_path_effect_deserialize")).Invoke (data);
+		#endif
+
+		// sk_data_t* sk_path_effect_serialize(const sk_path_effect_t* patheffect)
+		#if !USE_DELEGATES
+		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
+		internal static extern sk_data_t sk_path_effect_serialize (sk_path_effect_t patheffect);
+		#else
+		private partial class Delegates {
+			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+			internal delegate sk_data_t sk_path_effect_serialize (sk_path_effect_t patheffect);
+		}
+		private static Delegates.sk_path_effect_serialize sk_path_effect_serialize_delegate;
+		internal static sk_data_t sk_path_effect_serialize (sk_path_effect_t patheffect) =>
+			(sk_path_effect_serialize_delegate ??= GetSymbol<Delegates.sk_path_effect_serialize> ("sk_path_effect_serialize")).Invoke (patheffect);
 		#endif
 
 		// void sk_path_effect_unref(sk_path_effect_t* t)
@@ -10442,6 +10638,20 @@ namespace SkiaSharp
 			(sk_region_delete_delegate ??= GetSymbol<Delegates.sk_region_delete> ("sk_region_delete")).Invoke (r);
 		#endif
 
+		// sk_region_t* sk_region_deserialize(const sk_data_t* data)
+		#if !USE_DELEGATES
+		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
+		internal static extern sk_region_t sk_region_deserialize (sk_data_t data);
+		#else
+		private partial class Delegates {
+			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+			internal delegate sk_region_t sk_region_deserialize (sk_data_t data);
+		}
+		private static Delegates.sk_region_deserialize sk_region_deserialize_delegate;
+		internal static sk_region_t sk_region_deserialize (sk_data_t data) =>
+			(sk_region_deserialize_delegate ??= GetSymbol<Delegates.sk_region_deserialize> ("sk_region_deserialize")).Invoke (data);
+		#endif
+
 		// bool sk_region_get_boundary_path(const sk_region_t* r, sk_path_t* path)
 		#if !USE_DELEGATES
 		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
@@ -10732,6 +10942,20 @@ namespace SkiaSharp
 		private static Delegates.sk_region_quick_reject_rect sk_region_quick_reject_rect_delegate;
 		internal static bool sk_region_quick_reject_rect (sk_region_t r, SKRectI* rect) =>
 			(sk_region_quick_reject_rect_delegate ??= GetSymbol<Delegates.sk_region_quick_reject_rect> ("sk_region_quick_reject_rect")).Invoke (r, rect);
+		#endif
+
+		// sk_data_t* sk_region_serialize(const sk_region_t* region)
+		#if !USE_DELEGATES
+		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
+		internal static extern sk_data_t sk_region_serialize (sk_region_t region);
+		#else
+		private partial class Delegates {
+			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+			internal delegate sk_data_t sk_region_serialize (sk_region_t region);
+		}
+		private static Delegates.sk_region_serialize sk_region_serialize_delegate;
+		internal static sk_data_t sk_region_serialize (sk_region_t region) =>
+			(sk_region_serialize_delegate ??= GetSymbol<Delegates.sk_region_serialize> ("sk_region_serialize")).Invoke (region);
 		#endif
 
 		// bool sk_region_set_empty(sk_region_t* r)
@@ -11352,6 +11576,20 @@ namespace SkiaSharp
 
 		#region sk_shader.h
 
+		// sk_shader_t* sk_shader_deserialize(const sk_data_t* data)
+		#if !USE_DELEGATES
+		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
+		internal static extern sk_shader_t sk_shader_deserialize (sk_data_t data);
+		#else
+		private partial class Delegates {
+			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+			internal delegate sk_shader_t sk_shader_deserialize (sk_data_t data);
+		}
+		private static Delegates.sk_shader_deserialize sk_shader_deserialize_delegate;
+		internal static sk_shader_t sk_shader_deserialize (sk_data_t data) =>
+			(sk_shader_deserialize_delegate ??= GetSymbol<Delegates.sk_shader_deserialize> ("sk_shader_deserialize")).Invoke (data);
+		#endif
+
 		// sk_shader_t* sk_shader_new_blend(sk_blendmode_t mode, const sk_shader_t* dst, const sk_shader_t* src)
 		#if !USE_DELEGATES
 		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
@@ -11588,6 +11826,20 @@ namespace SkiaSharp
 		private static Delegates.sk_shader_ref sk_shader_ref_delegate;
 		internal static void sk_shader_ref (sk_shader_t shader) =>
 			(sk_shader_ref_delegate ??= GetSymbol<Delegates.sk_shader_ref> ("sk_shader_ref")).Invoke (shader);
+		#endif
+
+		// sk_data_t* sk_shader_serialize(const sk_shader_t* shader)
+		#if !USE_DELEGATES
+		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
+		internal static extern sk_data_t sk_shader_serialize (sk_shader_t shader);
+		#else
+		private partial class Delegates {
+			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+			internal delegate sk_data_t sk_shader_serialize (sk_shader_t shader);
+		}
+		private static Delegates.sk_shader_serialize sk_shader_serialize_delegate;
+		internal static sk_data_t sk_shader_serialize (sk_shader_t shader) =>
+			(sk_shader_serialize_delegate ??= GetSymbol<Delegates.sk_shader_serialize> ("sk_shader_serialize")).Invoke (shader);
 		#endif
 
 		// void sk_shader_unref(sk_shader_t* shader)
@@ -13088,6 +13340,20 @@ namespace SkiaSharp
 			(sk_textblob_builder_new_delegate ??= GetSymbol<Delegates.sk_textblob_builder_new> ("sk_textblob_builder_new")).Invoke ();
 		#endif
 
+		// sk_textblob_t* sk_textblob_deserialize(const sk_data_t* data)
+		#if !USE_DELEGATES
+		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
+		internal static extern sk_textblob_t sk_textblob_deserialize (sk_data_t data);
+		#else
+		private partial class Delegates {
+			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+			internal delegate sk_textblob_t sk_textblob_deserialize (sk_data_t data);
+		}
+		private static Delegates.sk_textblob_deserialize sk_textblob_deserialize_delegate;
+		internal static sk_textblob_t sk_textblob_deserialize (sk_data_t data) =>
+			(sk_textblob_deserialize_delegate ??= GetSymbol<Delegates.sk_textblob_deserialize> ("sk_textblob_deserialize")).Invoke (data);
+		#endif
+
 		// void sk_textblob_get_bounds(const sk_textblob_t* blob, sk_rect_t* bounds)
 		#if !USE_DELEGATES
 		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
@@ -13142,6 +13408,20 @@ namespace SkiaSharp
 		private static Delegates.sk_textblob_ref sk_textblob_ref_delegate;
 		internal static void sk_textblob_ref (sk_textblob_t blob) =>
 			(sk_textblob_ref_delegate ??= GetSymbol<Delegates.sk_textblob_ref> ("sk_textblob_ref")).Invoke (blob);
+		#endif
+
+		// sk_data_t* sk_textblob_serialize(const sk_textblob_t* path)
+		#if !USE_DELEGATES
+		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
+		internal static extern sk_data_t sk_textblob_serialize (sk_textblob_t path);
+		#else
+		private partial class Delegates {
+			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+			internal delegate sk_data_t sk_textblob_serialize (sk_textblob_t path);
+		}
+		private static Delegates.sk_textblob_serialize sk_textblob_serialize_delegate;
+		internal static sk_data_t sk_textblob_serialize (sk_textblob_t path) =>
+			(sk_textblob_serialize_delegate ??= GetSymbol<Delegates.sk_textblob_serialize> ("sk_textblob_serialize")).Invoke (path);
 		#endif
 
 		// void sk_textblob_unref(const sk_textblob_t* blob)
@@ -13610,6 +13890,20 @@ namespace SkiaSharp
 			(sk_typeface_create_from_stream_delegate ??= GetSymbol<Delegates.sk_typeface_create_from_stream> ("sk_typeface_create_from_stream")).Invoke (stream, index);
 		#endif
 
+		// sk_typeface_t* sk_typeface_deserialize(const sk_data_t* data)
+		#if !USE_DELEGATES
+		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
+		internal static extern sk_typeface_t sk_typeface_deserialize (sk_data_t data);
+		#else
+		private partial class Delegates {
+			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+			internal delegate sk_typeface_t sk_typeface_deserialize (sk_data_t data);
+		}
+		private static Delegates.sk_typeface_deserialize sk_typeface_deserialize_delegate;
+		internal static sk_typeface_t sk_typeface_deserialize (sk_data_t data) =>
+			(sk_typeface_deserialize_delegate ??= GetSymbol<Delegates.sk_typeface_deserialize> ("sk_typeface_deserialize")).Invoke (data);
+		#endif
+
 		// sk_string_t* sk_typeface_get_family_name(const sk_typeface_t* typeface)
 		#if !USE_DELEGATES
 		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
@@ -13794,6 +14088,20 @@ namespace SkiaSharp
 		private static Delegates.sk_typeface_ref_default sk_typeface_ref_default_delegate;
 		internal static sk_typeface_t sk_typeface_ref_default () =>
 			(sk_typeface_ref_default_delegate ??= GetSymbol<Delegates.sk_typeface_ref_default> ("sk_typeface_ref_default")).Invoke ();
+		#endif
+
+		// sk_data_t* sk_typeface_serialize(const sk_typeface_t* typeface)
+		#if !USE_DELEGATES
+		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
+		internal static extern sk_data_t sk_typeface_serialize (sk_typeface_t typeface);
+		#else
+		private partial class Delegates {
+			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+			internal delegate sk_data_t sk_typeface_serialize (sk_typeface_t typeface);
+		}
+		private static Delegates.sk_typeface_serialize sk_typeface_serialize_delegate;
+		internal static sk_data_t sk_typeface_serialize (sk_typeface_t typeface) =>
+			(sk_typeface_serialize_delegate ??= GetSymbol<Delegates.sk_typeface_serialize> ("sk_typeface_serialize")).Invoke (typeface);
 		#endif
 
 		// uint16_t sk_typeface_unichar_to_glyph(const sk_typeface_t* typeface, const int32_t unichar)
