@@ -16,7 +16,10 @@ if ($?) {
 			$build_number++
 			echo $build_number > BUILD_NUMBER.txt
 
-			dotnet cake --target=nuget --buildall=true --skipexternals=all --buildnumber=$build_number
+			# externals # everything
+			# externals-windows
+			# externals-uwp
+			dotnet cake --target=externals-windows --buildall=true --buildnumber=$build_number --configuration=Debug
 		}
 	}
 }

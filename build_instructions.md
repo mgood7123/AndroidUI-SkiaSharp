@@ -45,6 +45,10 @@ the above is where VS installs the sdk to
 name:  ANDROID_NDK_ROOT
 value: C:\Users\small\Downloads\android-ndk-r21
 ```
+```
+name:  NDK_ROOT
+value: C:\Users\small\Downloads\android-ndk-r21
+```
 (replace "small" with your username)
 
 
@@ -139,7 +143,7 @@ python3 # needed for git sync deps, will take you to microsoft store if not inst
 ./scrips/install-maui.ps1
 ./scrips/install-mono.ps1
 
-dotnet workload install --temp-dir K:\dotnet_workload_cache android ios tvos macos maccatalyst wasm-tools maui --source https://api.nuget.org/v3/index.json --source https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet6/nuget/v3/index.json --source https://pkgs.dev.azure.com/dnceng/public/_packaging/darc-pub-dotnet-runtime-bd261ea4/nuget/v3/index.json --source https://pkgs.dev.azure.com/dnceng/public/_packaging/darc-pub-dotnet-emsdk-52e9452f-3/nuget/v3/index.json
+dotnet workload install --temp-dir K:\dotnet_workload_cache android ios tvos macos maccatalyst wasm-tools maui tizen --source https://api.nuget.org/v3/index.json --source https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet6/nuget/v3/index.json --source https://pkgs.dev.azure.com/dnceng/public/_packaging/darc-pub-dotnet-runtime-bd261ea4/nuget/v3/index.json --source https://pkgs.dev.azure.com/dnceng/public/_packaging/darc-pub-dotnet-emsdk-52e9452f-3/nuget/v3/index.json
 ```
 
 

@@ -348,6 +348,10 @@
         "cs": "SKManagedPngChunkReaderDelegates",
         "internal": true
       },
+      "sk_managedcallbackcanvas_procs_t": {
+        "cs": "SKManagedCallbackCanvasDelegates",
+        "internal": true
+      },
       "sk_managedallocator_procs_t": {
         "cs": "SKManagedAllocatorDelegates",
         "internal": true
@@ -427,6 +431,105 @@
       },
       "sk_managedpngchunkreader_destroy_proc": {
         "cs": "SKManagedPngChunkReaderDestroyProxyDelegate"
+      },
+      "sk_managedcallbackcanvas_concat_proc": {
+        "cs": "SKManagedCallbackCanvasConcatProxyDelegate"
+      },
+      "sk_managedcallbackcanvas_scale_proc": {
+        "cs": "SKManagedCallbackCanvasScaleProxyDelegate"
+      },
+      "sk_managedcallbackcanvas_translate_proc": {
+        "cs": "SKManagedCallbackCanvasTranslateProxyDelegate"
+      },
+      "sk_managedcallbackcanvas_set_matrix_proc": {
+        "cs": "SKManagedCallbackCanvasSetMatrixProxyDelegate"
+      },
+      "sk_managedcallbackcanvas_save_proc": {
+        "cs": "SKManagedCallbackCanvasSaveProxyDelegate"
+      },
+      "sk_managedcallbackcanvas_restore_proc": {
+        "cs": "SKManagedCallbackCanvasRestoreProxyDelegate"
+      },
+      "sk_managedcallbackcanvas_save_layer_proc": {
+        "cs": "SKManagedCallbackCanvasSaveLayerProxyDelegate"
+      },
+      "sk_managedcallbackcanvas_draw_paint_proc": {
+        "cs": "SKManagedCallbackCanvasDrawPaintProxyDelegate"
+      },
+      "sk_managedcallbackcanvas_draw_rect_proc": {
+        "cs": "SKManagedCallbackCanvasDrawRectProxyDelegate"
+      },
+      "sk_managedcallbackcanvas_draw_rrect_proc": {
+        "cs": "SKManagedCallbackCanvasDrawRRectProxyDelegate"
+      },
+      "sk_managedcallbackcanvas_draw_drrect_proc": {
+        "cs": "SKManagedCallbackCanvasDrawDRRectProxyDelegate"
+      },
+      "sk_managedcallbackcanvas_draw_points_proc": {
+        "cs": "SKManagedCallbackCanvasDrawPointsProxyDelegate"
+      },
+      "sk_managedcallbackcanvas_draw_region_proc": {
+        "cs": "SKManagedCallbackCanvasDrawRegionProxyDelegate"
+      },
+      "sk_managedcallbackcanvas_draw_oval_proc": {
+        "cs": "SKManagedCallbackCanvasDrawOvalProxyDelegate"
+      },
+      "sk_managedcallbackcanvas_draw_arc_proc": {
+        "cs": "SKManagedCallbackCanvasDrawArcProxyDelegate"
+      },
+      "sk_managedcallbackcanvas_draw_path_proc": {
+        "cs": "SKManagedCallbackCanvasDrawPathProxyDelegate"
+      },
+      "sk_managedcallbackcanvas_draw_image_proc": {
+        "cs": "SKManagedCallbackCanvasDrawImageProxyDelegate"
+      },
+      "sk_managedcallbackcanvas_draw_image_nine_proc": {
+        "cs": "SKManagedCallbackCanvasDrawImageNineProxyDelegate"
+      },
+      "sk_managedcallbackcanvas_draw_image_lattice_proc": {
+        "cs": "SKManagedCallbackCanvasDrawImageLatticeProxyDelegate"
+      },
+      "sk_managedcallbackcanvas_draw_image_rect_proc": {
+        "cs": "SKManagedCallbackCanvasDrawImageRectProxyDelegate"
+      },
+      "sk_managedcallbackcanvas_draw_text_blob_proc": {
+        "cs": "SKManagedCallbackCanvasDrawTextBlobProxyDelegate"
+      },
+      "sk_managedcallbackcanvas_draw_drawable_proc": {
+        "cs": "SKManagedCallbackCanvasDrawDrawableProxyDelegate"
+      },
+      "sk_managedcallbackcanvas_draw_patch_proc": {
+        "cs": "SKManagedCallbackCanvasDrawPatchProxyDelegate"
+      },
+      "sk_managedcallbackcanvas_draw_vertices_proc": {
+        "cs": "SKManagedCallbackCanvasDrawVerticesProxyDelegate"
+      },
+      "sk_managedcallbackcanvas_draw_atlas_proc": {
+        "cs": "SKManagedCallbackCanvasDrawAtlasProxyDelegate"
+      },
+      "sk_managedcallbackcanvas_draw_annotation_proc": {
+        "cs": "SKManagedCallbackCanvasDrawAnnotationProxyDelegate"
+      },
+      "sk_managedcallbackcanvas_clip_rect_proc": {
+        "cs": "SKManagedCallbackCanvasClipRectProxyDelegate"
+      },
+      "sk_managedcallbackcanvas_clip_rrect_proc": {
+        "cs": "SKManagedCallbackCanvasClipRRectProxyDelegate"
+      },
+      "sk_managedcallbackcanvas_clip_path_proc": {
+        "cs": "SKManagedCallbackCanvasClipPathProxyDelegate"
+      },
+      "sk_managedcallbackcanvas_clip_shader_proc": {
+        "cs": "SKManagedCallbackCanvasClipShaderProxyDelegate"
+      },
+      "sk_managedcallbackcanvas_clip_region_proc": {
+        "cs": "SKManagedCallbackCanvasClipRegionProxyDelegate"
+      },
+      "sk_managedcallbackcanvas_flush_proc": {
+        "cs": "SKManagedCallbackCanvasFlushProxyDelegate"
+      },
+      "sk_managedcallbackcanvas_destroy_proc": {
+        "cs": "SKManagedCallbackCanvasDestroyProxyDelegate"
       },
       "sk_managedallocator_allocpixelref_proc": {
         "cs": "SKManagedAllocatorAllocPixelRefProxyDelegate"

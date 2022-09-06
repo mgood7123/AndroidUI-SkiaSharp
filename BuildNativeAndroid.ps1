@@ -16,7 +16,7 @@ if ($?) {
 			$build_number++
 			echo $build_number > BUILD_NUMBER.txt
 
-			dotnet cake --target=nuget --buildall=true --skipexternals=all --buildnumber=$build_number
+			dotnet cake --target=externals-android --buildall=true --buildnumber=$build_number
 		}
 	}
 }

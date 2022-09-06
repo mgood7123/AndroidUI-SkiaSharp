@@ -26,7 +26,6 @@ using sk_colorfilter_t = System.IntPtr;
 using sk_colorspace_icc_profile_t = System.IntPtr;
 using sk_colorspace_t = System.IntPtr;
 using sk_colortable_t = System.IntPtr;
-using sk_compatpaint_t = System.IntPtr;
 using sk_data_t = System.IntPtr;
 using sk_document_t = System.IntPtr;
 using sk_drawable_t = System.IntPtr;
@@ -40,6 +39,7 @@ using sk_image_t = System.IntPtr;
 using sk_imagefilter_croprect_t = System.IntPtr;
 using sk_imagefilter_t = System.IntPtr;
 using sk_managedallocator_t = System.IntPtr;
+using sk_managedcallbackcanvas_t = System.IntPtr;
 using sk_manageddrawable_t = System.IntPtr;
 using sk_managedpngchunkreader_t = System.IntPtr;
 using sk_managedtracememorydump_t = System.IntPtr;
@@ -862,6 +862,22 @@ namespace SkiaSharp
 			(gr_recording_context_get_max_surface_sample_count_for_color_type_delegate ??= GetSymbol<Delegates.gr_recording_context_get_max_surface_sample_count_for_color_type> ("gr_recording_context_get_max_surface_sample_count_for_color_type")).Invoke (context, colorType);
 		#endif
 
+		// bool gr_recording_context_should_convert_alpha8_to_r8(gr_recording_context_t* context)
+		#if !USE_DELEGATES
+		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
+		[return: MarshalAs (UnmanagedType.I1)]
+		internal static extern bool gr_recording_context_should_convert_alpha8_to_r8 (gr_recording_context_t context);
+		#else
+		private partial class Delegates {
+			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+			[return: MarshalAs (UnmanagedType.I1)]
+			internal delegate bool gr_recording_context_should_convert_alpha8_to_r8 (gr_recording_context_t context);
+		}
+		private static Delegates.gr_recording_context_should_convert_alpha8_to_r8 gr_recording_context_should_convert_alpha8_to_r8_delegate;
+		internal static bool gr_recording_context_should_convert_alpha8_to_r8 (gr_recording_context_t context) =>
+			(gr_recording_context_should_convert_alpha8_to_r8_delegate ??= GetSymbol<Delegates.gr_recording_context_should_convert_alpha8_to_r8> ("gr_recording_context_should_convert_alpha8_to_r8")).Invoke (context);
+		#endif
+
 		// void gr_recording_context_unref(gr_recording_context_t* context)
 		#if !USE_DELEGATES
 		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
@@ -1618,6 +1634,20 @@ namespace SkiaSharp
 			(sk_canvas_clip_rrect_with_operation_delegate ??= GetSymbol<Delegates.sk_canvas_clip_rrect_with_operation> ("sk_canvas_clip_rrect_with_operation")).Invoke (t, crect, op, doAA);
 		#endif
 
+		// void sk_canvas_clip_shader_with_operation(sk_canvas_t* t, sk_shader_t* cshader, sk_clipop_t op)
+		#if !USE_DELEGATES
+		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
+		internal static extern void sk_canvas_clip_shader_with_operation (sk_canvas_t t, sk_shader_t cshader, SKClipOperation op);
+		#else
+		private partial class Delegates {
+			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+			internal delegate void sk_canvas_clip_shader_with_operation (sk_canvas_t t, sk_shader_t cshader, SKClipOperation op);
+		}
+		private static Delegates.sk_canvas_clip_shader_with_operation sk_canvas_clip_shader_with_operation_delegate;
+		internal static void sk_canvas_clip_shader_with_operation (sk_canvas_t t, sk_shader_t cshader, SKClipOperation op) =>
+			(sk_canvas_clip_shader_with_operation_delegate ??= GetSymbol<Delegates.sk_canvas_clip_shader_with_operation> ("sk_canvas_clip_shader_with_operation")).Invoke (t, cshader, op);
+		#endif
+
 		// void sk_canvas_concat(sk_canvas_t*, const sk_matrix_t*)
 		#if !USE_DELEGATES
 		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
@@ -2110,6 +2140,20 @@ namespace SkiaSharp
 			(sk_canvas_get_device_clip_bounds_delegate ??= GetSymbol<Delegates.sk_canvas_get_device_clip_bounds> ("sk_canvas_get_device_clip_bounds")).Invoke (t, cbounds);
 		#endif
 
+		// void sk_canvas_get_image_info(const sk_canvas_t* ccanvas, sk_imageinfo_t* info)
+		#if !USE_DELEGATES
+		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
+		internal static extern void sk_canvas_get_image_info (sk_canvas_t ccanvas, SKImageInfoNative* info);
+		#else
+		private partial class Delegates {
+			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+			internal delegate void sk_canvas_get_image_info (sk_canvas_t ccanvas, SKImageInfoNative* info);
+		}
+		private static Delegates.sk_canvas_get_image_info sk_canvas_get_image_info_delegate;
+		internal static void sk_canvas_get_image_info (sk_canvas_t ccanvas, SKImageInfoNative* info) =>
+			(sk_canvas_get_image_info_delegate ??= GetSymbol<Delegates.sk_canvas_get_image_info> ("sk_canvas_get_image_info")).Invoke (ccanvas, info);
+		#endif
+
 		// bool sk_canvas_get_local_clip_bounds(sk_canvas_t* t, sk_rect_t* cbounds)
 		#if !USE_DELEGATES
 		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
@@ -2138,6 +2182,34 @@ namespace SkiaSharp
 		private static Delegates.sk_canvas_get_save_count sk_canvas_get_save_count_delegate;
 		internal static Int32 sk_canvas_get_save_count (sk_canvas_t param0) =>
 			(sk_canvas_get_save_count_delegate ??= GetSymbol<Delegates.sk_canvas_get_save_count> ("sk_canvas_get_save_count")).Invoke (param0);
+		#endif
+
+		// sk_isize_t sk_canvas_get_size(const sk_canvas_t* ccanvas)
+		#if !USE_DELEGATES
+		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
+		internal static extern SKSizeI sk_canvas_get_size (sk_canvas_t ccanvas);
+		#else
+		private partial class Delegates {
+			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+			internal delegate SKSizeI sk_canvas_get_size (sk_canvas_t ccanvas);
+		}
+		private static Delegates.sk_canvas_get_size sk_canvas_get_size_delegate;
+		internal static SKSizeI sk_canvas_get_size (sk_canvas_t ccanvas) =>
+			(sk_canvas_get_size_delegate ??= GetSymbol<Delegates.sk_canvas_get_size> ("sk_canvas_get_size")).Invoke (ccanvas);
+		#endif
+
+		// sk_surface_t* sk_canvas_get_surface(const sk_canvas_t* ccanvas)
+		#if !USE_DELEGATES
+		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
+		internal static extern sk_surface_t sk_canvas_get_surface (sk_canvas_t ccanvas);
+		#else
+		private partial class Delegates {
+			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+			internal delegate sk_surface_t sk_canvas_get_surface (sk_canvas_t ccanvas);
+		}
+		private static Delegates.sk_canvas_get_surface sk_canvas_get_surface_delegate;
+		internal static sk_surface_t sk_canvas_get_surface (sk_canvas_t ccanvas) =>
+			(sk_canvas_get_surface_delegate ??= GetSymbol<Delegates.sk_canvas_get_surface> ("sk_canvas_get_surface")).Invoke (ccanvas);
 		#endif
 
 		// void sk_canvas_get_total_matrix(sk_canvas_t* ccanvas, sk_matrix_t* matrix)
@@ -7988,6 +8060,34 @@ namespace SkiaSharp
 			(sk_paint_delete_delegate ??= GetSymbol<Delegates.sk_paint_delete> ("sk_paint_delete")).Invoke (param0);
 		#endif
 
+		// uint8_t sk_paint_get_alpha(const sk_paint_t* cpaint)
+		#if !USE_DELEGATES
+		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
+		internal static extern Byte sk_paint_get_alpha (sk_paint_t cpaint);
+		#else
+		private partial class Delegates {
+			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+			internal delegate Byte sk_paint_get_alpha (sk_paint_t cpaint);
+		}
+		private static Delegates.sk_paint_get_alpha sk_paint_get_alpha_delegate;
+		internal static Byte sk_paint_get_alpha (sk_paint_t cpaint) =>
+			(sk_paint_get_alpha_delegate ??= GetSymbol<Delegates.sk_paint_get_alpha> ("sk_paint_get_alpha")).Invoke (cpaint);
+		#endif
+
+		// float sk_paint_get_alphaf(const sk_paint_t* cpaint)
+		#if !USE_DELEGATES
+		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
+		internal static extern Single sk_paint_get_alphaf (sk_paint_t cpaint);
+		#else
+		private partial class Delegates {
+			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+			internal delegate Single sk_paint_get_alphaf (sk_paint_t cpaint);
+		}
+		private static Delegates.sk_paint_get_alphaf sk_paint_get_alphaf_delegate;
+		internal static Single sk_paint_get_alphaf (sk_paint_t cpaint) =>
+			(sk_paint_get_alphaf_delegate ??= GetSymbol<Delegates.sk_paint_get_alphaf> ("sk_paint_get_alphaf")).Invoke (cpaint);
+		#endif
+
 		// sk_blendmode_t sk_paint_get_blendmode(sk_paint_t*)
 		#if !USE_DELEGATES
 		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
@@ -8072,6 +8172,20 @@ namespace SkiaSharp
 		private static Delegates.sk_paint_get_filter_quality sk_paint_get_filter_quality_delegate;
 		internal static SKFilterQuality sk_paint_get_filter_quality (sk_paint_t param0) =>
 			(sk_paint_get_filter_quality_delegate ??= GetSymbol<Delegates.sk_paint_get_filter_quality> ("sk_paint_get_filter_quality")).Invoke (param0);
+		#endif
+
+		// sk_font_t* sk_paint_get_font(sk_paint_t* paint)
+		#if !USE_DELEGATES
+		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
+		internal static extern sk_font_t sk_paint_get_font (sk_paint_t paint);
+		#else
+		private partial class Delegates {
+			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+			internal delegate sk_font_t sk_paint_get_font (sk_paint_t paint);
+		}
+		private static Delegates.sk_paint_get_font sk_paint_get_font_delegate;
+		internal static sk_font_t sk_paint_get_font (sk_paint_t paint) =>
+			(sk_paint_get_font_delegate ??= GetSymbol<Delegates.sk_paint_get_font> ("sk_paint_get_font")).Invoke (paint);
 		#endif
 
 		// sk_imagefilter_t* sk_paint_get_imagefilter(sk_paint_t*)
@@ -8200,6 +8314,34 @@ namespace SkiaSharp
 			(sk_paint_get_style_delegate ??= GetSymbol<Delegates.sk_paint_get_style> ("sk_paint_get_style")).Invoke (param0);
 		#endif
 
+		// sk_text_align_t sk_paint_get_text_align(const sk_paint_t* paint)
+		#if !USE_DELEGATES
+		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
+		internal static extern SKTextAlign sk_paint_get_text_align (sk_paint_t paint);
+		#else
+		private partial class Delegates {
+			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+			internal delegate SKTextAlign sk_paint_get_text_align (sk_paint_t paint);
+		}
+		private static Delegates.sk_paint_get_text_align sk_paint_get_text_align_delegate;
+		internal static SKTextAlign sk_paint_get_text_align (sk_paint_t paint) =>
+			(sk_paint_get_text_align_delegate ??= GetSymbol<Delegates.sk_paint_get_text_align> ("sk_paint_get_text_align")).Invoke (paint);
+		#endif
+
+		// sk_text_encoding_t sk_paint_get_text_encoding(const sk_paint_t* paint)
+		#if !USE_DELEGATES
+		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
+		internal static extern SKTextEncoding sk_paint_get_text_encoding (sk_paint_t paint);
+		#else
+		private partial class Delegates {
+			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+			internal delegate SKTextEncoding sk_paint_get_text_encoding (sk_paint_t paint);
+		}
+		private static Delegates.sk_paint_get_text_encoding sk_paint_get_text_encoding_delegate;
+		internal static SKTextEncoding sk_paint_get_text_encoding (sk_paint_t paint) =>
+			(sk_paint_get_text_encoding_delegate ??= GetSymbol<Delegates.sk_paint_get_text_encoding> ("sk_paint_get_text_encoding")).Invoke (paint);
+		#endif
+
 		// bool sk_paint_is_antialias(const sk_paint_t*)
 		#if !USE_DELEGATES
 		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
@@ -8232,6 +8374,20 @@ namespace SkiaSharp
 			(sk_paint_is_dither_delegate ??= GetSymbol<Delegates.sk_paint_is_dither> ("sk_paint_is_dither")).Invoke (param0);
 		#endif
 
+		// sk_font_t* sk_paint_make_font(sk_paint_t* paint)
+		#if !USE_DELEGATES
+		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
+		internal static extern sk_font_t sk_paint_make_font (sk_paint_t paint);
+		#else
+		private partial class Delegates {
+			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+			internal delegate sk_font_t sk_paint_make_font (sk_paint_t paint);
+		}
+		private static Delegates.sk_paint_make_font sk_paint_make_font_delegate;
+		internal static sk_font_t sk_paint_make_font (sk_paint_t paint) =>
+			(sk_paint_make_font_delegate ??= GetSymbol<Delegates.sk_paint_make_font> ("sk_paint_make_font")).Invoke (paint);
+		#endif
+
 		// sk_paint_t* sk_paint_new()
 		#if !USE_DELEGATES
 		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
@@ -8246,6 +8402,36 @@ namespace SkiaSharp
 			(sk_paint_new_delegate ??= GetSymbol<Delegates.sk_paint_new> ("sk_paint_new")).Invoke ();
 		#endif
 
+		// sk_paint_t* sk_paint_new_with_font(const sk_font_t* font)
+		#if !USE_DELEGATES
+		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
+		internal static extern sk_paint_t sk_paint_new_with_font (sk_font_t font);
+		#else
+		private partial class Delegates {
+			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+			internal delegate sk_paint_t sk_paint_new_with_font (sk_font_t font);
+		}
+		private static Delegates.sk_paint_new_with_font sk_paint_new_with_font_delegate;
+		internal static sk_paint_t sk_paint_new_with_font (sk_font_t font) =>
+			(sk_paint_new_with_font_delegate ??= GetSymbol<Delegates.sk_paint_new_with_font> ("sk_paint_new_with_font")).Invoke (font);
+		#endif
+
+		// bool sk_paint_nothing_to_draw(const sk_paint_t* cpaint)
+		#if !USE_DELEGATES
+		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
+		[return: MarshalAs (UnmanagedType.I1)]
+		internal static extern bool sk_paint_nothing_to_draw (sk_paint_t cpaint);
+		#else
+		private partial class Delegates {
+			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+			[return: MarshalAs (UnmanagedType.I1)]
+			internal delegate bool sk_paint_nothing_to_draw (sk_paint_t cpaint);
+		}
+		private static Delegates.sk_paint_nothing_to_draw sk_paint_nothing_to_draw_delegate;
+		internal static bool sk_paint_nothing_to_draw (sk_paint_t cpaint) =>
+			(sk_paint_nothing_to_draw_delegate ??= GetSymbol<Delegates.sk_paint_nothing_to_draw> ("sk_paint_nothing_to_draw")).Invoke (cpaint);
+		#endif
+
 		// void sk_paint_reset(sk_paint_t*)
 		#if !USE_DELEGATES
 		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
@@ -8258,6 +8444,34 @@ namespace SkiaSharp
 		private static Delegates.sk_paint_reset sk_paint_reset_delegate;
 		internal static void sk_paint_reset (sk_paint_t param0) =>
 			(sk_paint_reset_delegate ??= GetSymbol<Delegates.sk_paint_reset> ("sk_paint_reset")).Invoke (param0);
+		#endif
+
+		// void sk_paint_set_alpha(sk_paint_t* cpaint, uint8_t alpha)
+		#if !USE_DELEGATES
+		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
+		internal static extern void sk_paint_set_alpha (sk_paint_t cpaint, Byte alpha);
+		#else
+		private partial class Delegates {
+			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+			internal delegate void sk_paint_set_alpha (sk_paint_t cpaint, Byte alpha);
+		}
+		private static Delegates.sk_paint_set_alpha sk_paint_set_alpha_delegate;
+		internal static void sk_paint_set_alpha (sk_paint_t cpaint, Byte alpha) =>
+			(sk_paint_set_alpha_delegate ??= GetSymbol<Delegates.sk_paint_set_alpha> ("sk_paint_set_alpha")).Invoke (cpaint, alpha);
+		#endif
+
+		// void sk_paint_set_alphaf(sk_paint_t* cpaint, float alpha)
+		#if !USE_DELEGATES
+		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
+		internal static extern void sk_paint_set_alphaf (sk_paint_t cpaint, Single alpha);
+		#else
+		private partial class Delegates {
+			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+			internal delegate void sk_paint_set_alphaf (sk_paint_t cpaint, Single alpha);
+		}
+		private static Delegates.sk_paint_set_alphaf sk_paint_set_alphaf_delegate;
+		internal static void sk_paint_set_alphaf (sk_paint_t cpaint, Single alpha) =>
+			(sk_paint_set_alphaf_delegate ??= GetSymbol<Delegates.sk_paint_set_alphaf> ("sk_paint_set_alphaf")).Invoke (cpaint, alpha);
 		#endif
 
 		// void sk_paint_set_antialias(sk_paint_t*, bool)
@@ -8482,6 +8696,34 @@ namespace SkiaSharp
 		private static Delegates.sk_paint_set_style sk_paint_set_style_delegate;
 		internal static void sk_paint_set_style (sk_paint_t param0, SKPaintStyle param1) =>
 			(sk_paint_set_style_delegate ??= GetSymbol<Delegates.sk_paint_set_style> ("sk_paint_set_style")).Invoke (param0, param1);
+		#endif
+
+		// void sk_paint_set_text_align(sk_paint_t* paint, sk_text_align_t align)
+		#if !USE_DELEGATES
+		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
+		internal static extern void sk_paint_set_text_align (sk_paint_t paint, SKTextAlign align);
+		#else
+		private partial class Delegates {
+			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+			internal delegate void sk_paint_set_text_align (sk_paint_t paint, SKTextAlign align);
+		}
+		private static Delegates.sk_paint_set_text_align sk_paint_set_text_align_delegate;
+		internal static void sk_paint_set_text_align (sk_paint_t paint, SKTextAlign align) =>
+			(sk_paint_set_text_align_delegate ??= GetSymbol<Delegates.sk_paint_set_text_align> ("sk_paint_set_text_align")).Invoke (paint, align);
+		#endif
+
+		// void sk_paint_set_text_encoding(sk_paint_t* paint, sk_text_encoding_t encoding)
+		#if !USE_DELEGATES
+		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
+		internal static extern void sk_paint_set_text_encoding (sk_paint_t paint, SKTextEncoding encoding);
+		#else
+		private partial class Delegates {
+			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+			internal delegate void sk_paint_set_text_encoding (sk_paint_t paint, SKTextEncoding encoding);
+		}
+		private static Delegates.sk_paint_set_text_encoding sk_paint_set_text_encoding_delegate;
+		internal static void sk_paint_set_text_encoding (sk_paint_t paint, SKTextEncoding encoding) =>
+			(sk_paint_set_text_encoding_delegate ??= GetSymbol<Delegates.sk_paint_set_text_encoding> ("sk_paint_set_text_encoding")).Invoke (paint, encoding);
 		#endif
 
 		#endregion
@@ -14226,164 +14468,6 @@ namespace SkiaSharp
 
 		#endregion
 
-		#region sk_compatpaint.h
-
-		// sk_compatpaint_t* sk_compatpaint_clone(const sk_compatpaint_t* paint)
-		#if !USE_DELEGATES
-		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
-		internal static extern sk_compatpaint_t sk_compatpaint_clone (sk_compatpaint_t paint);
-		#else
-		private partial class Delegates {
-			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
-			internal delegate sk_compatpaint_t sk_compatpaint_clone (sk_compatpaint_t paint);
-		}
-		private static Delegates.sk_compatpaint_clone sk_compatpaint_clone_delegate;
-		internal static sk_compatpaint_t sk_compatpaint_clone (sk_compatpaint_t paint) =>
-			(sk_compatpaint_clone_delegate ??= GetSymbol<Delegates.sk_compatpaint_clone> ("sk_compatpaint_clone")).Invoke (paint);
-		#endif
-
-		// void sk_compatpaint_delete(sk_compatpaint_t* paint)
-		#if !USE_DELEGATES
-		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
-		internal static extern void sk_compatpaint_delete (sk_compatpaint_t paint);
-		#else
-		private partial class Delegates {
-			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
-			internal delegate void sk_compatpaint_delete (sk_compatpaint_t paint);
-		}
-		private static Delegates.sk_compatpaint_delete sk_compatpaint_delete_delegate;
-		internal static void sk_compatpaint_delete (sk_compatpaint_t paint) =>
-			(sk_compatpaint_delete_delegate ??= GetSymbol<Delegates.sk_compatpaint_delete> ("sk_compatpaint_delete")).Invoke (paint);
-		#endif
-
-		// sk_font_t* sk_compatpaint_get_font(sk_compatpaint_t* paint)
-		#if !USE_DELEGATES
-		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
-		internal static extern sk_font_t sk_compatpaint_get_font (sk_compatpaint_t paint);
-		#else
-		private partial class Delegates {
-			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
-			internal delegate sk_font_t sk_compatpaint_get_font (sk_compatpaint_t paint);
-		}
-		private static Delegates.sk_compatpaint_get_font sk_compatpaint_get_font_delegate;
-		internal static sk_font_t sk_compatpaint_get_font (sk_compatpaint_t paint) =>
-			(sk_compatpaint_get_font_delegate ??= GetSymbol<Delegates.sk_compatpaint_get_font> ("sk_compatpaint_get_font")).Invoke (paint);
-		#endif
-
-		// sk_text_align_t sk_compatpaint_get_text_align(const sk_compatpaint_t* paint)
-		#if !USE_DELEGATES
-		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
-		internal static extern SKTextAlign sk_compatpaint_get_text_align (sk_compatpaint_t paint);
-		#else
-		private partial class Delegates {
-			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
-			internal delegate SKTextAlign sk_compatpaint_get_text_align (sk_compatpaint_t paint);
-		}
-		private static Delegates.sk_compatpaint_get_text_align sk_compatpaint_get_text_align_delegate;
-		internal static SKTextAlign sk_compatpaint_get_text_align (sk_compatpaint_t paint) =>
-			(sk_compatpaint_get_text_align_delegate ??= GetSymbol<Delegates.sk_compatpaint_get_text_align> ("sk_compatpaint_get_text_align")).Invoke (paint);
-		#endif
-
-		// sk_text_encoding_t sk_compatpaint_get_text_encoding(const sk_compatpaint_t* paint)
-		#if !USE_DELEGATES
-		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
-		internal static extern SKTextEncoding sk_compatpaint_get_text_encoding (sk_compatpaint_t paint);
-		#else
-		private partial class Delegates {
-			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
-			internal delegate SKTextEncoding sk_compatpaint_get_text_encoding (sk_compatpaint_t paint);
-		}
-		private static Delegates.sk_compatpaint_get_text_encoding sk_compatpaint_get_text_encoding_delegate;
-		internal static SKTextEncoding sk_compatpaint_get_text_encoding (sk_compatpaint_t paint) =>
-			(sk_compatpaint_get_text_encoding_delegate ??= GetSymbol<Delegates.sk_compatpaint_get_text_encoding> ("sk_compatpaint_get_text_encoding")).Invoke (paint);
-		#endif
-
-		// sk_font_t* sk_compatpaint_make_font(sk_compatpaint_t* paint)
-		#if !USE_DELEGATES
-		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
-		internal static extern sk_font_t sk_compatpaint_make_font (sk_compatpaint_t paint);
-		#else
-		private partial class Delegates {
-			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
-			internal delegate sk_font_t sk_compatpaint_make_font (sk_compatpaint_t paint);
-		}
-		private static Delegates.sk_compatpaint_make_font sk_compatpaint_make_font_delegate;
-		internal static sk_font_t sk_compatpaint_make_font (sk_compatpaint_t paint) =>
-			(sk_compatpaint_make_font_delegate ??= GetSymbol<Delegates.sk_compatpaint_make_font> ("sk_compatpaint_make_font")).Invoke (paint);
-		#endif
-
-		// sk_compatpaint_t* sk_compatpaint_new()
-		#if !USE_DELEGATES
-		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
-		internal static extern sk_compatpaint_t sk_compatpaint_new ();
-		#else
-		private partial class Delegates {
-			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
-			internal delegate sk_compatpaint_t sk_compatpaint_new ();
-		}
-		private static Delegates.sk_compatpaint_new sk_compatpaint_new_delegate;
-		internal static sk_compatpaint_t sk_compatpaint_new () =>
-			(sk_compatpaint_new_delegate ??= GetSymbol<Delegates.sk_compatpaint_new> ("sk_compatpaint_new")).Invoke ();
-		#endif
-
-		// sk_compatpaint_t* sk_compatpaint_new_with_font(const sk_font_t* font)
-		#if !USE_DELEGATES
-		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
-		internal static extern sk_compatpaint_t sk_compatpaint_new_with_font (sk_font_t font);
-		#else
-		private partial class Delegates {
-			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
-			internal delegate sk_compatpaint_t sk_compatpaint_new_with_font (sk_font_t font);
-		}
-		private static Delegates.sk_compatpaint_new_with_font sk_compatpaint_new_with_font_delegate;
-		internal static sk_compatpaint_t sk_compatpaint_new_with_font (sk_font_t font) =>
-			(sk_compatpaint_new_with_font_delegate ??= GetSymbol<Delegates.sk_compatpaint_new_with_font> ("sk_compatpaint_new_with_font")).Invoke (font);
-		#endif
-
-		// void sk_compatpaint_reset(sk_compatpaint_t* paint)
-		#if !USE_DELEGATES
-		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
-		internal static extern void sk_compatpaint_reset (sk_compatpaint_t paint);
-		#else
-		private partial class Delegates {
-			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
-			internal delegate void sk_compatpaint_reset (sk_compatpaint_t paint);
-		}
-		private static Delegates.sk_compatpaint_reset sk_compatpaint_reset_delegate;
-		internal static void sk_compatpaint_reset (sk_compatpaint_t paint) =>
-			(sk_compatpaint_reset_delegate ??= GetSymbol<Delegates.sk_compatpaint_reset> ("sk_compatpaint_reset")).Invoke (paint);
-		#endif
-
-		// void sk_compatpaint_set_text_align(sk_compatpaint_t* paint, sk_text_align_t align)
-		#if !USE_DELEGATES
-		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
-		internal static extern void sk_compatpaint_set_text_align (sk_compatpaint_t paint, SKTextAlign align);
-		#else
-		private partial class Delegates {
-			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
-			internal delegate void sk_compatpaint_set_text_align (sk_compatpaint_t paint, SKTextAlign align);
-		}
-		private static Delegates.sk_compatpaint_set_text_align sk_compatpaint_set_text_align_delegate;
-		internal static void sk_compatpaint_set_text_align (sk_compatpaint_t paint, SKTextAlign align) =>
-			(sk_compatpaint_set_text_align_delegate ??= GetSymbol<Delegates.sk_compatpaint_set_text_align> ("sk_compatpaint_set_text_align")).Invoke (paint, align);
-		#endif
-
-		// void sk_compatpaint_set_text_encoding(sk_compatpaint_t* paint, sk_text_encoding_t encoding)
-		#if !USE_DELEGATES
-		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
-		internal static extern void sk_compatpaint_set_text_encoding (sk_compatpaint_t paint, SKTextEncoding encoding);
-		#else
-		private partial class Delegates {
-			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
-			internal delegate void sk_compatpaint_set_text_encoding (sk_compatpaint_t paint, SKTextEncoding encoding);
-		}
-		private static Delegates.sk_compatpaint_set_text_encoding sk_compatpaint_set_text_encoding_delegate;
-		internal static void sk_compatpaint_set_text_encoding (sk_compatpaint_t paint, SKTextEncoding encoding) =>
-			(sk_compatpaint_set_text_encoding_delegate ??= GetSymbol<Delegates.sk_compatpaint_set_text_encoding> ("sk_compatpaint_set_text_encoding")).Invoke (paint, encoding);
-		#endif
-
-		#endregion
-
 		#region sk_managedallocator.h
 
 		// void sk_managedallocator_delete(sk_managedallocator_t*)
@@ -14426,6 +14510,52 @@ namespace SkiaSharp
 		private static Delegates.sk_managedallocator_set_procs sk_managedallocator_set_procs_delegate;
 		internal static void sk_managedallocator_set_procs (SKManagedAllocatorDelegates procs) =>
 			(sk_managedallocator_set_procs_delegate ??= GetSymbol<Delegates.sk_managedallocator_set_procs> ("sk_managedallocator_set_procs")).Invoke (procs);
+		#endif
+
+		#endregion
+
+		#region sk_managedcallbackcanvas.h
+
+		// void sk_managedcallbackcanvas_delete(sk_managedcallbackcanvas_t*)
+		#if !USE_DELEGATES
+		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
+		internal static extern void sk_managedcallbackcanvas_delete (sk_managedcallbackcanvas_t param0);
+		#else
+		private partial class Delegates {
+			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+			internal delegate void sk_managedcallbackcanvas_delete (sk_managedcallbackcanvas_t param0);
+		}
+		private static Delegates.sk_managedcallbackcanvas_delete sk_managedcallbackcanvas_delete_delegate;
+		internal static void sk_managedcallbackcanvas_delete (sk_managedcallbackcanvas_t param0) =>
+			(sk_managedcallbackcanvas_delete_delegate ??= GetSymbol<Delegates.sk_managedcallbackcanvas_delete> ("sk_managedcallbackcanvas_delete")).Invoke (param0);
+		#endif
+
+		// sk_managedcallbackcanvas_t* sk_managedcallbackcanvas_new(void* context, int width, int height)
+		#if !USE_DELEGATES
+		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
+		internal static extern sk_managedcallbackcanvas_t sk_managedcallbackcanvas_new (void* context, Int32 width, Int32 height);
+		#else
+		private partial class Delegates {
+			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+			internal delegate sk_managedcallbackcanvas_t sk_managedcallbackcanvas_new (void* context, Int32 width, Int32 height);
+		}
+		private static Delegates.sk_managedcallbackcanvas_new sk_managedcallbackcanvas_new_delegate;
+		internal static sk_managedcallbackcanvas_t sk_managedcallbackcanvas_new (void* context, Int32 width, Int32 height) =>
+			(sk_managedcallbackcanvas_new_delegate ??= GetSymbol<Delegates.sk_managedcallbackcanvas_new> ("sk_managedcallbackcanvas_new")).Invoke (context, width, height);
+		#endif
+
+		// void sk_managedcallbackcanvas_set_procs(sk_managedcallbackcanvas_procs_t procs)
+		#if !USE_DELEGATES
+		[DllImport (SKIA, CallingConvention = CallingConvention.Cdecl)]
+		internal static extern void sk_managedcallbackcanvas_set_procs (SKManagedCallbackCanvasDelegates procs);
+		#else
+		private partial class Delegates {
+			[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+			internal delegate void sk_managedcallbackcanvas_set_procs (SKManagedCallbackCanvasDelegates procs);
+		}
+		private static Delegates.sk_managedcallbackcanvas_set_procs sk_managedcallbackcanvas_set_procs_delegate;
+		internal static void sk_managedcallbackcanvas_set_procs (SKManagedCallbackCanvasDelegates procs) =>
+			(sk_managedcallbackcanvas_set_procs_delegate ??= GetSymbol<Delegates.sk_managedcallbackcanvas_set_procs> ("sk_managedcallbackcanvas_set_procs")).Invoke (procs);
 		#endif
 
 		#endregion
@@ -15128,6 +15258,138 @@ namespace SkiaSharp {
 	// typedef void (*)(sk_managedallocator_t* d, void* context)* sk_managedallocator_destroy_proc
 	[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
 	internal unsafe delegate void SKManagedAllocatorDestroyProxyDelegate(sk_managedallocator_t d, void* context);
+
+	// typedef void (*)(sk_managedcallbackcanvas_t* d, void* context, const sk_path_t* path, const sk_clipop_t op, bool doAA)* sk_managedcallbackcanvas_clip_path_proc
+	[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+	internal unsafe delegate void SKManagedCallbackCanvasClipPathProxyDelegate(sk_managedcallbackcanvas_t d, void* context, sk_path_t path, SKClipOperation op, [MarshalAs (UnmanagedType.I1)] bool doAA);
+
+	// typedef void (*)(sk_managedcallbackcanvas_t* d, void* context, const sk_rect_t* rect, const sk_clipop_t op, bool doAA)* sk_managedcallbackcanvas_clip_rect_proc
+	[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+	internal unsafe delegate void SKManagedCallbackCanvasClipRectProxyDelegate(sk_managedcallbackcanvas_t d, void* context, SKRect* rect, SKClipOperation op, [MarshalAs (UnmanagedType.I1)] bool doAA);
+
+	// typedef void (*)(sk_managedcallbackcanvas_t* d, void* context, const sk_region_t* region, const sk_clipop_t op)* sk_managedcallbackcanvas_clip_region_proc
+	[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+	internal unsafe delegate void SKManagedCallbackCanvasClipRegionProxyDelegate(sk_managedcallbackcanvas_t d, void* context, sk_region_t region, SKClipOperation op);
+
+	// typedef void (*)(sk_managedcallbackcanvas_t* d, void* context, const sk_rrect_t* rrect, const sk_clipop_t op, bool doAA)* sk_managedcallbackcanvas_clip_rrect_proc
+	[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+	internal unsafe delegate void SKManagedCallbackCanvasClipRRectProxyDelegate(sk_managedcallbackcanvas_t d, void* context, sk_rrect_t rrect, SKClipOperation op, [MarshalAs (UnmanagedType.I1)] bool doAA);
+
+	// typedef void (*)(sk_managedcallbackcanvas_t* d, void* context, const sk_shader_t* shader, const sk_clipop_t op)* sk_managedcallbackcanvas_clip_shader_proc
+	[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+	internal unsafe delegate void SKManagedCallbackCanvasClipShaderProxyDelegate(sk_managedcallbackcanvas_t d, void* context, sk_shader_t shader, SKClipOperation op);
+
+	// typedef void (*)(sk_managedcallbackcanvas_t* d, void* context, sk_matrix_t matrix)* sk_managedcallbackcanvas_concat_proc
+	[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+	internal unsafe delegate void SKManagedCallbackCanvasConcatProxyDelegate(sk_managedcallbackcanvas_t d, void* context, SKMatrix matrix);
+
+	// typedef void (*)(sk_managedcallbackcanvas_t* d, void* context)* sk_managedcallbackcanvas_destroy_proc
+	[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+	internal unsafe delegate void SKManagedCallbackCanvasDestroyProxyDelegate(sk_managedcallbackcanvas_t d, void* context);
+
+	// typedef void (*)(sk_managedcallbackcanvas_t* d, void* context, const sk_rect_t* rect, const char* key, sk_data_t* value)* sk_managedcallbackcanvas_draw_annotation_proc
+	[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+	internal unsafe delegate void SKManagedCallbackCanvasDrawAnnotationProxyDelegate(sk_managedcallbackcanvas_t d, void* context, SKRect* rect, /* char */ void* key, sk_data_t value);
+
+	// typedef void (*)(sk_managedcallbackcanvas_t* d, void* context, const sk_rect_t* rect, float a, float b, bool c, const sk_paint_t* paint)* sk_managedcallbackcanvas_draw_arc_proc
+	[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+	internal unsafe delegate void SKManagedCallbackCanvasDrawArcProxyDelegate(sk_managedcallbackcanvas_t d, void* context, SKRect* rect, Single a, Single b, [MarshalAs (UnmanagedType.I1)] bool c, sk_paint_t paint);
+
+	// typedef void (*)(sk_managedcallbackcanvas_t* d, void* context, const sk_image_t* atlas, const sk_rsxform_t* xform, const sk_rect_t* tex, const sk_color_t* colors, int count, sk_blendmode_t mode, const sk_rect_t* cullRect, const sk_paint_t* paint)* sk_managedcallbackcanvas_draw_atlas_proc
+	[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+	internal unsafe delegate void SKManagedCallbackCanvasDrawAtlasProxyDelegate(sk_managedcallbackcanvas_t d, void* context, sk_image_t atlas, SKRotationScaleMatrix* xform, SKRect* tex, UInt32* colors, Int32 count, SKBlendMode mode, SKRect* cullRect, sk_paint_t paint);
+
+	// typedef void (*)(sk_managedcallbackcanvas_t* d, void* context, const sk_drawable_t* drawable, sk_matrix_t matrix)* sk_managedcallbackcanvas_draw_drawable_proc
+	[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+	internal unsafe delegate void SKManagedCallbackCanvasDrawDrawableProxyDelegate(sk_managedcallbackcanvas_t d, void* context, sk_drawable_t drawable, SKMatrix matrix);
+
+	// typedef void (*)(sk_managedcallbackcanvas_t* d, void* context, const sk_rrect_t* rrect1, const sk_rrect_t* rrect2, const sk_paint_t* paint)* sk_managedcallbackcanvas_draw_drrect_proc
+	[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+	internal unsafe delegate void SKManagedCallbackCanvasDrawDRRectProxyDelegate(sk_managedcallbackcanvas_t d, void* context, sk_rrect_t rrect1, sk_rrect_t rrect2, sk_paint_t paint);
+
+	// typedef void (*)(sk_managedcallbackcanvas_t* d, void* context, const sk_image_t* image, const sk_lattice_t* lattice, const sk_rect_t* dest, const sk_paint_t* paint)* sk_managedcallbackcanvas_draw_image_lattice_proc
+	[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+	internal unsafe delegate void SKManagedCallbackCanvasDrawImageLatticeProxyDelegate(sk_managedcallbackcanvas_t d, void* context, sk_image_t image, SKLatticeInternal* lattice, SKRect* dest, sk_paint_t paint);
+
+	// typedef void (*)(sk_managedcallbackcanvas_t* d, void* context, const sk_image_t* image, const sk_irect_t* center, const sk_rect_t* dest, const sk_paint_t* paint)* sk_managedcallbackcanvas_draw_image_nine_proc
+	[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+	internal unsafe delegate void SKManagedCallbackCanvasDrawImageNineProxyDelegate(sk_managedcallbackcanvas_t d, void* context, sk_image_t image, SKRectI* center, SKRect* dest, sk_paint_t paint);
+
+	// typedef void (*)(sk_managedcallbackcanvas_t* d, void* context, const sk_image_t* image, float x, float y, const sk_paint_t* paint)* sk_managedcallbackcanvas_draw_image_proc
+	[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+	internal unsafe delegate void SKManagedCallbackCanvasDrawImageProxyDelegate(sk_managedcallbackcanvas_t d, void* context, sk_image_t image, Single x, Single y, sk_paint_t paint);
+
+	// typedef void (*)(sk_managedcallbackcanvas_t* d, void* context, const sk_image_t* image, const sk_rect_t* src, const sk_rect_t* dest, const sk_paint_t* paint)* sk_managedcallbackcanvas_draw_image_rect_proc
+	[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+	internal unsafe delegate void SKManagedCallbackCanvasDrawImageRectProxyDelegate(sk_managedcallbackcanvas_t d, void* context, sk_image_t image, SKRect* src, SKRect* dest, sk_paint_t paint);
+
+	// typedef void (*)(sk_managedcallbackcanvas_t* d, void* context, const sk_rect_t* rect, const sk_paint_t* paint)* sk_managedcallbackcanvas_draw_oval_proc
+	[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+	internal unsafe delegate void SKManagedCallbackCanvasDrawOvalProxyDelegate(sk_managedcallbackcanvas_t d, void* context, SKRect* rect, sk_paint_t paint);
+
+	// typedef void (*)(sk_managedcallbackcanvas_t* d, void* context, const sk_paint_t* paint)* sk_managedcallbackcanvas_draw_paint_proc
+	[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+	internal unsafe delegate void SKManagedCallbackCanvasDrawPaintProxyDelegate(sk_managedcallbackcanvas_t d, void* context, sk_paint_t paint);
+
+	// typedef void (*)(sk_managedcallbackcanvas_t* d, void* context, const sk_point_t* cubics, const sk_color_t* colors, const sk_point_t* texCoords, sk_blendmode_t mode, const sk_paint_t* paint)* sk_managedcallbackcanvas_draw_patch_proc
+	[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+	internal unsafe delegate void SKManagedCallbackCanvasDrawPatchProxyDelegate(sk_managedcallbackcanvas_t d, void* context, SKPoint* cubics, UInt32* colors, SKPoint* texCoords, SKBlendMode mode, sk_paint_t paint);
+
+	// typedef void (*)(sk_managedcallbackcanvas_t* d, void* context, const sk_path_t* path, const sk_paint_t* paint)* sk_managedcallbackcanvas_draw_path_proc
+	[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+	internal unsafe delegate void SKManagedCallbackCanvasDrawPathProxyDelegate(sk_managedcallbackcanvas_t d, void* context, sk_path_t path, sk_paint_t paint);
+
+	// typedef void (*)(sk_managedcallbackcanvas_t* d, void* context, sk_point_mode_t pointMode, size_t count, const sk_point_t[-1] points, const sk_paint_t* paint)* sk_managedcallbackcanvas_draw_points_proc
+	[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+	internal unsafe delegate void SKManagedCallbackCanvasDrawPointsProxyDelegate(sk_managedcallbackcanvas_t d, void* context, SKPointMode pointMode, /* size_t */ IntPtr count, SKPoint* points, sk_paint_t paint);
+
+	// typedef void (*)(sk_managedcallbackcanvas_t* d, void* context, const sk_rect_t* rect, const sk_paint_t* paint)* sk_managedcallbackcanvas_draw_rect_proc
+	[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+	internal unsafe delegate void SKManagedCallbackCanvasDrawRectProxyDelegate(sk_managedcallbackcanvas_t d, void* context, SKRect* rect, sk_paint_t paint);
+
+	// typedef void (*)(sk_managedcallbackcanvas_t* d, void* context, const sk_region_t* region, const sk_paint_t* paint)* sk_managedcallbackcanvas_draw_region_proc
+	[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+	internal unsafe delegate void SKManagedCallbackCanvasDrawRegionProxyDelegate(sk_managedcallbackcanvas_t d, void* context, sk_region_t region, sk_paint_t paint);
+
+	// typedef void (*)(sk_managedcallbackcanvas_t* d, void* context, const sk_rrect_t* rrect, const sk_paint_t* paint)* sk_managedcallbackcanvas_draw_rrect_proc
+	[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+	internal unsafe delegate void SKManagedCallbackCanvasDrawRRectProxyDelegate(sk_managedcallbackcanvas_t d, void* context, sk_rrect_t rrect, sk_paint_t paint);
+
+	// typedef void (*)(sk_managedcallbackcanvas_t* d, void* context, const sk_textblob_t* blob, float x, float y, const sk_paint_t* paint)* sk_managedcallbackcanvas_draw_text_blob_proc
+	[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+	internal unsafe delegate void SKManagedCallbackCanvasDrawTextBlobProxyDelegate(sk_managedcallbackcanvas_t d, void* context, sk_textblob_t blob, Single x, Single y, sk_paint_t paint);
+
+	// typedef void (*)(sk_managedcallbackcanvas_t* d, void* context, const sk_vertices_t* vertices, sk_blendmode_t mode, const sk_paint_t* paint)* sk_managedcallbackcanvas_draw_vertices_proc
+	[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+	internal unsafe delegate void SKManagedCallbackCanvasDrawVerticesProxyDelegate(sk_managedcallbackcanvas_t d, void* context, sk_vertices_t vertices, SKBlendMode mode, sk_paint_t paint);
+
+	// typedef void (*)(sk_managedcallbackcanvas_t* d, void* context)* sk_managedcallbackcanvas_flush_proc
+	[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+	internal unsafe delegate void SKManagedCallbackCanvasFlushProxyDelegate(sk_managedcallbackcanvas_t d, void* context);
+
+	// typedef void (*)(sk_managedcallbackcanvas_t* d, void* context)* sk_managedcallbackcanvas_restore_proc
+	[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+	internal unsafe delegate void SKManagedCallbackCanvasRestoreProxyDelegate(sk_managedcallbackcanvas_t d, void* context);
+
+	// typedef void (*)(sk_managedcallbackcanvas_t* d, void* context, const sk_rect_t* rect, const sk_paint_t* paint)* sk_managedcallbackcanvas_save_layer_proc
+	[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+	internal unsafe delegate void SKManagedCallbackCanvasSaveLayerProxyDelegate(sk_managedcallbackcanvas_t d, void* context, SKRect* rect, sk_paint_t paint);
+
+	// typedef void (*)(sk_managedcallbackcanvas_t* d, void* context)* sk_managedcallbackcanvas_save_proc
+	[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+	internal unsafe delegate void SKManagedCallbackCanvasSaveProxyDelegate(sk_managedcallbackcanvas_t d, void* context);
+
+	// typedef void (*)(sk_managedcallbackcanvas_t* d, void* context, float x, float y)* sk_managedcallbackcanvas_scale_proc
+	[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+	internal unsafe delegate void SKManagedCallbackCanvasScaleProxyDelegate(sk_managedcallbackcanvas_t d, void* context, Single x, Single y);
+
+	// typedef void (*)(sk_managedcallbackcanvas_t* d, void* context, sk_matrix_t matrix)* sk_managedcallbackcanvas_set_matrix_proc
+	[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+	internal unsafe delegate void SKManagedCallbackCanvasSetMatrixProxyDelegate(sk_managedcallbackcanvas_t d, void* context, SKMatrix matrix);
+
+	// typedef void (*)(sk_managedcallbackcanvas_t* d, void* context, float x, float y)* sk_managedcallbackcanvas_translate_proc
+	[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+	internal unsafe delegate void SKManagedCallbackCanvasTranslateProxyDelegate(sk_managedcallbackcanvas_t d, void* context, Single x, Single y);
 
 	// typedef void (*)(sk_manageddrawable_t* d, void* context)* sk_manageddrawable_destroy_proc
 	[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
@@ -16753,6 +17015,161 @@ namespace SkiaSharp {
 			var hash = new HashCode ();
 			hash.Add (fAllocPixelRef);
 			hash.Add (fDestroy);
+			return hash.ToHashCode ();
+		}
+
+	}
+
+	// sk_managedcallbackcanvas_procs_t
+	[StructLayout (LayoutKind.Sequential)]
+	internal unsafe partial struct SKManagedCallbackCanvasDelegates : IEquatable<SKManagedCallbackCanvasDelegates> {
+		// public sk_managedcallbackcanvas_concat_proc fConcat
+		public SKManagedCallbackCanvasConcatProxyDelegate fConcat;
+
+		// public sk_managedcallbackcanvas_clip_rect_proc fClipRect
+		public SKManagedCallbackCanvasClipRectProxyDelegate fClipRect;
+
+		// public sk_managedcallbackcanvas_clip_rrect_proc fClipRRect
+		public SKManagedCallbackCanvasClipRRectProxyDelegate fClipRRect;
+
+		// public sk_managedcallbackcanvas_clip_path_proc fClipPath
+		public SKManagedCallbackCanvasClipPathProxyDelegate fClipPath;
+
+		// public sk_managedcallbackcanvas_clip_shader_proc fClipShader
+		public SKManagedCallbackCanvasClipShaderProxyDelegate fClipShader;
+
+		// public sk_managedcallbackcanvas_clip_region_proc fClipRegion
+		public SKManagedCallbackCanvasClipRegionProxyDelegate fClipRegion;
+
+		// public sk_managedcallbackcanvas_draw_annotation_proc fDrawAnnotation
+		public SKManagedCallbackCanvasDrawAnnotationProxyDelegate fDrawAnnotation;
+
+		// public sk_managedcallbackcanvas_draw_arc_proc fDrawArc
+		public SKManagedCallbackCanvasDrawArcProxyDelegate fDrawArc;
+
+		// public sk_managedcallbackcanvas_draw_atlas_proc fDrawAtlas
+		public SKManagedCallbackCanvasDrawAtlasProxyDelegate fDrawAtlas;
+
+		// public sk_managedcallbackcanvas_draw_drawable_proc fDrawDrawable
+		public SKManagedCallbackCanvasDrawDrawableProxyDelegate fDrawDrawable;
+
+		// public sk_managedcallbackcanvas_draw_drrect_proc fDrawDRRect
+		public SKManagedCallbackCanvasDrawDRRectProxyDelegate fDrawDRRect;
+
+		// public sk_managedcallbackcanvas_draw_image_rect_proc fDrawImageRect
+		public SKManagedCallbackCanvasDrawImageRectProxyDelegate fDrawImageRect;
+
+		// public sk_managedcallbackcanvas_draw_image_lattice_proc fDrawImageLattice
+		public SKManagedCallbackCanvasDrawImageLatticeProxyDelegate fDrawImageLattice;
+
+		// public sk_managedcallbackcanvas_draw_image_nine_proc fDrawImageNine
+		public SKManagedCallbackCanvasDrawImageNineProxyDelegate fDrawImageNine;
+
+		// public sk_managedcallbackcanvas_draw_image_proc fDrawImage
+		public SKManagedCallbackCanvasDrawImageProxyDelegate fDrawImage;
+
+		// public sk_managedcallbackcanvas_draw_oval_proc fDrawOval
+		public SKManagedCallbackCanvasDrawOvalProxyDelegate fDrawOval;
+
+		// public sk_managedcallbackcanvas_draw_paint_proc fDrawPaint
+		public SKManagedCallbackCanvasDrawPaintProxyDelegate fDrawPaint;
+
+		// public sk_managedcallbackcanvas_draw_patch_proc fDrawPatch
+		public SKManagedCallbackCanvasDrawPatchProxyDelegate fDrawPatch;
+
+		// public sk_managedcallbackcanvas_draw_path_proc fDrawPath
+		public SKManagedCallbackCanvasDrawPathProxyDelegate fDrawPath;
+
+		// public sk_managedcallbackcanvas_draw_points_proc fDrawPoints
+		public SKManagedCallbackCanvasDrawPointsProxyDelegate fDrawPoints;
+
+		// public sk_managedcallbackcanvas_draw_rect_proc fDrawRect
+		public SKManagedCallbackCanvasDrawRectProxyDelegate fDrawRect;
+
+		// public sk_managedcallbackcanvas_draw_region_proc fDrawRegion
+		public SKManagedCallbackCanvasDrawRegionProxyDelegate fDrawRegion;
+
+		// public sk_managedcallbackcanvas_draw_rrect_proc fDrawRRect
+		public SKManagedCallbackCanvasDrawRRectProxyDelegate fDrawRRect;
+
+		// public sk_managedcallbackcanvas_draw_text_blob_proc fDrawTextBlob
+		public SKManagedCallbackCanvasDrawTextBlobProxyDelegate fDrawTextBlob;
+
+		// public sk_managedcallbackcanvas_draw_vertices_proc fDrawVertices
+		public SKManagedCallbackCanvasDrawVerticesProxyDelegate fDrawVertices;
+
+		// public sk_managedcallbackcanvas_destroy_proc fDestroy
+		public SKManagedCallbackCanvasDestroyProxyDelegate fDestroy;
+
+		// public sk_managedcallbackcanvas_flush_proc fFlush
+		public SKManagedCallbackCanvasFlushProxyDelegate fFlush;
+
+		// public sk_managedcallbackcanvas_save_proc fSave
+		public SKManagedCallbackCanvasSaveProxyDelegate fSave;
+
+		// public sk_managedcallbackcanvas_save_layer_proc fSaveLayer
+		public SKManagedCallbackCanvasSaveLayerProxyDelegate fSaveLayer;
+
+		// public sk_managedcallbackcanvas_set_matrix_proc fSetMatrix
+		public SKManagedCallbackCanvasSetMatrixProxyDelegate fSetMatrix;
+
+		// public sk_managedcallbackcanvas_restore_proc fRestore
+		public SKManagedCallbackCanvasRestoreProxyDelegate fRestore;
+
+		// public sk_managedcallbackcanvas_translate_proc fScale
+		public SKManagedCallbackCanvasTranslateProxyDelegate fScale;
+
+		// public sk_managedcallbackcanvas_scale_proc fTranslate
+		public SKManagedCallbackCanvasScaleProxyDelegate fTranslate;
+
+		public readonly bool Equals (SKManagedCallbackCanvasDelegates obj) =>
+			fConcat == obj.fConcat && fClipRect == obj.fClipRect && fClipRRect == obj.fClipRRect && fClipPath == obj.fClipPath && fClipShader == obj.fClipShader && fClipRegion == obj.fClipRegion && fDrawAnnotation == obj.fDrawAnnotation && fDrawArc == obj.fDrawArc && fDrawAtlas == obj.fDrawAtlas && fDrawDrawable == obj.fDrawDrawable && fDrawDRRect == obj.fDrawDRRect && fDrawImageRect == obj.fDrawImageRect && fDrawImageLattice == obj.fDrawImageLattice && fDrawImageNine == obj.fDrawImageNine && fDrawImage == obj.fDrawImage && fDrawOval == obj.fDrawOval && fDrawPaint == obj.fDrawPaint && fDrawPatch == obj.fDrawPatch && fDrawPath == obj.fDrawPath && fDrawPoints == obj.fDrawPoints && fDrawRect == obj.fDrawRect && fDrawRegion == obj.fDrawRegion && fDrawRRect == obj.fDrawRRect && fDrawTextBlob == obj.fDrawTextBlob && fDrawVertices == obj.fDrawVertices && fDestroy == obj.fDestroy && fFlush == obj.fFlush && fSave == obj.fSave && fSaveLayer == obj.fSaveLayer && fSetMatrix == obj.fSetMatrix && fRestore == obj.fRestore && fScale == obj.fScale && fTranslate == obj.fTranslate;
+
+		public readonly override bool Equals (object obj) =>
+			obj is SKManagedCallbackCanvasDelegates f && Equals (f);
+
+		public static bool operator == (SKManagedCallbackCanvasDelegates left, SKManagedCallbackCanvasDelegates right) =>
+			left.Equals (right);
+
+		public static bool operator != (SKManagedCallbackCanvasDelegates left, SKManagedCallbackCanvasDelegates right) =>
+			!left.Equals (right);
+
+		public readonly override int GetHashCode ()
+		{
+			var hash = new HashCode ();
+			hash.Add (fConcat);
+			hash.Add (fClipRect);
+			hash.Add (fClipRRect);
+			hash.Add (fClipPath);
+			hash.Add (fClipShader);
+			hash.Add (fClipRegion);
+			hash.Add (fDrawAnnotation);
+			hash.Add (fDrawArc);
+			hash.Add (fDrawAtlas);
+			hash.Add (fDrawDrawable);
+			hash.Add (fDrawDRRect);
+			hash.Add (fDrawImageRect);
+			hash.Add (fDrawImageLattice);
+			hash.Add (fDrawImageNine);
+			hash.Add (fDrawImage);
+			hash.Add (fDrawOval);
+			hash.Add (fDrawPaint);
+			hash.Add (fDrawPatch);
+			hash.Add (fDrawPath);
+			hash.Add (fDrawPoints);
+			hash.Add (fDrawRect);
+			hash.Add (fDrawRegion);
+			hash.Add (fDrawRRect);
+			hash.Add (fDrawTextBlob);
+			hash.Add (fDrawVertices);
+			hash.Add (fDestroy);
+			hash.Add (fFlush);
+			hash.Add (fSave);
+			hash.Add (fSaveLayer);
+			hash.Add (fSetMatrix);
+			hash.Add (fRestore);
+			hash.Add (fScale);
+			hash.Add (fTranslate);
 			return hash.ToHashCode ();
 		}
 

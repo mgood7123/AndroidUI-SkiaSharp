@@ -22,7 +22,7 @@ namespace SkiaSharp
 		}
 
 		public SKPaint ()
-			: this (SkiaApi.sk_compatpaint_new (), true)
+			: this (SkiaApi.sk_paint_new (), true)
 		{
 			if (Handle == IntPtr.Zero) {
 				throw new InvalidOperationException ("Unable to create a new SKPaint instance.");
@@ -35,7 +35,7 @@ namespace SkiaSharp
 			if (font == null)
 				throw new ArgumentNullException (nameof (font));
 
-			Handle = SkiaApi.sk_compatpaint_new_with_font (font.Handle);
+			Handle = SkiaApi.sk_paint_new_with_font (font.Handle);
 
 			if (Handle == IntPtr.Zero)
 				throw new InvalidOperationException ("Unable to create a new SKPaint instance.");
@@ -47,12 +47,12 @@ namespace SkiaSharp
 			base.Dispose (disposing);
 
 		protected override void DisposeNative () =>
-			SkiaApi.sk_compatpaint_delete (Handle);
+			SkiaApi.sk_paint_delete (Handle);
 
 		// Reset
 
 		public void Reset () =>
-			SkiaApi.sk_compatpaint_reset (Handle);
+			SkiaApi.sk_paint_reset (Handle);
 
 		// properties
 
@@ -62,6 +62,10 @@ namespace SkiaSharp
 				SkiaApi.sk_paint_set_antialias (Handle, value);
 				UpdateFontEdging (value);
 			}
+		}
+
+		public bool NothingToDraw {
+			get => SkiaApi.sk_paint_nothing_to_draw (Handle);
 		}
 
 		public bool IsDither {
@@ -129,6 +133,16 @@ namespace SkiaSharp
 		public SKPaintStyle Style {
 			get => SkiaApi.sk_paint_get_style (Handle);
 			set => SkiaApi.sk_paint_set_style (Handle, value);
+		}
+
+		public byte Alpha {
+			get => SkiaApi.sk_paint_get_alpha (Handle);
+			set => SkiaApi.sk_paint_set_alpha (Handle, value);
+		}
+
+		public float AlphaF {
+			get => SkiaApi.sk_paint_get_alphaf (Handle);
+			set => SkiaApi.sk_paint_set_alphaf (Handle, value);
 		}
 
 		public SKColor Color {
@@ -209,13 +223,13 @@ namespace SkiaSharp
 		}
 
 		public SKTextAlign TextAlign {
-			get => SkiaApi.sk_compatpaint_get_text_align (Handle);
-			set => SkiaApi.sk_compatpaint_set_text_align (Handle, value);
+			get => SkiaApi.sk_paint_get_text_align (Handle);
+			set => SkiaApi.sk_paint_set_text_align (Handle, value);
 		}
 
 		public SKTextEncoding TextEncoding {
-			get => SkiaApi.sk_compatpaint_get_text_encoding (Handle);
-			set => SkiaApi.sk_compatpaint_set_text_encoding (Handle, value);
+			get => SkiaApi.sk_paint_get_text_encoding (Handle);
+			set => SkiaApi.sk_paint_set_text_encoding (Handle, value);
 		}
 
 		public float TextScaleX {
@@ -257,7 +271,7 @@ namespace SkiaSharp
 		// Clone
 
 		public SKPaint Clone () =>
-			GetObject (SkiaApi.sk_compatpaint_clone (Handle));
+			GetObject (SkiaApi.sk_paint_clone (Handle));
 
 		// MeasureText
 
@@ -705,10 +719,10 @@ namespace SkiaSharp
 		// Font
 
 		public SKFont ToFont () =>
-			SKFont.GetObject (SkiaApi.sk_compatpaint_make_font (Handle));
+			SKFont.GetObject (SkiaApi.sk_paint_make_font (Handle));
 
 		internal SKFont GetFont () =>
-			font ??= OwnedBy (SKFont.GetObject (SkiaApi.sk_compatpaint_get_font (Handle), false), this);
+			font ??= OwnedBy (SKFont.GetObject (SkiaApi.sk_paint_get_font (Handle), false), this);
 
 		private void UpdateFontEdging (bool antialias)
 		{

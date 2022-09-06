@@ -13,6 +13,44 @@ namespace SkiaSharp
 		{
 		}
 
+		// so we can serialize and deserialize this
+
+		private SKVertexMode vmode;
+		private SKPoint[] positions;
+		private SKPoint[] texCoords;
+		private SKColor[] colors;
+		private UInt16[] indices;
+
+		public SKVertexMode VMode_FOR_SERIALIZATION
+		{
+			get { return vmode; }
+			set { vmode = value; }
+		}
+
+		public SKPoint[] Positions_FOR_SERIALIZATION
+		{
+			get { return positions; }
+			set { positions = value; }
+		}
+
+		public SKPoint[] TexCoords_FOR_SERIALIZATION
+		{
+			get { return texCoords; }
+			set { texCoords = value; }
+		}
+
+		public SKColor[] Colors_FOR_SERIALIZATION
+		{
+			get { return colors; }
+			set { colors = value; }
+		}
+
+		public UInt16[] Indices_FOR_SERIALIZATION
+		{
+			get { return indices; }
+			set { indices = value; }
+		}
+
 		protected override void Dispose (bool disposing) =>
 			base.Dispose (disposing);
 
@@ -47,7 +85,13 @@ namespace SkiaSharp
 			fixed (SKPoint* t = texs)
 			fixed (SKColor* c = colors)
 			fixed (UInt16* i = indices) {
-				return GetObject (SkiaApi.sk_vertices_make_copy (vmode, vertexCount, p, t, (uint*)c, indexCount, i));
+				SKVertices obj = GetObject (SkiaApi.sk_vertices_make_copy (vmode, vertexCount, p, t, (uint*)c, indexCount, i));
+				obj.VMode_FOR_SERIALIZATION = vmode;
+				obj.Positions_FOR_SERIALIZATION = positions;
+				obj.TexCoords_FOR_SERIALIZATION = texs;
+				obj.Colors_FOR_SERIALIZATION = colors;
+				obj.Indices_FOR_SERIALIZATION = indices;
+				return obj;
 			}
 		}
 
