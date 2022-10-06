@@ -3,6 +3,55 @@ using System.Runtime.InteropServices;
 
 namespace SkiaSharp
 {
+	public unsafe class SK_UTF_CString : SKObject
+	{
+		int length;
+		System.Text.Encoding encoding;
+		SKTextEncoding sktextencoding;
+
+		public int Length => length;
+		public System.Text.Encoding Encoding => encoding;
+		public SKTextEncoding SKTextEncoding => sktextencoding;
+
+		internal SK_UTF_CString (IntPtr handle, bool owns)
+			: base (handle, owns)
+		{
+		}
+
+		public SK_UTF_CString (string input, SKTextEncoding encoding = SKTextEncoding.Utf8) : this (IntPtr.Zero, false)
+		{
+			this.encoding = encoding switch {
+				SKTextEncoding.Utf8 => System.Text.Encoding.UTF8,
+				SKTextEncoding.Utf16 => System.Text.Encoding.Unicode,
+				SKTextEncoding.Utf32 => System.Text.Encoding.UTF32,
+				_ => throw new ArgumentOutOfRangeException (nameof (encoding), $"Encoding {encoding} is not supported."),
+			};
+			sktextencoding = encoding;
+
+			length = this.encoding.GetByteCount (input);
+
+			var buffer = (byte*)Marshal.AllocHGlobal (length + 1);
+
+			fixed (char* pInput = input) {
+				this.encoding.GetBytes (pInput, input.Length, buffer, length);
+			}
+
+			buffer[length] = 0;
+
+			Handle = (IntPtr)buffer;
+			OwnsHandle = true;
+		}
+
+		protected override void Dispose (bool disposing) =>
+			base.Dispose (disposing);
+
+		protected override void DisposeNative () =>
+			Marshal.FreeHGlobal(Handle);
+
+		internal static SK_UTF_CString GetObject (IntPtr handle) =>
+			handle == IntPtr.Zero ? null : new SK_UTF_CString (handle, true);
+	}
+
 	internal unsafe class SKString : SKObject, ISKSkipObjectRegistration
 	{
 		internal SKString (IntPtr handle, bool owns)

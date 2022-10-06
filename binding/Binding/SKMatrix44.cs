@@ -14,10 +14,10 @@ namespace SkiaSharp
 			base.Dispose (disposing);
 
 		protected override void DisposeNative () =>
-			SkiaApi.sk_matrix44_destroy (Handle);
+			SkiaApi.sk_m44_destroy (Handle);
 
 		public SKMatrix44 ()
-			: this (SkiaApi.sk_matrix44_new (), true)
+			: this (SkiaApi.sk_m44_new (), true)
 		{
 			if (Handle == IntPtr.Zero)
 				throw new InvalidOperationException ("Unable to create a new SKMatrix44 instance.");
@@ -29,7 +29,7 @@ namespace SkiaSharp
 			if (src == null)
 				throw new ArgumentNullException (nameof (src));
 
-			Handle = SkiaApi.sk_matrix44_new_copy (src.Handle);
+			Handle = SkiaApi.sk_m44_new_copy (src.Handle);
 
 			if (Handle == IntPtr.Zero)
 				throw new InvalidOperationException ("Unable to create a new SKMatrix44 instance.");
@@ -43,14 +43,14 @@ namespace SkiaSharp
 			if (b == null)
 				throw new ArgumentNullException (nameof (b));
 
-			Handle = SkiaApi.sk_matrix44_new_concat (a.Handle, b.Handle);
+			Handle = SkiaApi.sk_m44_new_concat (a.Handle, b.Handle);
 
 			if (Handle == IntPtr.Zero)
 				throw new InvalidOperationException ("Unable to create a new SKMatrix44 instance.");
 		}
 
 		public SKMatrix44 (SKMatrix src)
-			: this (SkiaApi.sk_matrix44_new_matrix (&src), true)
+			: this (SkiaApi.sk_m44_new_matrix (&src), true)
 		{
 			if (Handle == IntPtr.Zero)
 				throw new InvalidOperationException ("Unable to create a new SKMatrix44 instance.");
@@ -61,17 +61,14 @@ namespace SkiaSharp
 		public SKMatrix Matrix {
 			get {
 				SKMatrix matrix;
-				SkiaApi.sk_matrix44_to_matrix (Handle, &matrix);
+				SkiaApi.sk_m44_to_matrix (Handle, &matrix);
 				return matrix;
 			}
 		}
 
-		public SKMatrix44TypeMask Type =>
-			SkiaApi.sk_matrix44_get_type (Handle);
-
 		public float this[int row, int column] {
-			get => SkiaApi.sk_matrix44_get (Handle, row, column);
-			set => SkiaApi.sk_matrix44_set (Handle, row, column, value);
+			get => SkiaApi.sk_m44_get (Handle, row, column);
+			set => SkiaApi.sk_m44_set (Handle, row, column, value);
 		}
 
 		// Create*
@@ -148,7 +145,7 @@ namespace SkiaSharp
 				throw new ArgumentException ("The destination array must be 16 entries.", nameof (dst));
 
 			fixed (float* d = dst) {
-				SkiaApi.sk_matrix44_as_col_major (Handle, d);
+				SkiaApi.sk_m44_as_col_major (Handle, d);
 			}
 		}
 
@@ -167,7 +164,7 @@ namespace SkiaSharp
 				throw new ArgumentException ("The destination array must be 16 entries.", nameof (dst));
 
 			fixed (float* d = dst) {
-				SkiaApi.sk_matrix44_as_row_major (Handle, d);
+				SkiaApi.sk_m44_as_row_major (Handle, d);
 			}
 		}
 
@@ -180,13 +177,13 @@ namespace SkiaSharp
 			if (right == null)
 				throw new ArgumentNullException (nameof (right));
 
-			return SkiaApi.sk_matrix44_equals (left.Handle, right.Handle);
+			return SkiaApi.sk_m44_equals (left.Handle, right.Handle);
 		}
 
 		// Set*
 
 		public void SetIdentity () =>
-			SkiaApi.sk_matrix44_set_identity (Handle);
+			SkiaApi.sk_m44_set_identity (Handle);
 
 		public void SetColumnMajor (float[] src)
 		{
@@ -196,7 +193,7 @@ namespace SkiaSharp
 				throw new ArgumentException ("The source array must be 16 entries.", nameof (src));
 
 			fixed (float* s = src) {
-				SkiaApi.sk_matrix44_set_col_major (Handle, s);
+				SkiaApi.sk_m44_set_col_major (Handle, s);
 			}
 		}
 
@@ -208,7 +205,7 @@ namespace SkiaSharp
 				throw new ArgumentException ("The source array must be 16 entries.", nameof (src));
 
 			fixed (float* s = src) {
-				SkiaApi.sk_matrix44_set_row_major (Handle, s);
+				SkiaApi.sk_m44_set_row_major (Handle, s);
 			}
 		}
 
@@ -218,7 +215,7 @@ namespace SkiaSharp
 				throw new ArgumentException ("The source array must be 9 entries.", nameof (src));
 
 			var row = stackalloc float[9] { src[0], src[3], src[6], src[1], src[4], src[7], src[2], src[5], src[8] };
-			SkiaApi.sk_matrix44_set_3x3_row_major (Handle, row);
+			SkiaApi.sk_m44_set_3x3_row_major (Handle, row);
 		}
 
 		public void Set3x3RowMajor (float[] src)
@@ -227,24 +224,24 @@ namespace SkiaSharp
 				throw new ArgumentException ("The source array must be 9 entries.", nameof (src));
 
 			fixed (float* s = src) {
-				SkiaApi.sk_matrix44_set_3x3_row_major (Handle, s);
+				SkiaApi.sk_m44_set_3x3_row_major (Handle, s);
 			}
 		}
 
 		public void SetTranslate (float dx, float dy, float dz) =>
-			SkiaApi.sk_matrix44_set_translate (Handle, dx, dy, dz);
+			SkiaApi.sk_m44_set_translate (Handle, dx, dy, dz);
 
 		public void SetScale (float sx, float sy, float sz) =>
-			SkiaApi.sk_matrix44_set_scale (Handle, sx, sy, sz);
+			SkiaApi.sk_m44_set_scale (Handle, sx, sy, sz);
 
 		public void SetRotationAboutDegrees (float x, float y, float z, float degrees) =>
-			SkiaApi.sk_matrix44_set_rotate_about_degrees (Handle, x, y, z, degrees);
+			SkiaApi.sk_m44_set_rotate_about_degrees (Handle, x, y, z, degrees);
 
 		public void SetRotationAbout (float x, float y, float z, float radians) =>
-			SkiaApi.sk_matrix44_set_rotate_about_radians (Handle, x, y, z, radians);
+			SkiaApi.sk_m44_set_rotate_about_radians (Handle, x, y, z, radians);
 
 		public void SetRotationAboutUnit (float x, float y, float z, float radians) =>
-			SkiaApi.sk_matrix44_set_rotate_about_radians_unit (Handle, x, y, z, radians);
+			SkiaApi.sk_m44_set_rotate_about_radians_unit (Handle, x, y, z, radians);
 
 		public void SetConcat (SKMatrix44 a, SKMatrix44 b)
 		{
@@ -253,29 +250,29 @@ namespace SkiaSharp
 			if (b == null)
 				throw new ArgumentNullException (nameof (b));
 
-			SkiaApi.sk_matrix44_set_concat (Handle, a.Handle, b.Handle);
+			SkiaApi.sk_m44_set_concat (Handle, a.Handle, b.Handle);
 		}
 
 		// Pre* / Post*
 
 		public void PreTranslate (float dx, float dy, float dz) =>
-			SkiaApi.sk_matrix44_pre_translate (Handle, dx, dy, dz);
+			SkiaApi.sk_m44_pre_translate (Handle, dx, dy, dz);
 
 		public void PostTranslate (float dx, float dy, float dz) =>
-			SkiaApi.sk_matrix44_post_translate (Handle, dx, dy, dz);
+			SkiaApi.sk_m44_post_translate (Handle, dx, dy, dz);
 
 		public void PreScale (float sx, float sy, float sz) =>
-			SkiaApi.sk_matrix44_pre_scale (Handle, sx, sy, sz);
+			SkiaApi.sk_m44_pre_scale (Handle, sx, sy, sz);
 
 		public void PostScale (float sx, float sy, float sz) =>
-			SkiaApi.sk_matrix44_post_scale (Handle, sx, sy, sz);
+			SkiaApi.sk_m44_post_scale (Handle, sx, sy, sz);
 
 		public void PreConcat (SKMatrix44 m)
 		{
 			if (m == null)
 				throw new ArgumentNullException (nameof (m));
 
-			SkiaApi.sk_matrix44_pre_concat (Handle, m.Handle);
+			SkiaApi.sk_m44_pre_concat (Handle, m.Handle);
 		}
 
 		public void PostConcat (SKMatrix44 m)
@@ -283,13 +280,13 @@ namespace SkiaSharp
 			if (m == null)
 				throw new ArgumentNullException (nameof (m));
 
-			SkiaApi.sk_matrix44_post_concat (Handle, m.Handle);
+			SkiaApi.sk_m44_post_concat (Handle, m.Handle);
 		}
 
 		// Invert
 
 		public bool IsInvertible =>
-			SkiaApi.sk_matrix44_invert (Handle, IntPtr.Zero);
+			SkiaApi.sk_m44_invert (Handle, IntPtr.Zero);
 
 		public SKMatrix44 Invert ()
 		{
@@ -306,13 +303,13 @@ namespace SkiaSharp
 			if (inverse == null)
 				throw new ArgumentNullException (nameof (inverse));
 
-			return SkiaApi.sk_matrix44_invert (Handle, inverse.Handle);
+			return SkiaApi.sk_m44_invert (Handle, inverse.Handle);
 		}
 
 		// Transpose
 
 		public void Transpose () =>
-			SkiaApi.sk_matrix44_transpose (Handle);
+			SkiaApi.sk_m44_transpose (Handle);
 
 		// MapScalars
 
@@ -344,7 +341,7 @@ namespace SkiaSharp
 
 			fixed (float* s = srcVector4)
 			fixed (float* d = dstVector4) {
-				SkiaApi.sk_matrix44_map_scalars (Handle, s, d);
+				SkiaApi.sk_m44_map_scalars (Handle, s, d);
 			}
 		}
 
@@ -408,19 +405,19 @@ namespace SkiaSharp
 
 			fixed (float* s = src2)
 			fixed (float* d = dst4) {
-				SkiaApi.sk_matrix44_map2 (Handle, s, src2.Length / 2, d);
+				SkiaApi.sk_m44_map2 (Handle, s, src2.Length / 2, d);
 			}
 		}
 
 		// Preserves2DAxisAlignment
 
 		public bool Preserves2DAxisAlignment (float epsilon) =>
-			SkiaApi.sk_matrix44_preserves_2d_axis_alignment (Handle, epsilon);
+			SkiaApi.sk_m44_preserves_2d_axis_alignment (Handle, epsilon);
 
 		// Determinant
 
 		public double Determinant () =>
-			SkiaApi.sk_matrix44_determinant (Handle);
+			SkiaApi.sk_m44_determinant (Handle);
 
 		// operators
 

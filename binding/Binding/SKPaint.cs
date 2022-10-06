@@ -22,11 +22,15 @@ namespace SkiaSharp
 		}
 
 		public SKPaint ()
-			: this (SkiaApi.sk_paint_new (), true)
+			: this (SkiaApi.sk_paint_extra_info_new (), true)
 		{
 			if (Handle == IntPtr.Zero) {
 				throw new InvalidOperationException ("Unable to create a new SKPaint instance.");
 			}
+
+			font = new SKFont (FontHandle, false);
+
+			LcdRenderText = font.Edging == SKFontEdging.SubpixelAntialias;
 		}
 
 		public SKPaint (SKFont font)
@@ -35,10 +39,25 @@ namespace SkiaSharp
 			if (font == null)
 				throw new ArgumentNullException (nameof (font));
 
-			Handle = SkiaApi.sk_paint_new_with_font (font.Handle);
+			Handle = SkiaApi.sk_paint_extra_info_new_with_font (font.Handle);
 
 			if (Handle == IntPtr.Zero)
 				throw new InvalidOperationException ("Unable to create a new SKPaint instance.");
+
+			font = new SKFont (FontHandle, false);
+
+			LcdRenderText = font.Edging == SKFontEdging.SubpixelAntialias;
+		}
+
+		public SKPaint (IntPtr nativeSkFontHandle, IntPtr nativeSkPaintHandle)
+			: this (IntPtr.Zero, true)
+		{
+			Handle = SkiaApi.sk_paint_extra_info_new_with_font_and_paint (nativeSkFontHandle, nativeSkPaintHandle);
+
+			if (Handle == IntPtr.Zero)
+				throw new InvalidOperationException ("Unable to create a new SKPaint instance.");
+
+			font = new SKFont (FontHandle, false);
 
 			LcdRenderText = font.Edging == SKFontEdging.SubpixelAntialias;
 		}
@@ -47,30 +66,38 @@ namespace SkiaSharp
 			base.Dispose (disposing);
 
 		protected override void DisposeNative () =>
-			SkiaApi.sk_paint_delete (Handle);
+			SkiaApi.sk_paint_extra_info_delete (Handle);
 
 		// Reset
 
 		public void Reset () =>
-			SkiaApi.sk_paint_reset (Handle);
+			SkiaApi.sk_paint_extra_info_reset (Handle);
 
 		// properties
 
+		private IntPtr PaintHandle =>
+			SkiaApi.sk_paint_extra_info_get_paint (Handle);
+
+		private IntPtr FontHandle =>
+			SkiaApi.sk_paint_extra_info_get_font (Handle);
+
+		public SKFont Font => font;
+
 		public bool IsAntialias {
-			get => SkiaApi.sk_paint_is_antialias (Handle);
+			get => SkiaApi.sk_paint_is_antialias (PaintHandle);
 			set {
-				SkiaApi.sk_paint_set_antialias (Handle, value);
+				SkiaApi.sk_paint_set_antialias (PaintHandle, value);
 				UpdateFontEdging (value);
 			}
 		}
 
 		public bool NothingToDraw {
-			get => SkiaApi.sk_paint_nothing_to_draw (Handle);
+			get => SkiaApi.sk_paint_nothing_to_draw (PaintHandle);
 		}
 
 		public bool IsDither {
-			get => SkiaApi.sk_paint_is_dither (Handle);
-			set => SkiaApi.sk_paint_set_dither (Handle, value);
+			get => SkiaApi.sk_paint_is_dither (PaintHandle);
+			set => SkiaApi.sk_paint_set_dither (PaintHandle, value);
 		}
 
 		[EditorBrowsable (EditorBrowsableState.Never)]
@@ -81,13 +108,13 @@ namespace SkiaSharp
 		}
 
 		public bool IsLinearText {
-			get => GetFont ().LinearMetrics;
-			set => GetFont ().LinearMetrics = value;
+			get => font.LinearMetrics;
+			set => font.LinearMetrics = value;
 		}
 
 		public bool SubpixelText {
-			get => GetFont ().Subpixel;
-			set => GetFont ().Subpixel = value;
+			get => font.Subpixel;
+			set => font.Subpixel = value;
 		}
 
 		public bool LcdRenderText {
@@ -99,23 +126,23 @@ namespace SkiaSharp
 		}
 
 		public bool IsEmbeddedBitmapText {
-			get => GetFont ().EmbeddedBitmaps;
-			set => GetFont ().EmbeddedBitmaps = value;
+			get => font.EmbeddedBitmaps;
+			set => font.EmbeddedBitmaps = value;
 		}
 
 		public bool IsAutohinted {
-			get => GetFont ().ForceAutoHinting;
-			set => GetFont ().ForceAutoHinting = value;
+			get => font.ForceAutoHinting;
+			set => font.ForceAutoHinting = value;
 		}
 
 		public SKPaintHinting HintingLevel {
-			get => (SKPaintHinting)GetFont ().Hinting;
-			set => GetFont ().Hinting = (SKFontHinting)value;
+			get => (SKPaintHinting)font.Hinting;
+			set => font.Hinting = (SKFontHinting)value;
 		}
 
 		public bool FakeBoldText {
-			get => GetFont ().Embolden;
-			set => GetFont ().Embolden = value;
+			get => font.Embolden;
+			set => font.Embolden = value;
 		}
 
 		[EditorBrowsable (EditorBrowsableState.Never)]
@@ -131,137 +158,161 @@ namespace SkiaSharp
 		}
 
 		public SKPaintStyle Style {
-			get => SkiaApi.sk_paint_get_style (Handle);
-			set => SkiaApi.sk_paint_set_style (Handle, value);
+			get => SkiaApi.sk_paint_get_style (PaintHandle);
+			set => SkiaApi.sk_paint_set_style (PaintHandle, value);
 		}
 
 		public byte Alpha {
-			get => SkiaApi.sk_paint_get_alpha (Handle);
-			set => SkiaApi.sk_paint_set_alpha (Handle, value);
+			get => SkiaApi.sk_paint_get_alpha (PaintHandle);
+			set => SkiaApi.sk_paint_set_alpha (PaintHandle, value);
 		}
 
 		public float AlphaF {
-			get => SkiaApi.sk_paint_get_alphaf (Handle);
-			set => SkiaApi.sk_paint_set_alphaf (Handle, value);
+			get => SkiaApi.sk_paint_get_alphaf (PaintHandle);
+			set => SkiaApi.sk_paint_set_alphaf (PaintHandle, value);
 		}
 
 		public SKColor Color {
-			get => SkiaApi.sk_paint_get_color (Handle);
-			set => SkiaApi.sk_paint_set_color (Handle, (uint)value);
+			get => SkiaApi.sk_paint_get_color (PaintHandle);
+			set => SkiaApi.sk_paint_set_color (PaintHandle, (uint)value);
 		}
 
 		public SKColorF ColorF {
 			get {
 				SKColorF color4f;
-				SkiaApi.sk_paint_get_color4f (Handle, &color4f);
+				SkiaApi.sk_paint_get_color4f (PaintHandle, &color4f);
 				return color4f;
 			}
-			set => SkiaApi.sk_paint_set_color4f (Handle, &value, IntPtr.Zero);
+			set => SkiaApi.sk_paint_set_color4f (PaintHandle, &value, IntPtr.Zero);
 		}
 
 		public void SetColor (SKColorF color, SKColorSpace colorspace) =>
-			SkiaApi.sk_paint_set_color4f (Handle, &color, colorspace?.Handle ?? IntPtr.Zero);
+			SkiaApi.sk_paint_set_color4f (PaintHandle, &color, colorspace?.Handle ?? IntPtr.Zero);
 
 		public float StrokeWidth {
-			get => SkiaApi.sk_paint_get_stroke_width (Handle);
-			set => SkiaApi.sk_paint_set_stroke_width (Handle, value);
+			get => SkiaApi.sk_paint_get_stroke_width (PaintHandle);
+			set => SkiaApi.sk_paint_set_stroke_width (PaintHandle, value);
 		}
 
 		public float StrokeMiter {
-			get => SkiaApi.sk_paint_get_stroke_miter (Handle);
-			set => SkiaApi.sk_paint_set_stroke_miter (Handle, value);
+			get => SkiaApi.sk_paint_get_stroke_miter (PaintHandle);
+			set => SkiaApi.sk_paint_set_stroke_miter (PaintHandle, value);
 		}
 
 		public SKStrokeCap StrokeCap {
-			get => SkiaApi.sk_paint_get_stroke_cap (Handle);
-			set => SkiaApi.sk_paint_set_stroke_cap (Handle, value);
+			get => SkiaApi.sk_paint_get_stroke_cap (PaintHandle);
+			set => SkiaApi.sk_paint_set_stroke_cap (PaintHandle, value);
 		}
 
 		public SKStrokeJoin StrokeJoin {
-			get => SkiaApi.sk_paint_get_stroke_join (Handle);
-			set => SkiaApi.sk_paint_set_stroke_join (Handle, value);
+			get => SkiaApi.sk_paint_get_stroke_join (PaintHandle);
+			set => SkiaApi.sk_paint_set_stroke_join (PaintHandle, value);
 		}
 
 		public SKShader Shader {
-			get => SKShader.GetObject (SkiaApi.sk_paint_get_shader (Handle));
-			set => SkiaApi.sk_paint_set_shader (Handle, value == null ? IntPtr.Zero : value.Handle);
+			get => SKShader.GetObject (SkiaApi.sk_paint_get_shader (PaintHandle));
+			set => SkiaApi.sk_paint_set_shader (PaintHandle, value == null ? IntPtr.Zero : value.Handle);
 		}
 
 		public SKMaskFilter MaskFilter {
-			get => SKMaskFilter.GetObject (SkiaApi.sk_paint_get_maskfilter (Handle));
-			set => SkiaApi.sk_paint_set_maskfilter (Handle, value == null ? IntPtr.Zero : value.Handle);
+			get => SKMaskFilter.GetObject (SkiaApi.sk_paint_get_maskfilter (PaintHandle));
+			set => SkiaApi.sk_paint_set_maskfilter (PaintHandle, value == null ? IntPtr.Zero : value.Handle);
 		}
 
 		public SKColorFilter ColorFilter {
-			get => SKColorFilter.GetObject (SkiaApi.sk_paint_get_colorfilter (Handle));
-			set => SkiaApi.sk_paint_set_colorfilter (Handle, value == null ? IntPtr.Zero : value.Handle);
+			get => SKColorFilter.GetObject (SkiaApi.sk_paint_get_colorfilter (PaintHandle));
+			set => SkiaApi.sk_paint_set_colorfilter (PaintHandle, value == null ? IntPtr.Zero : value.Handle);
 		}
 
 		public SKImageFilter ImageFilter {
-			get => SKImageFilter.GetObject (SkiaApi.sk_paint_get_imagefilter (Handle));
-			set => SkiaApi.sk_paint_set_imagefilter (Handle, value == null ? IntPtr.Zero : value.Handle);
+			get => SKImageFilter.GetObject (SkiaApi.sk_paint_get_imagefilter (PaintHandle));
+			set => SkiaApi.sk_paint_set_imagefilter (PaintHandle, value == null ? IntPtr.Zero : value.Handle);
 		}
 
 		public SKBlendMode BlendMode {
-			get => SkiaApi.sk_paint_get_blendmode (Handle);
-			set => SkiaApi.sk_paint_set_blendmode (Handle, value);
+			get => SkiaApi.sk_paint_get_blendmode_or_default (PaintHandle, SKBlendMode.SrcOver);
+			set => SkiaApi.sk_paint_set_blend_mode (PaintHandle, value);
 		}
 
-		public SKFilterQuality FilterQuality {
-			get => SkiaApi.sk_paint_get_filter_quality (Handle);
-			set => SkiaApi.sk_paint_set_filter_quality (Handle, value);
+		public SKBlendMode? BlenderAsBlendMode()
+		{
+			SKBlendMode blendMode;
+			SKBlendMode* ptr = &blendMode;
+			SkiaApi.sk_paint_as_blendmode (PaintHandle, &ptr);
+			return ptr is null ? null : blendMode;
+		}
+
+		public SKBlendMode BlenderAsBlendModeOrDefault (SKBlendMode defaultBlendMode)
+		{
+			return SkiaApi.sk_paint_get_blendmode_or_default (PaintHandle, defaultBlendMode);
+		}
+
+		public bool IsSrcOver => SkiaApi.sk_paint_is_src_over (PaintHandle);
+
+		public void SetARGB(byte a, byte r, byte g, byte b) => SkiaApi.sk_paint_set_argb (PaintHandle, a, r, g, b);
+		public void SetARGB(float a, float r, float g, float b) => SkiaApi.sk_paint_set_argb (
+			PaintHandle,
+			(byte)(a * 255.0f + 0.5f),
+			(byte)(r * 255.0f + 0.5f),
+			(byte)(g * 255.0f + 0.5f),
+			(byte)(b * 255.0f + 0.5f)
+		);
+
+		public SKBlender Blender {
+			get => SKBlender.GetObject (SkiaApi.sk_paint_get_blender (PaintHandle));
+			set => SkiaApi.sk_paint_set_blender (PaintHandle, value == null ? IntPtr.Zero : value.Handle);
 		}
 
 		public SKTypeface Typeface {
-			get => GetFont ().Typeface;
-			set => GetFont ().Typeface = value;
+			get => font.Typeface;
+			set => font.Typeface = value;
 		}
 
 		public float TextSize {
-			get => GetFont ().Size;
-			set => GetFont ().Size = value;
+			get => font.Size;
+			set => font.Size = value;
 		}
 
 		public SKTextAlign TextAlign {
-			get => SkiaApi.sk_paint_get_text_align (Handle);
-			set => SkiaApi.sk_paint_set_text_align (Handle, value);
+			get => SkiaApi.sk_paint_extra_info_get_text_align (Handle);
+			set => SkiaApi.sk_paint_extra_info_set_text_align (Handle, value);
 		}
 
 		public SKTextEncoding TextEncoding {
-			get => SkiaApi.sk_paint_get_text_encoding (Handle);
-			set => SkiaApi.sk_paint_set_text_encoding (Handle, value);
+			get => SkiaApi.sk_paint_extra_info_get_text_encoding (Handle);
+			set => SkiaApi.sk_paint_extra_info_set_text_encoding (Handle, value);
 		}
 
 		public float TextScaleX {
-			get => GetFont ().ScaleX;
-			set => GetFont ().ScaleX = value;
+			get => font.ScaleX;
+			set => font.ScaleX = value;
 		}
 
 		public float TextSkewX {
-			get => GetFont ().SkewX;
-			set => GetFont ().SkewX = value;
+			get => font.SkewX;
+			set => font.SkewX = value;
 		}
 
 		public SKPathEffect PathEffect {
-			get => SKPathEffect.GetObject (SkiaApi.sk_paint_get_path_effect (Handle));
-			set => SkiaApi.sk_paint_set_path_effect (Handle, value == null ? IntPtr.Zero : value.Handle);
+			get => SKPathEffect.GetObject (SkiaApi.sk_paint_get_path_effect (PaintHandle));
+			set => SkiaApi.sk_paint_set_path_effect (PaintHandle, value == null ? IntPtr.Zero : value.Handle);
 		}
 
 		// FontSpacing
 
 		public float FontSpacing =>
-			GetFont ().Spacing;
+			font.Spacing;
 
 		// FontMetrics
 
 		public SKFontMetrics FontMetrics {
 			get {
-				return GetFont ().Metrics;
+				return font.Metrics;
 			}
 		}
 
 		public float GetFontMetrics (out SKFontMetrics metrics) =>
-			GetFont ().GetFontMetrics (out metrics);
+			font.GetFontMetrics (out metrics);
 
 		[EditorBrowsable (EditorBrowsableState.Never)]
 		[Obsolete ("Use GetFontMetrics (out SKFontMetrics) instead.")]
@@ -271,60 +322,60 @@ namespace SkiaSharp
 		// Clone
 
 		public SKPaint Clone () =>
-			GetObject (SkiaApi.sk_paint_clone (Handle));
+			GetObject (SkiaApi.sk_paint_extra_info_clone (Handle));
 
 		// MeasureText
 
 		public float MeasureText (string text) =>
-			GetFont ().MeasureText (text, this);
+			font.MeasureText (text, this);
 
 		public float MeasureText (ReadOnlySpan<char> text) =>
-			GetFont ().MeasureText (text, this);
+			font.MeasureText (text, this);
 
 		public float MeasureText (byte[] text) =>
-			GetFont ().MeasureText (text, TextEncoding, this);
+			font.MeasureText (text, TextEncoding, this);
 
 		public float MeasureText (ReadOnlySpan<byte> text) =>
-			GetFont ().MeasureText (text, TextEncoding, this);
+			font.MeasureText (text, TextEncoding, this);
 
 		public float MeasureText (IntPtr buffer, int length) =>
-			GetFont ().MeasureText (buffer, length, TextEncoding, this);
+			font.MeasureText (buffer, length, TextEncoding, this);
 
 		public float MeasureText (IntPtr buffer, IntPtr length) =>
-			GetFont ().MeasureText (buffer, (int)length, TextEncoding, this);
+			font.MeasureText (buffer, (int)length, TextEncoding, this);
 
 		public float MeasureText (string text, ref SKRect bounds) =>
-			GetFont ().MeasureText (text, out bounds, this);
+			font.MeasureText (text, out bounds, this);
 
 		public float MeasureText (ReadOnlySpan<char> text, ref SKRect bounds) =>
-			GetFont ().MeasureText (text, out bounds, this);
+			font.MeasureText (text, out bounds, this);
 
 		public float MeasureText (byte[] text, ref SKRect bounds) =>
-			GetFont ().MeasureText (text, TextEncoding, out bounds, this);
+			font.MeasureText (text, TextEncoding, out bounds, this);
 
 		public float MeasureText (ReadOnlySpan<byte> text, ref SKRect bounds) =>
-			GetFont ().MeasureText (text, TextEncoding, out bounds, this);
+			font.MeasureText (text, TextEncoding, out bounds, this);
 
 		public float MeasureText (IntPtr buffer, int length, ref SKRect bounds) =>
-			GetFont ().MeasureText (buffer, length, TextEncoding, out bounds, this);
+			font.MeasureText (buffer, length, TextEncoding, out bounds, this);
 
 		public float MeasureText (IntPtr buffer, IntPtr length, ref SKRect bounds) =>
-			GetFont ().MeasureText (buffer, (int)length, TextEncoding, out bounds, this);
+			font.MeasureText (buffer, (int)length, TextEncoding, out bounds, this);
 
 		// BreakText
 
 		public long BreakText (string text, float maxWidth) =>
-			GetFont ().BreakText (text, maxWidth, out _, this);
+			font.BreakText (text, maxWidth, out _, this);
 
 		public long BreakText (string text, float maxWidth, out float measuredWidth) =>
-			GetFont ().BreakText (text, maxWidth, out measuredWidth, this);
+			font.BreakText (text, maxWidth, out measuredWidth, this);
 
 		public long BreakText (string text, float maxWidth, out float measuredWidth, out string measuredText)
 		{
 			if (text == null)
 				throw new ArgumentNullException (nameof (text));
 
-			var charsRead = GetFont ().BreakText (text, maxWidth, out measuredWidth, this);
+			var charsRead = font.BreakText (text, maxWidth, out measuredWidth, this);
 			if (charsRead == 0) {
 				measuredText = string.Empty;
 				return 0;
@@ -338,75 +389,75 @@ namespace SkiaSharp
 		}
 
 		public long BreakText (ReadOnlySpan<char> text, float maxWidth) =>
-			GetFont ().BreakText (text, maxWidth, out _, this);
+			font.BreakText (text, maxWidth, out _, this);
 
 		public long BreakText (ReadOnlySpan<char> text, float maxWidth, out float measuredWidth) =>
-			GetFont ().BreakText (text, maxWidth, out measuredWidth, this);
+			font.BreakText (text, maxWidth, out measuredWidth, this);
 
 		public long BreakText (byte[] text, float maxWidth) =>
-			GetFont ().BreakText (text, TextEncoding, maxWidth, out _, this);
+			font.BreakText (text, TextEncoding, maxWidth, out _, this);
 
 		public long BreakText (byte[] text, float maxWidth, out float measuredWidth) =>
-			GetFont ().BreakText (text, TextEncoding, maxWidth, out measuredWidth, this);
+			font.BreakText (text, TextEncoding, maxWidth, out measuredWidth, this);
 
 		public long BreakText (ReadOnlySpan<byte> text, float maxWidth) =>
-			GetFont ().BreakText (text, TextEncoding, maxWidth, out _, this);
+			font.BreakText (text, TextEncoding, maxWidth, out _, this);
 
 		public long BreakText (ReadOnlySpan<byte> text, float maxWidth, out float measuredWidth) =>
-			GetFont ().BreakText (text, TextEncoding, maxWidth, out measuredWidth, this);
+			font.BreakText (text, TextEncoding, maxWidth, out measuredWidth, this);
 
 		public long BreakText (IntPtr buffer, int length, float maxWidth) =>
-			GetFont ().BreakText (buffer, length, TextEncoding, maxWidth, out _, this);
+			font.BreakText (buffer, length, TextEncoding, maxWidth, out _, this);
 
 		public long BreakText (IntPtr buffer, int length, float maxWidth, out float measuredWidth) =>
-			GetFont ().BreakText (buffer, length, TextEncoding, maxWidth, out measuredWidth, this);
+			font.BreakText (buffer, length, TextEncoding, maxWidth, out measuredWidth, this);
 
 		public long BreakText (IntPtr buffer, IntPtr length, float maxWidth) =>
-			GetFont ().BreakText (buffer, (int)length, TextEncoding, maxWidth, out _, this);
+			font.BreakText (buffer, (int)length, TextEncoding, maxWidth, out _, this);
 
 		public long BreakText (IntPtr buffer, IntPtr length, float maxWidth, out float measuredWidth) =>
-			GetFont ().BreakText (buffer, (int)length, TextEncoding, maxWidth, out measuredWidth, this);
+			font.BreakText (buffer, (int)length, TextEncoding, maxWidth, out measuredWidth, this);
 
 		// GetTextPath
 
 		public SKPath GetTextPath (string text, float x, float y) =>
-			GetFont ().GetTextPath (text, new SKPoint (x, y));
+			font.GetTextPath (text, new SKPoint (x, y));
 
 		public SKPath GetTextPath (ReadOnlySpan<char> text, float x, float y) =>
-			GetFont ().GetTextPath (text, new SKPoint (x, y));
+			font.GetTextPath (text, new SKPoint (x, y));
 
 		public SKPath GetTextPath (byte[] text, float x, float y) =>
-			GetFont ().GetTextPath (text, TextEncoding, new SKPoint (x, y));
+			font.GetTextPath (text, TextEncoding, new SKPoint (x, y));
 
 		public SKPath GetTextPath (ReadOnlySpan<byte> text, float x, float y) =>
-			GetFont ().GetTextPath (text, TextEncoding, new SKPoint (x, y));
+			font.GetTextPath (text, TextEncoding, new SKPoint (x, y));
 
 		public SKPath GetTextPath (IntPtr buffer, int length, float x, float y) =>
-			GetFont ().GetTextPath (buffer, length, TextEncoding, new SKPoint (x, y));
+			font.GetTextPath (buffer, length, TextEncoding, new SKPoint (x, y));
 
 		public SKPath GetTextPath (IntPtr buffer, IntPtr length, float x, float y) =>
-			GetFont ().GetTextPath (buffer, (int)length, TextEncoding, new SKPoint (x, y));
+			font.GetTextPath (buffer, (int)length, TextEncoding, new SKPoint (x, y));
 
 		public SKPath GetTextPath (string text, SKPoint[] points) =>
-			GetFont ().GetTextPath (text, points);
+			font.GetTextPath (text, points);
 
 		public SKPath GetTextPath (ReadOnlySpan<char> text, ReadOnlySpan<SKPoint> points) =>
-			GetFont ().GetTextPath (text, points);
+			font.GetTextPath (text, points);
 
 		public SKPath GetTextPath (byte[] text, SKPoint[] points) =>
-			GetFont ().GetTextPath (text, TextEncoding, points);
+			font.GetTextPath (text, TextEncoding, points);
 
 		public SKPath GetTextPath (ReadOnlySpan<byte> text, ReadOnlySpan<SKPoint> points) =>
-			GetFont ().GetTextPath (text, TextEncoding, points);
+			font.GetTextPath (text, TextEncoding, points);
 
 		public SKPath GetTextPath (IntPtr buffer, int length, SKPoint[] points) =>
-			GetFont ().GetTextPath (buffer, length, TextEncoding, points);
+			font.GetTextPath (buffer, length, TextEncoding, points);
 
 		public SKPath GetTextPath (IntPtr buffer, int length, ReadOnlySpan<SKPoint> points) =>
-			GetFont ().GetTextPath (buffer, length, TextEncoding, points);
+			font.GetTextPath (buffer, length, TextEncoding, points);
 
 		public SKPath GetTextPath (IntPtr buffer, IntPtr length, SKPoint[] points) =>
-			GetFont ().GetTextPath (buffer, (int)length, TextEncoding, points);
+			font.GetTextPath (buffer, (int)length, TextEncoding, points);
 
 		// GetFillPath
 
@@ -450,7 +501,7 @@ namespace SkiaSharp
 			if (dst == null)
 				throw new ArgumentNullException (nameof (dst));
 
-			return SkiaApi.sk_paint_get_fill_path (Handle, src.Handle, dst.Handle, null, resScale);
+			return SkiaApi.sk_paint_get_fill_path (PaintHandle, src.Handle, dst.Handle, null, resScale);
 		}
 
 		public bool GetFillPath (SKPath src, SKPath dst, SKRect cullRect)
@@ -463,134 +514,134 @@ namespace SkiaSharp
 			if (dst == null)
 				throw new ArgumentNullException (nameof (dst));
 
-			return SkiaApi.sk_paint_get_fill_path (Handle, src.Handle, dst.Handle, &cullRect, resScale);
+			return SkiaApi.sk_paint_get_fill_path (PaintHandle, src.Handle, dst.Handle, &cullRect, resScale);
 		}
 
 		// CountGlyphs
 
 		public int CountGlyphs (string text) =>
-			GetFont ().CountGlyphs (text);
+			font.CountGlyphs (text);
 
 		public int CountGlyphs (ReadOnlySpan<char> text) =>
-			GetFont ().CountGlyphs (text);
+			font.CountGlyphs (text);
 
 		public int CountGlyphs (byte[] text) =>
-			GetFont ().CountGlyphs (text, TextEncoding);
+			font.CountGlyphs (text, TextEncoding);
 
 		public int CountGlyphs (ReadOnlySpan<byte> text) =>
-			GetFont ().CountGlyphs (text, TextEncoding);
+			font.CountGlyphs (text, TextEncoding);
 
 		public int CountGlyphs (IntPtr text, int length) =>
-			GetFont ().CountGlyphs (text, length, TextEncoding);
+			font.CountGlyphs (text, length, TextEncoding);
 
 		public int CountGlyphs (IntPtr text, IntPtr length) =>
-			GetFont ().CountGlyphs (text, (int)length, TextEncoding);
+			font.CountGlyphs (text, (int)length, TextEncoding);
 
 		// GetGlyphs
 
 		public ushort[] GetGlyphs (string text) =>
-			GetFont ().GetGlyphs (text);
+			font.GetGlyphs (text);
 
 		public ushort[] GetGlyphs (ReadOnlySpan<char> text) =>
-			GetFont ().GetGlyphs (text);
+			font.GetGlyphs (text);
 
 		public ushort[] GetGlyphs (byte[] text) =>
-			GetFont ().GetGlyphs (text, TextEncoding);
+			font.GetGlyphs (text, TextEncoding);
 
 		public ushort[] GetGlyphs (ReadOnlySpan<byte> text) =>
-			GetFont ().GetGlyphs (text, TextEncoding);
+			font.GetGlyphs (text, TextEncoding);
 
 		public ushort[] GetGlyphs (IntPtr text, int length) =>
-			GetFont ().GetGlyphs (text, length, TextEncoding);
+			font.GetGlyphs (text, length, TextEncoding);
 
 		public ushort[] GetGlyphs (IntPtr text, IntPtr length) =>
-			GetFont ().GetGlyphs (text, (int)length, TextEncoding);
+			font.GetGlyphs (text, (int)length, TextEncoding);
 
 		// ContainsGlyphs
 
 		public bool ContainsGlyphs (string text) =>
-			GetFont ().ContainsGlyphs (text);
+			font.ContainsGlyphs (text);
 
 		public bool ContainsGlyphs (ReadOnlySpan<char> text) =>
-			GetFont ().ContainsGlyphs (text);
+			font.ContainsGlyphs (text);
 
 		public bool ContainsGlyphs (byte[] text) =>
-			GetFont ().ContainsGlyphs (text, TextEncoding);
+			font.ContainsGlyphs (text, TextEncoding);
 
 		public bool ContainsGlyphs (ReadOnlySpan<byte> text) =>
-			GetFont ().ContainsGlyphs (text, TextEncoding);
+			font.ContainsGlyphs (text, TextEncoding);
 
 		public bool ContainsGlyphs (IntPtr text, int length) =>
-			GetFont ().ContainsGlyphs (text, length, TextEncoding);
+			font.ContainsGlyphs (text, length, TextEncoding);
 
 		public bool ContainsGlyphs (IntPtr text, IntPtr length) =>
-			GetFont ().ContainsGlyphs (text, (int)length, TextEncoding);
+			font.ContainsGlyphs (text, (int)length, TextEncoding);
 
 		// GetGlyphPositions
 
 		public SKPoint[] GetGlyphPositions (string text, SKPoint origin = default) =>
-			GetFont ().GetGlyphPositions (text, origin);
+			font.GetGlyphPositions (text, origin);
 
 		public SKPoint[] GetGlyphPositions (ReadOnlySpan<char> text, SKPoint origin = default) =>
-			GetFont ().GetGlyphPositions (text, origin);
+			font.GetGlyphPositions (text, origin);
 
 		public SKPoint[] GetGlyphPositions (ReadOnlySpan<byte> text, SKPoint origin = default) =>
-			GetFont ().GetGlyphPositions (text, TextEncoding, origin);
+			font.GetGlyphPositions (text, TextEncoding, origin);
 
 		public SKPoint[] GetGlyphPositions (IntPtr text, int length, SKPoint origin = default) =>
-			GetFont ().GetGlyphPositions (text, length, TextEncoding, origin);
+			font.GetGlyphPositions (text, length, TextEncoding, origin);
 
 		// GetGlyphOffsets
 
 		public float[] GetGlyphOffsets (string text, float origin = 0f) =>
-			GetFont ().GetGlyphOffsets (text, origin);
+			font.GetGlyphOffsets (text, origin);
 
 		public float[] GetGlyphOffsets (ReadOnlySpan<char> text, float origin = 0f) =>
-			GetFont ().GetGlyphOffsets (text, origin);
+			font.GetGlyphOffsets (text, origin);
 
 		public float[] GetGlyphOffsets (ReadOnlySpan<byte> text, float origin = 0f) =>
-			GetFont ().GetGlyphOffsets (text, TextEncoding, origin);
+			font.GetGlyphOffsets (text, TextEncoding, origin);
 
 		public float[] GetGlyphOffsets (IntPtr text, int length, float origin = 0f) =>
-			GetFont ().GetGlyphOffsets (text, length, TextEncoding, origin);
+			font.GetGlyphOffsets (text, length, TextEncoding, origin);
 
 		// GetGlyphWidths
 
 		public float[] GetGlyphWidths (string text) =>
-			GetFont ().GetGlyphWidths (text, this);
+			font.GetGlyphWidths (text, this);
 
 		public float[] GetGlyphWidths (ReadOnlySpan<char> text) =>
-			GetFont ().GetGlyphWidths (text, this);
+			font.GetGlyphWidths (text, this);
 
 		public float[] GetGlyphWidths (byte[] text) =>
-			GetFont ().GetGlyphWidths (text, TextEncoding, this);
+			font.GetGlyphWidths (text, TextEncoding, this);
 
 		public float[] GetGlyphWidths (ReadOnlySpan<byte> text) =>
-			GetFont ().GetGlyphWidths (text, TextEncoding, this);
+			font.GetGlyphWidths (text, TextEncoding, this);
 
 		public float[] GetGlyphWidths (IntPtr text, int length) =>
-			GetFont ().GetGlyphWidths (text, length, TextEncoding, this);
+			font.GetGlyphWidths (text, length, TextEncoding, this);
 
 		public float[] GetGlyphWidths (IntPtr text, IntPtr length) =>
-			GetFont ().GetGlyphWidths (text, (int)length, TextEncoding, this);
+			font.GetGlyphWidths (text, (int)length, TextEncoding, this);
 
 		public float[] GetGlyphWidths (string text, out SKRect[] bounds) =>
-			GetFont ().GetGlyphWidths (text, out bounds, this);
+			font.GetGlyphWidths (text, out bounds, this);
 
 		public float[] GetGlyphWidths (ReadOnlySpan<char> text, out SKRect[] bounds) =>
-			GetFont ().GetGlyphWidths (text, out bounds, this);
+			font.GetGlyphWidths (text, out bounds, this);
 
 		public float[] GetGlyphWidths (byte[] text, out SKRect[] bounds) =>
-			GetFont ().GetGlyphWidths (text, TextEncoding, out bounds, this);
+			font.GetGlyphWidths (text, TextEncoding, out bounds, this);
 
 		public float[] GetGlyphWidths (ReadOnlySpan<byte> text, out SKRect[] bounds) =>
-			GetFont ().GetGlyphWidths (text, TextEncoding, out bounds, this);
+			font.GetGlyphWidths (text, TextEncoding, out bounds, this);
 
 		public float[] GetGlyphWidths (IntPtr text, int length, out SKRect[] bounds) =>
-			GetFont ().GetGlyphWidths (text, length, TextEncoding, out bounds, this);
+			font.GetGlyphWidths (text, length, TextEncoding, out bounds, this);
 
 		public float[] GetGlyphWidths (IntPtr text, IntPtr length, out SKRect[] bounds) =>
-			GetFont ().GetGlyphWidths (text, (int)length, TextEncoding, out bounds, this);
+			font.GetGlyphWidths (text, (int)length, TextEncoding, out bounds, this);
 
 		// GetTextIntercepts
 
@@ -602,7 +653,7 @@ namespace SkiaSharp
 			if (text == null)
 				throw new ArgumentNullException (nameof (text));
 
-			using var blob = SKTextBlob.Create (text, GetFont (), new SKPoint (x, y));
+			using var blob = SKTextBlob.Create (text, font, new SKPoint (x, y));
 			return blob.GetIntercepts (upperBounds, lowerBounds, this);
 		}
 
@@ -614,7 +665,7 @@ namespace SkiaSharp
 			if (text == null)
 				throw new ArgumentNullException (nameof (text));
 
-			using var blob = SKTextBlob.Create (text, TextEncoding, GetFont (), new SKPoint (x, y));
+			using var blob = SKTextBlob.Create (text, TextEncoding, font, new SKPoint (x, y));
 			return blob.GetIntercepts (upperBounds, lowerBounds, this);
 		}
 
@@ -626,7 +677,7 @@ namespace SkiaSharp
 			if (text == IntPtr.Zero && length != 0)
 				throw new ArgumentNullException (nameof (text));
 
-			using var blob = SKTextBlob.Create (text, length, TextEncoding, GetFont (), new SKPoint (x, y));
+			using var blob = SKTextBlob.Create (text, length, TextEncoding, font, new SKPoint (x, y));
 			return blob.GetIntercepts (upperBounds, lowerBounds, this);
 		}
 
@@ -650,7 +701,7 @@ namespace SkiaSharp
 			if (text == null)
 				throw new ArgumentNullException (nameof (text));
 
-			using var blob = SKTextBlob.CreatePositioned (text, GetFont (), positions);
+			using var blob = SKTextBlob.CreatePositioned (text, font, positions);
 			return blob.GetIntercepts (upperBounds, lowerBounds, this);
 		}
 
@@ -662,7 +713,7 @@ namespace SkiaSharp
 			if (text == null)
 				throw new ArgumentNullException (nameof (text));
 
-			using var blob = SKTextBlob.CreatePositioned (text, TextEncoding, GetFont (), positions);
+			using var blob = SKTextBlob.CreatePositioned (text, TextEncoding, font, positions);
 			return blob.GetIntercepts (upperBounds, lowerBounds, this);
 		}
 
@@ -674,7 +725,7 @@ namespace SkiaSharp
 			if (text == IntPtr.Zero && length != IntPtr.Zero)
 				throw new ArgumentNullException (nameof (text));
 
-			using var blob = SKTextBlob.CreatePositioned (text, (int)length, TextEncoding, GetFont (), positions);
+			using var blob = SKTextBlob.CreatePositioned (text, (int)length, TextEncoding, font, positions);
 			return blob.GetIntercepts (upperBounds, lowerBounds, this);
 		}
 
@@ -688,7 +739,7 @@ namespace SkiaSharp
 			if (text == null)
 				throw new ArgumentNullException (nameof (text));
 
-			using var blob = SKTextBlob.CreateHorizontal (text, GetFont (), xpositions, y);
+			using var blob = SKTextBlob.CreateHorizontal (text, font, xpositions, y);
 			return blob.GetIntercepts (upperBounds, lowerBounds, this);
 		}
 
@@ -700,7 +751,7 @@ namespace SkiaSharp
 			if (text == null)
 				throw new ArgumentNullException (nameof (text));
 
-			using var blob = SKTextBlob.CreateHorizontal (text, TextEncoding, GetFont (), xpositions, y);
+			using var blob = SKTextBlob.CreateHorizontal (text, TextEncoding, font, xpositions, y);
 			return blob.GetIntercepts (upperBounds, lowerBounds, this);
 		}
 
@@ -712,17 +763,16 @@ namespace SkiaSharp
 			if (text == IntPtr.Zero && length != IntPtr.Zero)
 				throw new ArgumentNullException (nameof (text));
 
-			using var blob = SKTextBlob.CreateHorizontal (text, (int)length, TextEncoding, GetFont (), xpositions, y);
+			using var blob = SKTextBlob.CreateHorizontal (text, (int)length, TextEncoding, font, xpositions, y);
 			return blob.GetIntercepts (upperBounds, lowerBounds, this);
 		}
 
 		// Font
 
 		public SKFont ToFont () =>
-			SKFont.GetObject (SkiaApi.sk_paint_make_font (Handle));
+			SKFont.GetObject (SkiaApi.sk_paint_extra_info_clone_font (Handle));
 
-		internal SKFont GetFont () =>
-			font ??= OwnedBy (SKFont.GetObject (SkiaApi.sk_paint_get_font (Handle), false), this);
+		internal SKFont GetFont () => font;
 
 		private void UpdateFontEdging (bool antialias)
 		{
@@ -732,7 +782,7 @@ namespace SkiaSharp
 					? SKFontEdging.SubpixelAntialias
 					: SKFontEdging.Antialias;
 			}
-			GetFont ().Edging = edging;
+			font.Edging = edging;
 		}
 
 		//

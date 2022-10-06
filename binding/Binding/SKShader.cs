@@ -391,8 +391,9 @@ namespace SkiaSharp
 
 		// CreatePerlinNoiseImprovedNoise
 
-		public static SKShader CreatePerlinNoiseImprovedNoise (float baseFrequencyX, float baseFrequencyY, int numOctaves, float z) =>
-			GetObject (SkiaApi.sk_shader_new_perlin_noise_improved_noise (baseFrequencyX, baseFrequencyY, numOctaves, z));
+		// TODO: find implementation of this
+		//public static SKShader CreatePerlinNoiseImprovedNoise (float baseFrequencyX, float baseFrequencyY, int numOctaves, float z) =>
+		//	GetObject (SkiaApi.sk_shader_new_perlin_noise_improved_noise (baseFrequencyX, baseFrequencyY, numOctaves, z));
 
 		// CreatePerlinNoiseTurbulence
 

@@ -50,10 +50,8 @@ namespace SkiaSharp
 			return path.IsEmpty || QuickReject (path.Bounds);
 		}
 
-		virtual public SKSurface Surface
-		{
-			get
-			{
+		virtual public SKSurface Surface {
+			get {
 				if (Handle == IntPtr.Zero)
 					throw new ObjectDisposedException ("SKCanvas");
 				IntPtr surface = SkiaApi.sk_canvas_get_surface (Handle);
@@ -61,13 +59,11 @@ namespace SkiaSharp
 			}
 		}
 
-		virtual public SKSizeI BaseLayerSize
-		{
-			get
-			{
+		virtual public SKSizeI BaseLayerSize {
+			get {
 				if (Handle == IntPtr.Zero)
-					throw new ObjectDisposedException("SKCanvas");
-				return SkiaApi.sk_canvas_get_size(Handle);
+					throw new ObjectDisposedException ("SKCanvas");
+				return SkiaApi.sk_canvas_get_size (Handle);
 			}
 		}
 
@@ -80,13 +76,13 @@ namespace SkiaSharp
 			return SkiaApi.sk_canvas_save (Handle);
 		}
 
-		virtual public int SaveLayerAlpha(byte alpha) {
+		virtual public int SaveLayerAlpha (byte alpha) {
 			if (255 == alpha) {
-				return SaveLayer(null);
+				return SaveLayer (null);
 			} else {
-				using SKPaint tmpPaint = new();
+				using SKPaint tmpPaint = new ();
 				tmpPaint.Alpha = alpha;
-				return SaveLayer(tmpPaint);
+				return SaveLayer (tmpPaint);
 			}
 		}
 
@@ -301,11 +297,23 @@ namespace SkiaSharp
 
 		// Concat
 
+		[Obsolete ("Use Concat(SKMatrix44) instead.")]
 		virtual public void Concat (ref SKMatrix m)
 		{
 			fixed (SKMatrix* ptr = &m) {
 				SkiaApi.sk_canvas_concat (Handle, ptr);
 			}
+		}
+
+		virtual public void Concat (SKMatrix44 m44)
+		{
+			SkiaApi.sk_canvas_concat44 (Handle, m44.Handle);
+		}
+
+		[Obsolete ("Internal use only, see Skia/include/private/chromium/Slug.h")]
+		virtual public void DrawSlug (IntPtr slug)
+		{
+			SkiaApi.sk_canvas_draw_slug (Handle, slug);
 		}
 
 		// Clip*
@@ -529,28 +537,68 @@ namespace SkiaSharp
 
 		public void DrawImage (SKImage image, SKPoint p, SKPaint paint = null)
 		{
-			DrawImage (image, p.X, p.Y, paint);
+			DrawImage (image, p.X, p.Y, new SKSamplingOptions (), paint);
 		}
 
-		virtual public void DrawImage (SKImage image, float x, float y, SKPaint paint = null)
+		public void DrawImage (SKImage image, float x, float y, SKPaint paint = null)
+		{
+			DrawImage (image, x, y, new SKSamplingOptions (), paint);
+		}
+
+		public void DrawImage (SKImage image, SKPoint p, SKSamplingOptions samplingOptions, SKPaint paint = null)
+		{
+			DrawImage (image, p.X, p.Y, samplingOptions, paint);
+		}
+
+		virtual public void DrawImage (SKImage image, float x, float y, SKSamplingOptions samplingOptions, SKPaint paint = null)
 		{
 			if (image == null)
 				throw new ArgumentNullException (nameof (image));
-			SkiaApi.sk_canvas_draw_image (Handle, image.Handle, x, y, paint == null ? IntPtr.Zero : paint.Handle);
+			SkiaApi.sk_canvas_draw_image (Handle, image.Handle, x, y, &samplingOptions, paint == null ? IntPtr.Zero : paint.Handle);
 		}
 
-		virtual public void DrawImage (SKImage image, SKRect dest, SKPaint paint = null)
+		public void DrawImage (SKImage image, SKRect dest, SKPaint paint = null)
+		{
+			DrawImage (image, dest, new SKSamplingOptions(), paint);
+		}
+
+		public void DrawImage (SKImage image, SKRect source, SKRect dest, SKPaint paint = null)
+		{
+			DrawImage (image, source, dest, new SKSamplingOptions (), paint);
+		}
+
+		public void DrawImage (SKImage image, SKRect dest, SKPaint paint, SKSrcRectConstraint constraint)
+		{
+			DrawImage (image, dest, new SKSamplingOptions(), paint, constraint);
+		}
+
+		public void DrawImage (SKImage image, SKRect source, SKRect dest, SKPaint paint, SKSrcRectConstraint constraint)
+		{
+			DrawImage (image, source, dest, new SKSamplingOptions (), paint, constraint);
+		}
+
+		public void DrawImage (SKImage image, SKRect dest, SKSamplingOptions samplingOptions, SKPaint paint = null)
+		{
+			DrawImage (image, dest, samplingOptions, paint, SKSrcRectConstraint.Fast);
+		}
+
+		public void DrawImage (SKImage image, SKRect source, SKRect dest, SKSamplingOptions samplingOptions, SKPaint paint = null)
+		{
+			DrawImage (image, source, dest, samplingOptions, paint, SKSrcRectConstraint.Fast);
+		}
+
+		public void DrawImage (SKImage image, SKRect dest, SKSamplingOptions samplingOptions, SKPaint paint, SKSrcRectConstraint constraint)
 		{
 			if (image == null)
 				throw new ArgumentNullException (nameof (image));
-			SkiaApi.sk_canvas_draw_image_rect (Handle, image.Handle, null, &dest, paint == null ? IntPtr.Zero : paint.Handle);
+			DrawImage (image, new SKRect (0, 0, image.Width, image.Height), dest, samplingOptions, paint, constraint);
 		}
 
-		virtual public void DrawImage (SKImage image, SKRect source, SKRect dest, SKPaint paint = null)
+		virtual public void DrawImage (SKImage image, SKRect source, SKRect dest, SKSamplingOptions samplingOptions, SKPaint paint, SKSrcRectConstraint constraint)
 		{
 			if (image == null)
 				throw new ArgumentNullException (nameof (image));
-			SkiaApi.sk_canvas_draw_image_rect (Handle, image.Handle, &source, &dest, paint == null ? IntPtr.Zero : paint.Handle);
+			SkiaApi.sk_canvas_draw_image_rect_with_constraint (Handle, image.Handle, &source, &dest, &samplingOptions, paint == null ? IntPtr.Zero : paint.Handle, constraint);
 		}
 
 		// DrawPicture
@@ -959,7 +1007,12 @@ namespace SkiaSharp
 			DrawImageNinePatch (image, center, dst, paint);
 		}
 
-		virtual public void DrawImageNinePatch (SKImage image, SKRectI center, SKRect dst, SKPaint paint = null)
+		public void DrawImageNinePatch (SKImage image, SKRectI center, SKRect dst, SKPaint paint = null)
+		{
+			DrawImageNinePatch (image, center, dst, new SKFilterMode (), paint);
+		}
+
+		virtual public void DrawImageNinePatch (SKImage image, SKRectI center, SKRect dst, SKFilterMode filter, SKPaint paint = null)
 		{
 			if (image == null)
 				throw new ArgumentNullException (nameof (image));
@@ -967,7 +1020,7 @@ namespace SkiaSharp
 			if (!SKRect.Create (image.Width, image.Height).Contains (center))
 				throw new ArgumentException ("Center rectangle must be contained inside the image bounds.", nameof (center));
 
-			SkiaApi.sk_canvas_draw_image_nine (Handle, image.Handle, &center, &dst, paint == null ? IntPtr.Zero : paint.Handle);
+			SkiaApi.sk_canvas_draw_image_nine (Handle, image.Handle, &center, &dst, filter, paint == null ? IntPtr.Zero : paint.Handle);
 		}
 
 		// Draw*Lattice
@@ -993,7 +1046,12 @@ namespace SkiaSharp
 			DrawImageLattice (image, lattice, dst, paint);
 		}
 
-		virtual public void DrawImageLattice (SKImage image, SKLattice lattice, SKRect dst, SKPaint paint = null)
+		public void DrawImageLattice (SKImage image, SKLattice lattice, SKRect dst, SKPaint paint = null)
+		{
+			DrawImageLattice (image, lattice, dst, new SKFilterMode (), paint);
+		}
+
+		virtual public void DrawImageLattice (SKImage image, SKLattice lattice, SKRect dst, SKFilterMode filter, SKPaint paint = null)
 		{
 			if (image == null)
 				throw new ArgumentNullException (nameof (image));
@@ -1019,7 +1077,7 @@ namespace SkiaSharp
 					var bounds = lattice.Bounds.Value;
 					nativeLattice.fBounds = &bounds;
 				}
-				SkiaApi.sk_canvas_draw_image_lattice (Handle, image.Handle, &nativeLattice, &dst, paint == null ? IntPtr.Zero : paint.Handle);
+				SkiaApi.sk_canvas_draw_image_lattice (Handle, image.Handle, &nativeLattice, &dst, filter, paint == null ? IntPtr.Zero : paint.Handle);
 			}
 		}
 
@@ -1030,16 +1088,31 @@ namespace SkiaSharp
 			SkiaApi.sk_canvas_reset_matrix (Handle);
 		}
 
+		[Obsolete ("Use SetMatrix(SKMatrix44) instead.")]
 		virtual public void SetMatrix (SKMatrix matrix)
 		{
 			SkiaApi.sk_canvas_set_matrix (Handle, &matrix);
 		}
 
+		virtual public void SetMatrix (SKMatrix44 m44)
+		{
+			SkiaApi.sk_canvas_set_matrix44 (Handle, m44.Handle);
+		}
+
+		[Obsolete ("Use TotalMatrix44 instead.")]
 		virtual public SKMatrix TotalMatrix {
 			get {
 				SKMatrix matrix;
 				SkiaApi.sk_canvas_get_total_matrix (Handle, &matrix);
 				return matrix;
+			}
+		}
+
+		virtual public SKMatrix44 TotalMatrix44 {
+			get {
+				SKMatrix44 m44 = new ();
+				SkiaApi.sk_canvas_get_total_matrix44 (Handle, m44.Handle);
+				return m44;
 			}
 		}
 
@@ -1110,13 +1183,25 @@ namespace SkiaSharp
 		public void DrawAtlas (SKImage atlas, SKRect[] sprites, SKRotationScaleMatrix[] transforms, SKPaint paint) =>
 			DrawAtlas (atlas, sprites, transforms, null, SKBlendMode.Dst, null, paint);
 
+		public void DrawAtlas (SKImage atlas, SKRect[] sprites, SKRotationScaleMatrix[] transforms, SKSamplingOptions samplingOptions, SKPaint paint) =>
+			DrawAtlas (atlas, sprites, transforms, null, SKBlendMode.Dst, samplingOptions, null, paint);
+
 		public void DrawAtlas (SKImage atlas, SKRect[] sprites, SKRotationScaleMatrix[] transforms, SKColor[] colors, SKBlendMode mode, SKPaint paint) =>
 			DrawAtlas (atlas, sprites, transforms, colors, mode, null, paint);
+
+		public void DrawAtlas (SKImage atlas, SKRect[] sprites, SKRotationScaleMatrix[] transforms, SKColor[] colors, SKBlendMode mode, SKSamplingOptions samplingOptions, SKPaint paint) =>
+			DrawAtlas (atlas, sprites, transforms, colors, mode, samplingOptions, null, paint);
 
 		public void DrawAtlas (SKImage atlas, SKRect[] sprites, SKRotationScaleMatrix[] transforms, SKColor[] colors, SKBlendMode mode, SKRect cullRect, SKPaint paint) =>
 			DrawAtlas (atlas, sprites, transforms, colors, mode, &cullRect, paint);
 
-		virtual public void DrawAtlas (SKImage atlas, SKRect[] sprites, SKRotationScaleMatrix[] transforms, SKColor[] colors, SKBlendMode mode, SKRect* cullRect, SKPaint paint)
+		public void DrawAtlas (SKImage atlas, SKRect[] sprites, SKRotationScaleMatrix[] transforms, SKColor[] colors, SKBlendMode mode, SKSamplingOptions samplingOptions, SKRect cullRect, SKPaint paint) =>
+			DrawAtlas (atlas, sprites, transforms, colors, mode, samplingOptions, &cullRect, paint);
+
+		public void DrawAtlas (SKImage atlas, SKRect[] sprites, SKRotationScaleMatrix[] transforms, SKColor[] colors, SKBlendMode mode, SKRect* cullRect, SKPaint paint) =>
+			DrawAtlas (atlas, sprites, transforms, colors, mode, new SKSamplingOptions(), cullRect, paint);
+
+		virtual public void DrawAtlas (SKImage atlas, SKRect[] sprites, SKRotationScaleMatrix[] transforms, SKColor[] colors, SKBlendMode mode, SKSamplingOptions samplingOptions, SKRect* cullRect, SKPaint paint)
 		{
 			if (atlas == null)
 				throw new ArgumentNullException (nameof (atlas));
@@ -1133,7 +1218,7 @@ namespace SkiaSharp
 			fixed (SKRect* s = sprites)
 			fixed (SKRotationScaleMatrix* t = transforms)
 			fixed (SKColor* c = colors) {
-				SkiaApi.sk_canvas_draw_atlas (Handle, atlas.Handle, t, s, (uint*)c, transforms.Length, mode, cullRect, paint.Handle);
+				SkiaApi.sk_canvas_draw_atlas (Handle, atlas.Handle, t, s, (uint*)c, transforms.Length, mode, &samplingOptions, cullRect, paint.Handle);
 			}
 		}
 

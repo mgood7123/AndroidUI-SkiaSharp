@@ -533,11 +533,26 @@ namespace SkiaSharp
 		public SKShader ToShader () =>
 			ToShader (SKShaderTileMode.Clamp, SKShaderTileMode.Clamp);
 
-		public SKShader ToShader (SKShaderTileMode tileX, SKShaderTileMode tileY) =>
-			SKShader.GetObject (SkiaApi.sk_image_make_shader (Handle, tileX, tileY, null));
+		public SKShader ToShader (SKSamplingOptions samplingOptions) =>
+			ToShader (SKShaderTileMode.Clamp, SKShaderTileMode.Clamp, samplingOptions);
 
-		public SKShader ToShader (SKShaderTileMode tileX, SKShaderTileMode tileY, SKMatrix localMatrix) =>
-			SKShader.GetObject (SkiaApi.sk_image_make_shader (Handle, tileX, tileY, &localMatrix));
+		public SKShader ToShader (SKMatrix localMatrix) =>
+			ToShader (SKShaderTileMode.Clamp, SKShaderTileMode.Clamp, localMatrix);
+
+		public SKShader ToShader (SKSamplingOptions samplingOptions, SKMatrix localMatrix) =>
+			ToShader (SKShaderTileMode.Clamp, SKShaderTileMode.Clamp, samplingOptions, localMatrix);
+
+		public SKShader ToShader (SKShaderTileMode tmx, SKShaderTileMode tmy) =>
+			ToShader (tmx, tmy, new SKSamplingOptions ());
+
+		public SKShader ToShader (SKShaderTileMode tmx, SKShaderTileMode tmy, SKMatrix localMatrix) =>
+			ToShader (tmx, tmy, new SKSamplingOptions (), localMatrix);
+
+		public SKShader ToShader (SKShaderTileMode tmx, SKShaderTileMode tmy, SKSamplingOptions samplingOptions) =>
+			SKShader.GetObject (SkiaApi.sk_image_make_shader (Handle, tmx, tmy, &samplingOptions, null));
+
+		public SKShader ToShader (SKShaderTileMode tmx, SKShaderTileMode tmy, SKSamplingOptions samplingOptions, SKMatrix localMatrix) =>
+			SKShader.GetObject (SkiaApi.sk_image_make_shader (Handle, tmx, tmy, &samplingOptions, &localMatrix));
 
 		// PeekPixels
 
@@ -611,16 +626,16 @@ namespace SkiaSharp
 
 		// ScalePixels
 
-		public bool ScalePixels (SKPixmap dst, SKFilterQuality quality)
+		public bool ScalePixels (SKPixmap dst, SKSamplingOptions samplingOptions)
 		{
-			return ScalePixels (dst, quality, SKImageCachingHint.Allow);
+			return ScalePixels (dst, samplingOptions, SKImageCachingHint.Allow);
 		}
 
-		public bool ScalePixels (SKPixmap dst, SKFilterQuality quality, SKImageCachingHint cachingHint)
+		public bool ScalePixels (SKPixmap dst, SKSamplingOptions samplingOptions, SKImageCachingHint cachingHint)
 		{
 			if (dst == null)
 				throw new ArgumentNullException (nameof (dst));
-			return SkiaApi.sk_image_scale_pixels (Handle, dst.Handle, quality, cachingHint);
+			return SkiaApi.sk_image_scale_pixels (Handle, dst.Handle, &samplingOptions, cachingHint);
 		}
 
 		// Subset

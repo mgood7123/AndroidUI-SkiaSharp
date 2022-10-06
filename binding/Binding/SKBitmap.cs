@@ -35,6 +35,38 @@ namespace SkiaSharp
 					return SKFilterQuality.Medium;
 			}
 		}
+
+		public static SKSamplingOptions ToSamplingOptions (this SKBitmapResizeMethod method)
+		{
+			switch (method) {
+				case SKBitmapResizeMethod.Box:
+				case SKBitmapResizeMethod.Triangle:
+					return new SKSamplingOptions (SKFilterQuality.Low);
+				case SKBitmapResizeMethod.Lanczos3:
+					return new SKSamplingOptions (SKFilterQuality.Medium);
+				case SKBitmapResizeMethod.Hamming:
+				case SKBitmapResizeMethod.Mitchell:
+					return new SKSamplingOptions (SKFilterQuality.High);
+				default:
+					return new SKSamplingOptions (SKFilterQuality.Medium);
+			}
+		}
+
+		public static SKSamplingOptions ToSamplingOptions (this SKBitmapResizeMethod method, SKMipmapMode filter_quality_medium__mipmap_mode)
+		{
+			switch (method) {
+				case SKBitmapResizeMethod.Box:
+				case SKBitmapResizeMethod.Triangle:
+					return new SKSamplingOptions (SKFilterQuality.Low);
+				case SKBitmapResizeMethod.Lanczos3:
+					return new SKSamplingOptions (SKFilterQuality.Medium, filter_quality_medium__mipmap_mode);
+				case SKBitmapResizeMethod.Hamming:
+				case SKBitmapResizeMethod.Mitchell:
+					return new SKSamplingOptions (SKFilterQuality.High);
+				default:
+					return new SKSamplingOptions (SKFilterQuality.Medium, filter_quality_medium__mipmap_mode);
+			}
+		}
 	}
 
 	// TODO: keep in mind SKBitmap may be going away (according to Google)
@@ -1007,27 +1039,27 @@ namespace SkiaSharp
 		// Resize
 
 		[EditorBrowsable (EditorBrowsableState.Never)]
-		[Obsolete ("Use Resize(SKImageInfo, SKFilterQuality) instead.")]
+		[Obsolete ("Use Resize(SKImageInfo, SKSamplingOptions) instead.")]
 		public SKBitmap Resize (SKImageInfo info, SKBitmapResizeMethod method) =>
 			Resize (info, method.ToFilterQuality ());
 
 		[EditorBrowsable (EditorBrowsableState.Never)]
-		[Obsolete ("Use ScalePixels(SKBitmap, SKFilterQuality) instead.")]
+		[Obsolete ("Use ScalePixels(SKBitmap, SKSamplingOptions) instead.")]
 		public bool Resize (SKBitmap dst, SKBitmapResizeMethod method) =>
 			ScalePixels (dst, method.ToFilterQuality ());
 
 		[EditorBrowsable (EditorBrowsableState.Never)]
-		[Obsolete ("Use ScalePixels(SKBitmap, SKFilterQuality) instead.")]
+		[Obsolete ("Use ScalePixels(SKBitmap, SKSamplingOptions) instead.")]
 		public static bool Resize (SKBitmap dst, SKBitmap src, SKBitmapResizeMethod method) =>
 			src.ScalePixels (dst, method.ToFilterQuality ());
 
-		public SKBitmap Resize (SKImageInfo info, SKFilterQuality quality)
+		public SKBitmap Resize (SKImageInfo info, SKSamplingOptions options)
 		{
 			if (info.IsEmpty)
 				return null;
 
 			var dst = new SKBitmap (info);
-			if (ScalePixels (dst, quality)) {
+			if (ScalePixels (dst, options)) {
 				return dst;
 			} else {
 				dst.Dispose ();
@@ -1035,30 +1067,30 @@ namespace SkiaSharp
 			}
 		}
 
-		public SKBitmap Resize (SKSizeI size, SKFilterQuality quality) =>
-			Resize (Info.WithSize (size), quality);
+		public SKBitmap Resize (SKSizeI size, SKSamplingOptions options) =>
+			Resize (Info.WithSize (size), options);
 
 		// ScalePixels
 
-		public bool ScalePixels (SKBitmap destination, SKFilterQuality quality)
+		public bool ScalePixels (SKBitmap destination, SKSamplingOptions options)
 		{
 			if (destination == null) {
 				throw new ArgumentNullException (nameof (destination));
 			}
 
 			using (var dstPix = destination.PeekPixels ()) {
-				return ScalePixels (dstPix, quality);
+				return ScalePixels (dstPix, options);
 			}
 		}
 
-		public bool ScalePixels (SKPixmap destination, SKFilterQuality quality)
+		public bool ScalePixels (SKPixmap destination, SKSamplingOptions options)
 		{
 			if (destination == null) {
 				throw new ArgumentNullException (nameof (destination));
 			}
 
 			using (var srcPix = PeekPixels ()) {
-				return srcPix.ScalePixels (destination, quality);
+				return srcPix.ScalePixels (destination, options);
 			}
 		}
 
@@ -1114,10 +1146,25 @@ namespace SkiaSharp
 		public SKShader ToShader () =>
 			ToShader (SKShaderTileMode.Clamp, SKShaderTileMode.Clamp);
 
+		public SKShader ToShader (SKSamplingOptions samplingOptions) =>
+			ToShader (SKShaderTileMode.Clamp, SKShaderTileMode.Clamp, samplingOptions);
+
+		public SKShader ToShader (SKMatrix localMatrix) =>
+			ToShader (SKShaderTileMode.Clamp, SKShaderTileMode.Clamp, localMatrix);
+
+		public SKShader ToShader (SKSamplingOptions samplingOptions, SKMatrix localMatrix) =>
+			ToShader (SKShaderTileMode.Clamp, SKShaderTileMode.Clamp, samplingOptions, localMatrix);
+
 		public SKShader ToShader (SKShaderTileMode tmx, SKShaderTileMode tmy) =>
-			SKShader.GetObject (SkiaApi.sk_bitmap_make_shader (Handle, tmx, tmy, null));
+			ToShader (tmx, tmy, new SKSamplingOptions ());
 
 		public SKShader ToShader (SKShaderTileMode tmx, SKShaderTileMode tmy, SKMatrix localMatrix) =>
-			SKShader.GetObject (SkiaApi.sk_bitmap_make_shader (Handle, tmx, tmy, &localMatrix));
+			ToShader (tmx, tmy, new SKSamplingOptions (), localMatrix);
+
+		public SKShader ToShader (SKShaderTileMode tmx, SKShaderTileMode tmy, SKSamplingOptions samplingOptions) =>
+			SKShader.GetObject (SkiaApi.sk_bitmap_make_shader (Handle, tmx, tmy, &samplingOptions, null));
+
+		public SKShader ToShader (SKShaderTileMode tmx, SKShaderTileMode tmy, SKSamplingOptions samplingOptions, SKMatrix localMatrix) =>
+			SKShader.GetObject (SkiaApi.sk_bitmap_make_shader (Handle, tmx, tmy, &samplingOptions, &localMatrix));
 	}
 }

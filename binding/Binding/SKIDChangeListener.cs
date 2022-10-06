@@ -152,9 +152,9 @@ namespace SkiaSharp
 			/// Add a new listener to the list. It must not already be deregistered. Also clears out
 			/// <br></br> previously deregistered listeners.
 			/// </summary>
-			public void Add(SKIDChangeListener listener, bool singleThreaded = false)
+			public void Add(SKIDChangeListener listener)
 			{
-				SkiaApi.sk_managedidchangelistenerlist_add(Handle, listener.Handle, singleThreaded);
+				SkiaApi.sk_managedidchangelistenerlist_add(Handle, listener.Handle);
 			}
 
 			/// <returns>The number of registered listeners (including deregisterd listeners that are yet-to-be removed).</returns>
@@ -166,17 +166,17 @@ namespace SkiaSharp
 			/// <summary>
 			/// Calls changed() on all listeners that haven't been deregistered and resets the list.
 			/// </summary>
-			public void Changed(bool singleThreaded = false)
+			public void Changed()
 			{
-				SkiaApi.sk_managedidchangelistenerlist_changed(Handle, singleThreaded);
+				SkiaApi.sk_managedidchangelistenerlist_changed(Handle);
 			}
 
 			/// <summary>
 			/// Resets without calling changed() on the listeners.
 			/// </summary>
-			public void Reset(bool singleThreaded = false)
+			public void Reset()
 			{
-				SkiaApi.sk_managedidchangelistenerlist_reset(Handle, singleThreaded);
+				SkiaApi.sk_managedidchangelistenerlist_reset(Handle);
 			}
 		}
 	}

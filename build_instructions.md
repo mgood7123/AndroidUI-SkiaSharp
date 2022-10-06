@@ -1,14 +1,13 @@
 To build `SkiaSharp` on `Windows`:
 
-this requires `~50GB to ~100GB` for `installation/setup`
+this requires `~20GB to ~50GB` for `installation/setup`
 and an additional `44GB` for building natives and bindings/views
 
 building is recommended on `EXTERNAL HARD-DRIVE` if free space on internal hdd is small
 
-install `VS 2019`
 install `VS 2022`
-install specified https://github.com/mono/SkiaSharp/wiki/Building-SkiaSharp for both 2019 and 2022
-`~25GB` for each VS installation
+install specified https://github.com/mono/SkiaSharp/wiki/Building-SkiaSharp for 2022
+`~25GB` for VS installation
 
 `Windows 10 SDK (10.0.10240)` can be obtained from https://go.microsoft.com/fwlink/p/?LinkId=619296
 `Windows 10 SDK (10.0.16299.91)` can be obtained from https://go.microsoft.com/fwlink/p/?linkid=864422

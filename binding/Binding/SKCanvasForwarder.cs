@@ -15,6 +15,7 @@ namespace SkiaSharp
 		public override bool IsClipRect => canvasRef.IsClipRect;
 
 		public override SKMatrix TotalMatrix => canvasRef.TotalMatrix;
+		public override SKMatrix44 TotalMatrix44 => canvasRef.TotalMatrix44;
 
 		public override int SaveCount => canvasRef.SaveCount;
 
@@ -211,6 +212,11 @@ namespace SkiaSharp
 			canvasRef.Concat (ref m);
 		}
 
+		public override void Concat (SKMatrix44 m44)
+		{
+			canvasRef.Concat (m44);
+		}
+
 		public override void ClipRect (SKRect rect, SKClipOperation operation = SKClipOperation.Intersect, bool antialias = false)
 		{
 			canvasRef.ClipRect (rect, operation, antialias);
@@ -291,24 +297,14 @@ namespace SkiaSharp
 			canvasRef.DrawPoints (mode, points, paint);
 		}
 
-		public override void DrawPoint (float x, float y, SKPaint paint)
+		public override void DrawImage (SKImage image, float x, float y, SKSamplingOptions samplingOptions, SKPaint paint = null)
 		{
-			canvasRef.DrawPoint (x, y, paint);
+			canvasRef.DrawImage (image, x, y, samplingOptions, paint);
 		}
 
-		public override void DrawImage (SKImage image, float x, float y, SKPaint paint = null)
+		public override void DrawImage (SKImage image, SKRect source, SKRect dest, SKSamplingOptions samplingOptions, SKPaint paint, SKSrcRectConstraint constraint)
 		{
-			canvasRef.DrawImage (image, x, y, paint);
-		}
-
-		public override void DrawImage (SKImage image, SKRect dest, SKPaint paint = null)
-		{
-			canvasRef.DrawImage (image, dest, paint);
-		}
-
-		public override void DrawImage (SKImage image, SKRect source, SKRect dest, SKPaint paint = null)
-		{
-			canvasRef.DrawImage (image, source, dest, paint);
+			canvasRef.DrawImage (image, source, dest, samplingOptions, paint, constraint);
 		}
 
 		public override void DrawPicture (SKPicture picture, ref SKMatrix matrix, SKPaint paint = null)
@@ -361,14 +357,14 @@ namespace SkiaSharp
 			canvasRef.DrawLinkDestinationAnnotation (rect, value);
 		}
 
-		public override void DrawImageNinePatch (SKImage image, SKRectI center, SKRect dst, SKPaint paint = null)
+		public override void DrawImageNinePatch (SKImage image, SKRectI center, SKRect dst, SKFilterMode filter, SKPaint paint = null)
 		{
-			canvasRef.DrawImageNinePatch (image, center, dst, paint);
+			canvasRef.DrawImageNinePatch (image, center, dst, filter, paint);
 		}
 
-		public override void DrawImageLattice (SKImage image, SKLattice lattice, SKRect dst, SKPaint paint = null)
+		public override void DrawImageLattice (SKImage image, SKLattice lattice, SKRect dst, SKFilterMode filter, SKPaint paint = null)
 		{
-			canvasRef.DrawImageLattice (image, lattice, dst, paint);
+			canvasRef.DrawImageLattice (image, lattice, dst, filter, paint);
 		}
 
 		public override void ResetMatrix ()
@@ -376,13 +372,13 @@ namespace SkiaSharp
 			canvasRef.ResetMatrix ();
 		}
 
-		virtual public SKSurface Surface {
+		public override SKSurface Surface {
 			get {
 				return canvasRef.Surface;
 			}
 		}
 
-		virtual public SKSizeI BaseLayerSize {
+		public override SKSizeI BaseLayerSize {
 			get
 			{
 				return canvasRef.BaseLayerSize;
@@ -392,6 +388,11 @@ namespace SkiaSharp
 		public override void SetMatrix (SKMatrix matrix)
 		{
 			canvasRef.SetMatrix (matrix);
+		}
+
+		public override void SetMatrix (SKMatrix44 m44)
+		{
+			canvasRef.SetMatrix (m44);
 		}
 
 		public override void DrawVertices (SKVertices vertices, SKBlendMode mode, SKPaint paint)
@@ -409,9 +410,9 @@ namespace SkiaSharp
 			canvasRef.DrawRoundRectDifference (outer, inner, paint);
 		}
 
-		public override unsafe void DrawAtlas (SKImage atlas, SKRect[] sprites, SKRotationScaleMatrix[] transforms, SKColor[] colors, SKBlendMode mode, SKRect* cullRect, SKPaint paint)
+		public override unsafe void DrawAtlas (SKImage atlas, SKRect[] sprites, SKRotationScaleMatrix[] transforms, SKColor[] colors, SKBlendMode mode, SKSamplingOptions samplingOptions, SKRect* cullRect, SKPaint paint)
 		{
-			canvasRef.DrawAtlas (atlas, sprites, transforms, colors, mode, cullRect, paint);
+			canvasRef.DrawAtlas (atlas, sprites, transforms, colors, mode, samplingOptions, cullRect, paint);
 		}
 
 		public override void DrawPatch (SKPoint[] cubics, SKColor[] colors, SKPoint[] texCoords, SKBlendMode mode, SKPaint paint)

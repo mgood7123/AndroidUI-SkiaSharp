@@ -306,14 +306,17 @@ namespace SkiaSharp
 				}
 				fromFinalizer = true;
 
-				Dispose (false);
+				if (Interlocked.CompareExchange (ref isDisposed, 1, 0) == 0)
+					Dispose (false);
+
 				if (LOG_ALLOCATION_DESTRUCTOR_EXIT_CALLBACK != null) {
 					LOG_ALLOCATION_DESTRUCTOR_EXIT_CALLBACK.Invoke (s);
 				}
 			} else {
 				fromFinalizer = true;
 
-				Dispose (false);
+				if (Interlocked.CompareExchange (ref isDisposed, 1, 0) == 0)
+					Dispose (false);
 			}
 		}
 
@@ -342,9 +345,6 @@ namespace SkiaSharp
 
 		protected virtual void Dispose (bool disposing)
 		{
-			if (Interlocked.CompareExchange (ref isDisposed, 1, 0) != 0)
-				return;
-
 			// dispose any objects that are owned/created by native code
 			if (disposing)
 				DisposeUnownedManaged ();
@@ -370,7 +370,8 @@ namespace SkiaSharp
 
 		protected internal void DisposeInternal ()
 		{
-			Dispose (true);
+			if (Interlocked.CompareExchange (ref isDisposed, 1, 0) == 0)
+				Dispose (true);
 			GC.SuppressFinalize (this);
 		}
 	}
@@ -383,14 +384,6 @@ namespace SkiaSharp
 				return SkiaApi.sk_refcnt_unique (handle);
 			else
 				return SkiaApi.sk_nvrefcnt_unique (handle);
-		}
-
-		public static int GetReferenceCount (this IntPtr handle, bool isVirtual)
-		{
-			if (isVirtual)
-				return SkiaApi.sk_refcnt_get_ref_count (handle);
-			else
-				return SkiaApi.sk_nvrefcnt_get_ref_count (handle);
 		}
 
 		public static void SafeRef (this ISKReferenceCounted obj)
@@ -407,14 +400,6 @@ namespace SkiaSharp
 				nvrefcnt.UnreferenceNative ();
 			else
 				SkiaApi.sk_refcnt_safe_unref (obj.Handle);
-		}
-
-		public static int GetReferenceCount (this ISKReferenceCounted obj)
-		{
-			if (obj is ISKNonVirtualReferenceCounted)
-				return SkiaApi.sk_nvrefcnt_get_ref_count (obj.Handle);
-			else
-				return SkiaApi.sk_refcnt_get_ref_count (obj.Handle);
 		}
 	}
 

@@ -80,9 +80,9 @@ namespace SkiaSharp
 			base.Dispose (disposing);
 		}
 
-		protected override void OnConcat (SKMatrix matrix)
+		protected override void OnConcat (SKMatrix44 matrix)
 		{
-			canvasRef.Concat (ref matrix);
+			canvasRef.Concat (matrix);
 		}
 
 		protected override void OnClipRect (SKRect rect, SKClipOperation operation, bool antiAlias)
@@ -120,9 +120,9 @@ namespace SkiaSharp
 			canvasRef.DrawArc (rect, startAngle, sweepAngle, useCenter, paint);
 		}
 
-		protected override unsafe void OnDrawAtlas (SKImage atlas, SKRect[] sprites, SKRotationScaleMatrix[] transforms, SKColor[] colors, SKBlendMode mode, SKRect* cullRect, SKPaint paint)
+		protected override unsafe void OnDrawAtlas (SKImage atlas, SKRect[] sprites, SKRotationScaleMatrix[] transforms, SKColor[] colors, SKBlendMode mode, SKSamplingOptions samplingOptions, SKRect* cullRect, SKPaint paint)
 		{
-			canvasRef.DrawAtlas (atlas, sprites, transforms, colors, mode, cullRect, paint);
+			canvasRef.DrawAtlas (atlas, sprites, transforms, colors, mode, samplingOptions, cullRect, paint);
 		}
 
 		protected override void OnDrawDrawable (SKDrawable drawable, SKMatrix matrix)
@@ -130,29 +130,24 @@ namespace SkiaSharp
 			canvasRef.DrawDrawable (drawable, ref matrix);
 		}
 
-		protected override void OnDrawImageRect (SKImage image, SKRect dest, SKPaint paint)
+		protected override void OnDrawImageRect (SKImage image, SKRect dest, SKSamplingOptions samplingOptions, SKPaint paint, SKSrcRectConstraint constraint)
 		{
-			canvasRef.DrawImage (image, dest, paint);
+			canvasRef.DrawImage (image, dest, samplingOptions, paint, constraint);
 		}
 
-		protected override void OnDrawImageRect (SKImage image, SKRect src, SKRect dest, SKPaint paint)
+		protected override void OnDrawImageRect (SKImage image, SKRect src, SKRect dest, SKSamplingOptions samplingOptions, SKPaint paint, SKSrcRectConstraint constraint)
 		{
-			canvasRef.DrawImage (image, src, dest, paint);
+			canvasRef.DrawImage (image, src, dest, samplingOptions, paint, constraint);
 		}
 
-		protected override void OnDrawImageLattice (SKImage image, SKLattice lattice, SKRect dest, SKPaint paint)
+		protected override void OnDrawImageLattice (SKImage image, SKLattice lattice, SKRect dest, SKFilterMode filter, SKPaint paint)
 		{
-			canvasRef.DrawImageLattice (image, lattice, dest, paint);
+			canvasRef.DrawImageLattice (image, lattice, dest, filter, paint);
 		}
 
-		protected override void OnDrawImageNinePatch (SKImage image, SKRectI center, SKRect dest, SKPaint paint)
+		protected override void OnDrawImage (SKImage image, float x, float y, SKSamplingOptions samplingOptions, SKPaint paint)
 		{
-			canvasRef.DrawImageNinePatch (image, center, dest, paint);
-		}
-
-		protected override void OnDrawImage (SKImage image, float x, float y, SKPaint paint)
-		{
-			canvasRef.DrawImage (image, x, y, paint);
+			canvasRef.DrawImage (image, x, y, samplingOptions, paint);
 		}
 
 		protected override void OnDrawOval (SKRect rect, SKPaint paint)
@@ -200,6 +195,11 @@ namespace SkiaSharp
 			canvasRef.DrawRoundRectDifference (outer, inner, paint);
 		}
 
+		protected override void OnDrawSlug (IntPtr slug)
+		{
+			canvasRef.DrawSlug (slug);
+		}
+
 		protected override void OnDrawText (SKTextBlob blob, float x, float y, SKPaint paint)
 		{
 			canvasRef.DrawText (blob, x, y, paint);
@@ -240,7 +240,7 @@ namespace SkiaSharp
 			canvasRef.Scale (sx, sy);
 		}
 
-		protected override void OnSetMatrix (SKMatrix matrix)
+		protected override void OnSetMatrix (SKMatrix44 matrix)
 		{
 			canvasRef.SetMatrix (matrix);
 		}

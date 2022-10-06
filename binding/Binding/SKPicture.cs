@@ -51,14 +51,50 @@ namespace SkiaSharp
 		public SKShader ToShader () =>
 			ToShader (SKShaderTileMode.Clamp, SKShaderTileMode.Clamp);
 
+		public SKShader ToShader (SKFilterMode filter) =>
+			ToShader (SKShaderTileMode.Clamp, SKShaderTileMode.Clamp, filter);
+
+		public SKShader ToShader (SKMatrix localMatrix) =>
+			ToShader (SKShaderTileMode.Clamp, SKShaderTileMode.Clamp, localMatrix);
+
+		public SKShader ToShader (SKFilterMode filter, SKMatrix localMatrix) =>
+			ToShader (SKShaderTileMode.Clamp, SKShaderTileMode.Clamp, filter, localMatrix);
+
 		public SKShader ToShader (SKShaderTileMode tmx, SKShaderTileMode tmy) =>
-			SKShader.GetObject (SkiaApi.sk_picture_make_shader (Handle, tmx, tmy, null, null));
+			ToShader (tmx, tmy, SKFilterMode.Nearest);
+
+		public SKShader ToShader (SKShaderTileMode tmx, SKShaderTileMode tmy, SKMatrix localMatrix) =>
+			ToShader (tmx, tmy, SKFilterMode.Nearest, localMatrix);
+
+		public SKShader ToShader (SKShaderTileMode tmx, SKShaderTileMode tmy, SKFilterMode filter) =>
+			SKShader.GetObject (SkiaApi.sk_picture_make_shader (Handle, tmx, tmy, filter, null, null));
+
+		public SKShader ToShader (SKShaderTileMode tmx, SKShaderTileMode tmy, SKFilterMode filter, SKMatrix localMatrix) =>
+			SKShader.GetObject (SkiaApi.sk_picture_make_shader (Handle, tmx, tmy, filter, &localMatrix, null));
+
+		public SKShader ToShader (SKRect tile) =>
+			ToShader (SKShaderTileMode.Clamp, SKShaderTileMode.Clamp, tile);
+
+		public SKShader ToShader (SKFilterMode filter, SKRect tile) =>
+			ToShader (SKShaderTileMode.Clamp, SKShaderTileMode.Clamp, filter, tile);
+
+		public SKShader ToShader (SKMatrix localMatrix, SKRect tile) =>
+			ToShader (SKShaderTileMode.Clamp, SKShaderTileMode.Clamp, localMatrix, tile);
+
+		public SKShader ToShader (SKFilterMode filter, SKMatrix localMatrix, SKRect tile) =>
+			ToShader (SKShaderTileMode.Clamp, SKShaderTileMode.Clamp, filter, localMatrix, tile);
 
 		public SKShader ToShader (SKShaderTileMode tmx, SKShaderTileMode tmy, SKRect tile) =>
-			SKShader.GetObject (SkiaApi.sk_picture_make_shader (Handle, tmx, tmy, null, &tile));
+			ToShader (tmx, tmy, SKFilterMode.Nearest, tile);
 
 		public SKShader ToShader (SKShaderTileMode tmx, SKShaderTileMode tmy, SKMatrix localMatrix, SKRect tile) =>
-			SKShader.GetObject (SkiaApi.sk_picture_make_shader (Handle, tmx, tmy, &localMatrix, &tile));
+			ToShader (tmx, tmy, SKFilterMode.Nearest, localMatrix, tile);
+
+		public SKShader ToShader (SKShaderTileMode tmx, SKShaderTileMode tmy, SKFilterMode filter, SKRect tile) =>
+			SKShader.GetObject (SkiaApi.sk_picture_make_shader (Handle, tmx, tmy, filter, null, &tile));
+
+		public SKShader ToShader (SKShaderTileMode tmx, SKShaderTileMode tmy, SKFilterMode filter, SKMatrix localMatrix, SKRect tile) =>
+			SKShader.GetObject (SkiaApi.sk_picture_make_shader (Handle, tmx, tmy, filter, &localMatrix, &tile));
 
 		// Deserialize
 

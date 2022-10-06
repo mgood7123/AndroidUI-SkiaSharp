@@ -8,6 +8,33 @@ using System.Reflection;
 
 namespace SkiaSharp
 {
+	public struct SKOptional
+	{
+		public struct NullOpt { };
+		public static NullOpt Null = default (NullOpt);
+	}
+
+	public unsafe struct SKOptional<T> where T : struct
+	{
+		public readonly bool has_value;
+		public readonly T value;
+
+		public SKOptional (T? value)
+		{
+			if (value == null) {
+				has_value = false;
+				this.value = default (T);
+			} else {
+				has_value = true;
+				this.value = value.Value;
+			}
+		}
+
+		public static implicit operator SKOptional<T>(T value) => new SKOptional<T>(value);
+		public static implicit operator SKOptional<T>(SKOptional.NullOpt unused) => new SKOptional<T>(null);
+		public static implicit operator T?(SKOptional<T> value) => value.has_value ? value.value : (T?)null;
+	}
+
 	internal unsafe static class Utils
 	{
 		internal const float NearlyZero = 1.0f / (1 << 12);

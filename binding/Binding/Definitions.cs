@@ -197,6 +197,12 @@ namespace SkiaSharp
 
 			return alphaType;
 		}
+
+		public static SKSamplingOptions ToSamplingOptions (this SKFilterQuality method) =>
+			new SKSamplingOptions (method);
+
+		public static SKSamplingOptions ToSamplingOptions (this SKFilterQuality method, SKMipmapMode filter_quality_medium__mipmap_mode) =>
+			new SKSamplingOptions (method, filter_quality_medium__mipmap_mode);
 	}
 
 	[EditorBrowsable (EditorBrowsableState.Never)]
@@ -738,5 +744,176 @@ namespace SkiaSharp
 			readonly get => SKTransferFunctionBehavior.Respect;
 			set { }
 		}
+	}
+
+	public partial struct SKCubicResampler
+	{
+		public static readonly SKCubicResampler Default;
+		// Historic default for kHigh_SkFilterQuality
+		public static readonly SKCubicResampler Mitchell;
+		public static readonly SKCubicResampler CatmullRom;
+
+		static SKCubicResampler ()
+		{
+			Default = new SKCubicResampler (0, 0);
+			Mitchell = new SKCubicResampler (1.0f / 3.0f, 1.0f / 3.0f);
+			CatmullRom = new SKCubicResampler (0.0f, 1.0f / 2.0f);
+		}
+
+		public SKCubicResampler(float b, float c)
+		{
+			fB = b;
+			fC = c;
+		}
+	}
+
+	public partial struct SKSamplingOptions
+	{
+		public static readonly SKSamplingOptions Default;
+
+		static SKSamplingOptions()
+		{
+			Default = new SKSamplingOptions {
+				fMaxAniso = 0,
+				fUseCubic = 0,
+				fCubic = SKCubicResampler.Default,
+				fFilter = SKFilterMode.Nearest,
+				fMipmap = SKMipmapMode.None
+			};
+		}
+
+		static SKSamplingOptions Aniso (Int32 Aniso) => new SKSamplingOptions (Aniso);
+
+		public SKSamplingOptions ()
+		{
+			fMaxAniso = 0;
+			fUseCubic = 0;
+			fCubic = SKCubicResampler.Default;
+			fFilter = SKFilterMode.Nearest;
+			fMipmap = SKMipmapMode.None;
+		}
+
+		public SKSamplingOptions (SKFilterMode fm)
+		{
+			fMaxAniso = 0;
+			fUseCubic = 0;
+			fCubic = SKCubicResampler.Default;
+			fFilter = fm;
+			fMipmap = SKMipmapMode.None;
+		}
+
+		public SKSamplingOptions (SKFilterQuality fq)
+		{
+			switch (fq) {
+				case SKFilterQuality.High: {
+						fMaxAniso = 0;
+						fUseCubic = 1;
+						fCubic = SKCubicResampler.Mitchell;
+						fFilter = SKFilterMode.Nearest;
+						fMipmap = SKMipmapMode.None;
+						break;
+					}
+				case SKFilterQuality.Medium: {
+						fMaxAniso = 0;
+						fUseCubic = 0;
+						fCubic = SKCubicResampler.Default;
+						fFilter = SKFilterMode.Linear;
+						fMipmap = SKMipmapMode.Nearest;
+						break;
+					}
+				case SKFilterQuality.Low: {
+						fMaxAniso = 0;
+						fUseCubic = 0;
+						fCubic = SKCubicResampler.Default;
+						fFilter = SKFilterMode.Linear;
+						fMipmap = SKMipmapMode.None;
+						break;
+					}
+				default: {
+						fMaxAniso = 0;
+						fUseCubic = 0;
+						fCubic = SKCubicResampler.Default;
+						fFilter = SKFilterMode.Nearest;
+						fMipmap = SKMipmapMode.None;
+						break;
+					}
+			}
+		}
+
+		public SKSamplingOptions (SKFilterMode fm, SKMipmapMode mm)
+		{
+			fMaxAniso = 0;
+			fUseCubic = 0;
+			fCubic = SKCubicResampler.Default;
+			fFilter = fm;
+			fMipmap = mm;
+		}
+
+		public SKSamplingOptions (SKFilterQuality fq, SKMipmapMode filter_quality_medium__mipmap_mode)
+		{
+			switch (fq) {
+				case SKFilterQuality.High: {
+						fMaxAniso = 0;
+						fUseCubic = 1;
+						fCubic = SKCubicResampler.Mitchell;
+						fFilter = SKFilterMode.Nearest;
+						fMipmap = SKMipmapMode.None;
+						break;
+					}
+				case SKFilterQuality.Medium: {
+						fMaxAniso = 0;
+						fUseCubic = 0;
+						fCubic = SKCubicResampler.Default;
+						fFilter = SKFilterMode.Linear;
+						fMipmap = filter_quality_medium__mipmap_mode;
+						break;
+					}
+				case SKFilterQuality.Low: {
+						fMaxAniso = 0;
+						fUseCubic = 0;
+						fCubic = SKCubicResampler.Default;
+						fFilter = SKFilterMode.Linear;
+						fMipmap = SKMipmapMode.None;
+						break;
+					}
+				default: {
+						fMaxAniso = 0;
+						fUseCubic = 0;
+						fCubic = SKCubicResampler.Default;
+						fFilter = SKFilterMode.Nearest;
+						fMipmap = SKMipmapMode.None;
+						break;
+					}
+			}
+		}
+
+		public SKSamplingOptions (SKCubicResampler c)
+		{
+			fMaxAniso = 0;
+			fUseCubic = 1;
+			fCubic = c;
+			fFilter = SKFilterMode.Nearest;
+			fMipmap = SKMipmapMode.None;
+		}
+
+		private SKSamplingOptions (Int32 maxAniso)
+		{
+			fMaxAniso = Math.Max(maxAniso, 1);
+			fUseCubic = 0;
+			fCubic = SKCubicResampler.Default;
+			fFilter = SKFilterMode.Nearest;
+			fMipmap = SKMipmapMode.None;
+		}
+
+		public bool IsAniso => fMaxAniso != 0;
+
+		public static implicit operator SKSamplingOptions (SKCubicResampler cubic) =>
+			new SKSamplingOptions (cubic);
+
+		public static implicit operator SKSamplingOptions (SKFilterQuality quality) =>
+			new SKSamplingOptions (quality);
+
+		public static implicit operator SKSamplingOptions (SKFilterMode filter) =>
+			new SKSamplingOptions (filter);
 	}
 }

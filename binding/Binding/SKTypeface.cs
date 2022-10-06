@@ -23,7 +23,7 @@ namespace SkiaSharp
 
 		static SKTypeface ()
 		{
-			defaultTypeface = new SKTypefaceStatic (SkiaApi.sk_typeface_ref_default ());
+			defaultTypeface = new SKTypefaceStatic (SkiaApi.sk_typeface_create_default ());
 		}
 
 		internal static void EnsureStaticInstanceAreInitialized ()

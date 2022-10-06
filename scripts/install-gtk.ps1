@@ -19,4 +19,8 @@ New-Item -ItemType Directory -Force -Path $p | Out-Null
 
 msiexec /i $installer /norestart /quiet /l* $p\gtk-sharp-install.log
 
+# clean up
+
+rm -force $tempDir
+
 exit $LASTEXITCODE

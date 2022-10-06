@@ -1,5 +1,5 @@
 Param(
-    [string] $Version = "12.0.0",
+    [string] $Version = "13.0.0",
     [string] $InstallDestination = "C:\Program Files\LLVM"
 )
 
@@ -20,6 +20,9 @@ New-Item -ItemType Directory -Force -Path "$llvmTemp" | Out-Null
 # install
 Write-Host "Installing LLVM..."
 & 7z x $install -y -o"$InstallDestination"
+
+# clean up
+rm -force $llvmTemp
 
 # echo version
 & "$InstallDestination\bin\clang.exe" --version

@@ -205,6 +205,12 @@
       "sk_blurstyle_t": {
         "cs": "SKBlurStyle"
       },
+      "sk_runtimeeffect_uniform_type_t": {
+        "cs": "SKRuntimeEffectUniformType"
+      },
+      "sk_runtimeeffect_child_type_t": {
+        "cs": "SKRuntimeEffectChildType"
+      },
       "sk_blendmode_t": {
         "cs": "SKBlendMode",
         "members": {
@@ -492,6 +498,9 @@
       "sk_managedcallbackcanvas_draw_image_rect_proc": {
         "cs": "SKManagedCallbackCanvasDrawImageRectProxyDelegate"
       },
+      "sk_managedcallbackcanvas_draw_slug_proc": {
+        "cs": "SKManagedCallbackCanvasDrawSlugProxyDelegate"
+      },
       "sk_managedcallbackcanvas_draw_text_blob_proc": {
         "cs": "SKManagedCallbackCanvasDrawTextBlobProxyDelegate"
       },
@@ -601,6 +610,116 @@
         "parameters": {
           "1": "[MarshalAs (UnmanagedType.LPStr)] String",
           "3": "[MarshalAs (UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPStr)] String[]"
+        }
+      },
+      "sk_imagefilter_new_runtime_shader": {
+        "parameters": {
+          "1": "[MarshalAs (UnmanagedType.LPStr)] String"
+        }
+      },
+      "sk_imagefilter_new_runtime_shader_with_multi": {
+        "parameters": {
+          "1": "[MarshalAs (UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPStr)] String[]"
+        }
+      },
+      "sk_runtimeeffect_get_uniform_from_name": {
+        "parameters": {
+          "1": "[MarshalAs (UnmanagedType.LPStr)] String"
+        }
+      },
+      "sk_runtimeeffect_get_child_from_name": {
+        "parameters": {
+          "1": "[MarshalAs (UnmanagedType.LPStr)] String"
+        }
+      },
+      "sk_runtime_effect_builder_get_uniform_by_name": {
+        "parameters": {
+          "1": "[MarshalAs (UnmanagedType.LPStr)] String"
+        }
+      },
+      "sk_runtime_effect_builder_get_child_by_name": {
+        "parameters": {
+          "1": "[MarshalAs (UnmanagedType.LPStr)] String"
+        }
+      },
+      "sk_runtime_effect_builder_set_uniform_int": {
+        "parameters": {
+          "1": "[MarshalAs (UnmanagedType.LPStr)] String"
+        }
+      },
+      "sk_runtime_effect_builder_set_uniform_int2": {
+        "parameters": {
+          "1": "[MarshalAs (UnmanagedType.LPStr)] String"
+        }
+      },
+      "sk_runtime_effect_builder_set_uniform_int3": {
+        "parameters": {
+          "1": "[MarshalAs (UnmanagedType.LPStr)] String"
+        }
+      },
+      "sk_runtime_effect_builder_set_uniform_int4": {
+        "parameters": {
+          "1": "[MarshalAs (UnmanagedType.LPStr)] String"
+        }
+      },
+      "sk_runtime_effect_builder_set_uniform_float": {
+        "parameters": {
+          "1": "[MarshalAs (UnmanagedType.LPStr)] String"
+        }
+      },
+      "sk_runtime_effect_builder_set_uniform_float2": {
+        "parameters": {
+          "1": "[MarshalAs (UnmanagedType.LPStr)] String"
+        }
+      },
+      "sk_runtime_effect_builder_set_uniform_float3": {
+        "parameters": {
+          "1": "[MarshalAs (UnmanagedType.LPStr)] String"
+        }
+      },
+      "sk_runtime_effect_builder_set_uniform_float4": {
+        "parameters": {
+          "1": "[MarshalAs (UnmanagedType.LPStr)] String"
+        }
+      },
+      "sk_runtime_effect_builder_set_uniform_float2x2": {
+        "parameters": {
+          "1": "[MarshalAs (UnmanagedType.LPStr)] String"
+        }
+      },
+      "sk_runtime_effect_builder_set_uniform_float3x3": {
+        "parameters": {
+          "1": "[MarshalAs (UnmanagedType.LPStr)] String"
+        }
+      },
+      "sk_runtime_effect_builder_set_uniform_float4x4": {
+        "parameters": {
+          "1": "[MarshalAs (UnmanagedType.LPStr)] String"
+        }
+      },
+      "sk_runtime_effect_builder_set_uniform_matrix": {
+        "parameters": {
+          "1": "[MarshalAs (UnmanagedType.LPStr)] String"
+        }
+      },
+      "sk_runtime_effect_builder_set_child_nullptr": {
+        "parameters": {
+          "1": "[MarshalAs (UnmanagedType.LPStr)] String"
+        }
+      },
+      "sk_runtime_effect_builder_set_child_shader": {
+        "parameters": {
+          "1": "[MarshalAs (UnmanagedType.LPStr)] String"
+        }
+      },
+      "sk_runtime_effect_builder_set_child_color_filter": {
+        "parameters": {
+          "1": "[MarshalAs (UnmanagedType.LPStr)] String"
+        }
+      },
+      "sk_runtime_effect_builder_set_child_blender": {
+        "parameters": {
+          "1": "[MarshalAs (UnmanagedType.LPStr)] String"
         }
       },
       "sk_typeface_create_from_name": {

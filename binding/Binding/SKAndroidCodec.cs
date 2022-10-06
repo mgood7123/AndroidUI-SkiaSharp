@@ -214,14 +214,9 @@ namespace SkiaSharp
 
 		public static SKAndroidCodec Create(SKCodec codec)
 		{
-			return Create(codec, SKAndroidCodecExifOrientationBehavior.KIgnore);
-		}
-
-		public static SKAndroidCodec Create(SKCodec codec, SKAndroidCodecExifOrientationBehavior behavior)
-		{
 			if (codec == null)
 				throw new ArgumentNullException(nameof(codec));
-			var handle = SkiaApi.sk_android_codec_new_from_codec(codec.Handle, behavior);
+			var handle = SkiaApi.sk_android_codec_new_from_codec(codec.Handle);
 			SKAndroidCodec c = GetObject(handle);
 			codec.RevokeOwnership(c);
 			return c;

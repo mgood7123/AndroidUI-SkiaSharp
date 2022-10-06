@@ -164,7 +164,7 @@ namespace SkiaSharp
 		// Resize
 
 		[EditorBrowsable (EditorBrowsableState.Never)]
-		[Obsolete ("Use ScalePixels(SKPixmap, SKFilterQuality) instead.")]
+		[Obsolete ("Use ScalePixels(SKPixmap, SKSamplingOptions) instead.")]
 		public static bool Resize (SKPixmap dst, SKPixmap src, SKBitmapResizeMethod method)
 		{
 			if (dst == null)
@@ -177,12 +177,12 @@ namespace SkiaSharp
 
 		// ScalePixels
 
-		public bool ScalePixels (SKPixmap destination, SKFilterQuality quality)
+		public bool ScalePixels (SKPixmap destination, SKSamplingOptions samplingOptions)
 		{
 			if (destination == null)
 				throw new ArgumentNullException (nameof (destination));
 
-			return SkiaApi.sk_pixmap_scale_pixels (Handle, destination.Handle, quality);
+			return SkiaApi.sk_pixmap_scale_pixels (Handle, destination.Handle, &samplingOptions);
 		}
 
 		// ReadPixels

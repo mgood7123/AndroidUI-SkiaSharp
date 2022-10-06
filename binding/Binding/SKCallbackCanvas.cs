@@ -31,12 +31,12 @@ namespace SkiaSharp
 				fDrawPatch = DrawPatchInternal,
 				fDrawPath = DrawPathInternal,
 				fDrawImage = DrawImageInternal,
-				fDrawImageNine = DrawImageNineInternal,
 				fDrawImageLattice = DrawImageLatticeInternal,
 				fDrawImageRect = DrawImageRectInternal,
 				fDrawTextBlob = DrawTextBlobInternal,
 				fDrawDrawable = DrawDrawableInternal,
 				fDrawVertices = DrawVerticesInternal,
+				fDrawSlug = DrawSlugInternal,
 				fDestroy = DestroyInternal,
 				fFlush = FlushInternal,
 				fRestore = RestoreInternal,
@@ -67,7 +67,7 @@ namespace SkiaSharp
 			}
 		}
 
-		protected abstract void OnConcat (SKMatrix matrix);
+		protected abstract void OnConcat (SKMatrix44 matrix);
 		protected abstract void OnClipRect (SKRect rect, SKClipOperation operation, bool antiAlias);
 		protected abstract void OnClipRoundRect (SKRoundRect rrect, SKClipOperation operation, bool antiAlias);
 		protected abstract void OnClipPath (SKPath path, SKClipOperation operation, bool antiAlias);
@@ -75,13 +75,12 @@ namespace SkiaSharp
 		protected abstract void OnClipRegion (SKRegion region, SKClipOperation operation);
 		protected abstract void OnDrawAnnotation (SKRect rect, string key, SKData value);
 		protected abstract void OnDrawArc (SKRect rect, float startAngle, float sweepAngle, bool useCenter, SKPaint paint);
-		protected abstract unsafe void OnDrawAtlas (SKImage atlas, SKRect[] sprites, SKRotationScaleMatrix[] transforms, SKColor[] colors, SKBlendMode mode, SKRect* cullRect, SKPaint paint);
+		protected abstract unsafe void OnDrawAtlas (SKImage atlas, SKRect[] sprites, SKRotationScaleMatrix[] transforms, SKColor[] colors, SKBlendMode mode, SKSamplingOptions samplingOptions, SKRect* cullRect, SKPaint paint);
 		protected abstract void OnDrawDrawable (SKDrawable drawable, SKMatrix matrix);
-		protected abstract void OnDrawImageRect (SKImage image, SKRect dest, SKPaint paint);
-		protected abstract void OnDrawImageRect (SKImage image, SKRect src, SKRect dest, SKPaint paint);
-		protected abstract void OnDrawImageLattice (SKImage image, SKLattice lattice, SKRect dest, SKPaint paint);
-		protected abstract void OnDrawImageNinePatch (SKImage image, SKRectI center, SKRect dest, SKPaint paint);
-		protected abstract void OnDrawImage (SKImage image, float x, float y, SKPaint paint);
+		protected abstract void OnDrawImageRect (SKImage image, SKRect dest, SKSamplingOptions samplingOptions, SKPaint paint, SKSrcRectConstraint constraint);
+		protected abstract void OnDrawImageRect (SKImage image, SKRect src, SKRect dest, SKSamplingOptions samplingOptions, SKPaint paint, SKSrcRectConstraint constraint);
+		protected abstract void OnDrawImageLattice (SKImage image, SKLattice lattice, SKRect dest, SKFilterMode filter, SKPaint paint);
+		protected abstract void OnDrawImage (SKImage image, float x, float y, SKSamplingOptions samplingOptions, SKPaint paint);
 		protected abstract void OnDrawOval (SKRect rect, SKPaint paint);
 		protected abstract void OnDrawPaint (SKPaint paint);
 		protected abstract void OnDrawPath (SKPath path, SKPaint paint);
@@ -91,6 +90,7 @@ namespace SkiaSharp
 		protected abstract void OnDrawRegion (SKRegion region, SKPaint paint);
 		protected abstract void OnDrawRoundRectDifference (SKRoundRect outer, SKRoundRect inner, SKPaint paint);
 		protected abstract void OnDrawRoundRect (SKRoundRect rect, SKPaint paint);
+		protected abstract void OnDrawSlug (IntPtr slug);
 		protected abstract void OnDrawText (SKTextBlob blob, float x, float y, SKPaint paint);
 		protected abstract void OnDrawVertices (SKVertices vertices, SKBlendMode mode, SKPaint paint);
 		protected abstract void OnFlush ();
@@ -99,7 +99,7 @@ namespace SkiaSharp
 		protected abstract void OnSaveLayer (SKPaint paint);
 		protected abstract void OnSaveLayer (SKRect limit, SKPaint paint);
 		protected abstract void OnScale (float sx, float sy);
-		protected abstract void OnSetMatrix (SKMatrix matrix);
+		protected abstract void OnSetMatrix (SKMatrix44 matrix);
 		protected abstract void OnTranslate (float dx, float dy);
 
 		// impl
@@ -163,11 +163,31 @@ namespace SkiaSharp
 			}
 		}
 
+		static T GetManagedObjectFromNative<T> (IntPtr handle, Func<IntPtr, T> creator) where T : SKObject
+		{
+			if (handle == IntPtr.Zero) {
+				return null;
+			}
+
+			bool is_ISKNonVirtualReferenceCounted = typeof (ISKNonVirtualReferenceCounted).IsAssignableFrom (typeof (T));
+			bool is_ISKReferenceCounted = typeof (ISKReferenceCounted).IsAssignableFrom (typeof (T));
+
+			// can we use this to simplify?
+			bool is_ISKSkipObjectRegistration = typeof (ISKSkipObjectRegistration).IsAssignableFrom (typeof (T));
+
+			if (is_ISKReferenceCounted && !is_ISKNonVirtualReferenceCounted) {
+				return GetOrAddObject (handle, false, false, (h, o) => creator.Invoke (h));
+			} else {
+				return creator.Invoke (handle);
+			}
+		}
+
 		[MonoPInvokeCallback (typeof (SKManagedCallbackCanvasConcatProxyDelegate))]
-		private static void ConcatInternal (IntPtr d, void* context, SKMatrix matrix)
+		private static void ConcatInternal (IntPtr d, void* context, IntPtr matrix)
 		{
 			var dump = DelegateProxies.GetUserData<SKCallbackCanvas> ((IntPtr)context, out _);
-			dump.OnConcat (matrix);
+			using DisposeIfNotOwns<SKMatrix44> m44 = GetManagedObjectFromNative<SKMatrix44> (matrix, h => new SKMatrix44 (h, false));
+			dump.OnConcat (m44);
 		}
 
 		[MonoPInvokeCallback (typeof (SKManagedCallbackCanvasScaleProxyDelegate))]
@@ -185,42 +205,18 @@ namespace SkiaSharp
 		}
 
 		[MonoPInvokeCallback (typeof (SKManagedCallbackCanvasSetMatrixProxyDelegate))]
-		private static void SetMatrixInternal (IntPtr d, void* context, SKMatrix matrix)
+		private static void SetMatrixInternal (IntPtr d, void* context, IntPtr matrix)
 		{
 			var dump = DelegateProxies.GetUserData<SKCallbackCanvas> ((IntPtr)context, out _);
-			dump.OnSetMatrix (matrix);
-		}
-
-
-
-		static T GetManagedObjectFromNative<T> (IntPtr handle, Func<IntPtr, T> creator) where T : SKObject
-		{
-			if (handle == IntPtr.Zero)
-			{
-				return null;
-			}
-
-			bool is_ISKNonVirtualReferenceCounted = typeof (ISKNonVirtualReferenceCounted).IsAssignableFrom (typeof (T));
-			bool is_ISKReferenceCounted = typeof (ISKReferenceCounted).IsAssignableFrom (typeof (T));
-
-			// can we use this to simplify?
-			bool is_ISKSkipObjectRegistration = typeof(ISKSkipObjectRegistration).IsAssignableFrom (typeof (T));
-
-			if (is_ISKReferenceCounted && !is_ISKNonVirtualReferenceCounted)
-			{
-				return GetOrAddObject (handle, false, false, (h, o) => creator.Invoke(h));
-			}
-			else
-			{
-				return creator.Invoke(handle);
-			}
+			using DisposeIfNotOwns<SKMatrix44> m44 = GetManagedObjectFromNative<SKMatrix44> (matrix, h => new SKMatrix44 (h, false));
+			dump.OnSetMatrix (m44);
 		}
 
 		[MonoPInvokeCallback (typeof (SKManagedCallbackCanvasDrawPaintProxyDelegate))]
 		private static void DrawPaintInternal (IntPtr d, void* context, IntPtr paint)
 		{
 			var dump = DelegateProxies.GetUserData<SKCallbackCanvas> ((IntPtr)context, out _);
-			using DisposeIfNotOwns<SKPaint> managedPaint = GetManagedObjectFromNative<SKPaint>(paint, h => new SKPaint(h, false));
+			using DisposeIfNotOwns<SKPaint> managedPaint = GetManagedObjectFromNative<SKPaint>(paint, h => new SKPaint(IntPtr.Zero, h));
 			dump.OnDrawPaint (managedPaint);
 		}
 
@@ -228,7 +224,7 @@ namespace SkiaSharp
 		private static void DrawRectInternal (IntPtr d, void* context, SKRect* rect, IntPtr paint)
 		{
 			var dump = DelegateProxies.GetUserData<SKCallbackCanvas> ((IntPtr)context, out _);
-			using DisposeIfNotOwns<SKPaint> managedPaint = GetManagedObjectFromNative<SKPaint>(paint, h => new SKPaint(h, false));
+			using DisposeIfNotOwns<SKPaint> managedPaint = GetManagedObjectFromNative<SKPaint>(paint, h => new SKPaint(IntPtr.Zero, h));
 			SKRect managedRect = rect == default ? SKRect.Empty : *rect;
 			dump.OnDrawRect (managedRect, managedPaint);
 		}
@@ -237,7 +233,7 @@ namespace SkiaSharp
 		private static void DrawRRectInternal (IntPtr d, void* context, IntPtr rrect, IntPtr paint)
 		{
 			var dump = DelegateProxies.GetUserData<SKCallbackCanvas> ((IntPtr)context, out _);
-			using DisposeIfNotOwns<SKPaint> managedPaint = GetManagedObjectFromNative<SKPaint>(paint, h => new SKPaint(h, false));
+			using DisposeIfNotOwns<SKPaint> managedPaint = GetManagedObjectFromNative<SKPaint>(paint, h => new SKPaint(IntPtr.Zero, h));
 			using DisposeIfNotOwns<SKRoundRect> managedRRect = GetManagedObjectFromNative<SKRoundRect>(rrect, h => new SKRoundRect(h, false));
 			dump.OnDrawRoundRect (managedRRect, managedPaint);
 		}
@@ -246,7 +242,7 @@ namespace SkiaSharp
 		private static void DrawDRRectInternal (IntPtr d, void* context, IntPtr rrect1, IntPtr rrect2, IntPtr paint)
 		{
 			var dump = DelegateProxies.GetUserData<SKCallbackCanvas> ((IntPtr)context, out _);
-			using DisposeIfNotOwns<SKPaint> managedPaint = GetManagedObjectFromNative<SKPaint>(paint, h => new SKPaint(h, false));
+			using DisposeIfNotOwns<SKPaint> managedPaint = GetManagedObjectFromNative<SKPaint>(paint, h => new SKPaint(IntPtr.Zero, h));
 			using DisposeIfNotOwns<SKRoundRect> managedRRect1 = GetManagedObjectFromNative<SKRoundRect>(rrect1, h => new SKRoundRect(h, false));
 			using DisposeIfNotOwns<SKRoundRect> managedRRect2 = GetManagedObjectFromNative<SKRoundRect>(rrect2, h => new SKRoundRect(h, false));
 			dump.OnDrawRoundRectDifference (managedRRect1, managedRRect2, managedPaint);
@@ -256,7 +252,7 @@ namespace SkiaSharp
 		private static void DrawArcInternal (IntPtr d, void* context, SKRect* rect, float a, float b, bool c, IntPtr paint)
 		{
 			var dump = DelegateProxies.GetUserData<SKCallbackCanvas> ((IntPtr)context, out _);
-			using DisposeIfNotOwns<SKPaint> managedPaint = GetManagedObjectFromNative<SKPaint>(paint, h => new SKPaint(h, false));
+			using DisposeIfNotOwns<SKPaint> managedPaint = GetManagedObjectFromNative<SKPaint>(paint, h => new SKPaint(IntPtr.Zero, h));
 			SKRect managedRect = rect == default ? SKRect.Empty : *rect;
 			dump.OnDrawArc (managedRect, a, b, c, managedPaint);
 		}
@@ -265,7 +261,7 @@ namespace SkiaSharp
 		private static void DrawOvalInternal (IntPtr d, void* context, SKRect* rect, IntPtr paint)
 		{
 			var dump = DelegateProxies.GetUserData<SKCallbackCanvas> ((IntPtr)context, out _);
-			using DisposeIfNotOwns<SKPaint> managedPaint = GetManagedObjectFromNative<SKPaint>(paint, h => new SKPaint(h, false));
+			using DisposeIfNotOwns<SKPaint> managedPaint = GetManagedObjectFromNative<SKPaint>(paint, h => new SKPaint(IntPtr.Zero, h));
 			SKRect managedRect = rect == default ? SKRect.Empty : *rect;
 			dump.OnDrawOval (managedRect, managedPaint);
 		}
@@ -275,7 +271,7 @@ namespace SkiaSharp
 		{
 			var dump = DelegateProxies.GetUserData<SKCallbackCanvas> ((IntPtr)context, out _);
 			using DisposeIfNotOwns<SKRegion> managedRegion = GetManagedObjectFromNative<SKRegion>(region, h => new SKRegion(h, false));
-			using DisposeIfNotOwns<SKPaint> managedPaint = GetManagedObjectFromNative<SKPaint>(paint, h => new SKPaint(h, false));
+			using DisposeIfNotOwns<SKPaint> managedPaint = GetManagedObjectFromNative<SKPaint>(paint, h => new SKPaint(IntPtr.Zero, h));
 			dump.OnDrawRegion (managedRegion, managedPaint);
 		}
 
@@ -319,7 +315,7 @@ namespace SkiaSharp
 		private static void DrawPointsInternal (IntPtr d, void* context, SKPointMode pointmode, IntPtr count, SKPoint* points, IntPtr paint)
 		{
 			var dump = DelegateProxies.GetUserData<SKCallbackCanvas> ((IntPtr)context, out _);
-			using DisposeIfNotOwns<SKPaint> managedPaint = GetManagedObjectFromNative<SKPaint>(paint, h => new SKPaint(h, false));
+			using DisposeIfNotOwns<SKPaint> managedPaint = GetManagedObjectFromNative<SKPaint>(paint, h => new SKPaint(IntPtr.Zero, h));
 			SKPoint[] managedPoints = GetArray<SKPoint> (count, points);
 			dump.OnDrawPoints (pointmode, managedPoints, managedPaint);
 		}
@@ -329,7 +325,7 @@ namespace SkiaSharp
 		{
 			var dump = DelegateProxies.GetUserData<SKCallbackCanvas> ((IntPtr)context, out _);
 			using DisposeIfNotOwns<SKPath> managedPath = GetManagedObjectFromNative<SKPath>(path, h => new SKPath(h, false));
-			using DisposeIfNotOwns<SKPaint> managedPaint = GetManagedObjectFromNative<SKPaint>(paint, h => new SKPaint(h, false));
+			using DisposeIfNotOwns<SKPaint> managedPaint = GetManagedObjectFromNative<SKPaint>(paint, h => new SKPaint(IntPtr.Zero, h));
 			dump.OnDrawPath (managedPath, managedPaint);
 		}
 
@@ -340,32 +336,21 @@ namespace SkiaSharp
 			SKPoint[] managedCubics = GetArray<SKPoint> (12, cubics);
 			SKColor[] managedColors = GetColorArray(4, colors);
 			SKPoint[] managedTexCoords = GetArray<SKPoint> (4, texCoords);
-			using DisposeIfNotOwns<SKPaint> managedPaint = GetManagedObjectFromNative<SKPaint>(paint, h => new SKPaint(h, false));
+			using DisposeIfNotOwns<SKPaint> managedPaint = GetManagedObjectFromNative<SKPaint>(paint, h => new SKPaint(IntPtr.Zero, h));
 			dump.OnDrawPatch (managedCubics, managedColors, managedTexCoords, mode, managedPaint);
 		}
 
 		[MonoPInvokeCallback (typeof (SKManagedCallbackCanvasDrawImageProxyDelegate))]
-		private static void DrawImageInternal (IntPtr d, void* context, IntPtr image, float x, float y, IntPtr paint)
+		private static void DrawImageInternal (IntPtr d, void* context, IntPtr image, float x, float y, SKSamplingOptions* sampling_options, IntPtr paint)
 		{
 			var dump = DelegateProxies.GetUserData<SKCallbackCanvas> ((IntPtr)context, out _);
 			using DisposeIfNotOwns<SKImage> managedImage = GetManagedObjectFromNative<SKImage>(image, h => new SKImage(h, false));
-			using DisposeIfNotOwns<SKPaint> managedPaint = GetManagedObjectFromNative<SKPaint>(paint, h => new SKPaint(h, false));
-			dump.OnDrawImage (managedImage, x, y, managedPaint);
-		}
-
-		[MonoPInvokeCallback (typeof (SKManagedCallbackCanvasDrawImageNineProxyDelegate))]
-		private static void DrawImageNineInternal (IntPtr d, void* context, IntPtr image, SKRectI* center, SKRect* dest, IntPtr paint)
-		{
-			var dump = DelegateProxies.GetUserData<SKCallbackCanvas> ((IntPtr)context, out _);
-			using DisposeIfNotOwns<SKImage> managedImage = GetManagedObjectFromNative<SKImage>(image, h => new SKImage(h, false));
-			SKRectI managedCenter = center == default ? SKRectI.Empty : *center;
-			SKRect managedDest = dest == default ? SKRect.Empty : *dest;
-			using DisposeIfNotOwns<SKPaint> managedPaint = GetManagedObjectFromNative<SKPaint>(paint, h => new SKPaint(h, false));
-			dump.OnDrawImageNinePatch (managedImage, managedCenter, managedDest, managedPaint);
+			using DisposeIfNotOwns<SKPaint> managedPaint = GetManagedObjectFromNative<SKPaint>(paint, h => new SKPaint(IntPtr.Zero, h));
+			dump.OnDrawImage (managedImage, x, y, sampling_options == default ? new SKSamplingOptions () : *sampling_options, managedPaint);
 		}
 
 		[MonoPInvokeCallback (typeof (SKManagedCallbackCanvasDrawImageLatticeProxyDelegate))]
-		private static void DrawImageLatticeInternal (IntPtr d, void* context, IntPtr image, SKLatticeInternal* lattice, SKRect* dest, IntPtr paint)
+		private static void DrawImageLatticeInternal (IntPtr d, void* context, IntPtr image, SKLatticeInternal* lattice, SKRect* dest, SKFilterMode filter, IntPtr paint)
 		{
 			var dump = DelegateProxies.GetUserData<SKCallbackCanvas> ((IntPtr)context, out _);
 			using DisposeIfNotOwns<SKImage> managedImage = GetManagedObjectFromNative<SKImage>(image, h => new SKImage(h, false));
@@ -387,24 +372,24 @@ namespace SkiaSharp
 				managedLattice.Colors = GetColorArray(count, lattice->fColors);
 			}
 			SKRect managedDest = dest == default ? SKRect.Empty : *dest;
-			using DisposeIfNotOwns<SKPaint> managedPaint = GetManagedObjectFromNative<SKPaint>(paint, h => new SKPaint(h, false));
-			dump.OnDrawImageLattice (managedImage, managedLattice, managedDest, managedPaint);
+			using DisposeIfNotOwns<SKPaint> managedPaint = GetManagedObjectFromNative<SKPaint>(paint, h => new SKPaint(IntPtr.Zero, h));
+			dump.OnDrawImageLattice (managedImage, managedLattice, managedDest, filter, managedPaint);
 		}
 
 		[MonoPInvokeCallback (typeof (SKManagedCallbackCanvasDrawImageRectProxyDelegate))]
-		private static void DrawImageRectInternal (IntPtr d, void* context, IntPtr image, SKRect* src, SKRect* dest, IntPtr paint)
+		private static void DrawImageRectInternal (IntPtr d, void* context, IntPtr image, SKRect* src, SKRect* dest, SKSamplingOptions* sampling_options, IntPtr paint, SKSrcRectConstraint constraint)
 		{
 			var dump = DelegateProxies.GetUserData<SKCallbackCanvas> ((IntPtr)context, out _);
 			using DisposeIfNotOwns<SKImage> managedImage = GetManagedObjectFromNative<SKImage> (image, h => new SKImage (h, false));
 			SKRect managedDest = dest == default ? SKRect.Empty : *dest;
-			using DisposeIfNotOwns<SKPaint> managedPaint = GetManagedObjectFromNative<SKPaint> (paint, h => new SKPaint (h, false));
+			using DisposeIfNotOwns<SKPaint> managedPaint = GetManagedObjectFromNative<SKPaint> (paint, h => new SKPaint(IntPtr.Zero, h));
 			if (src == default)
 			{
-				dump.OnDrawImageRect (managedImage, managedDest, managedPaint);
+				dump.OnDrawImageRect (managedImage, managedDest, sampling_options == default ? new SKSamplingOptions () : *sampling_options, managedPaint, constraint);
 			}
 			else
 			{
-				dump.OnDrawImageRect (managedImage, *src, managedDest, managedPaint);
+				dump.OnDrawImageRect (managedImage, *src, managedDest, sampling_options == default ? new SKSamplingOptions () : *sampling_options, managedPaint, constraint);
 			}
 		}
 
@@ -413,7 +398,7 @@ namespace SkiaSharp
 		{
 			var dump = DelegateProxies.GetUserData<SKCallbackCanvas> ((IntPtr)context, out _);
 			using DisposeIfNotOwns<SKTextBlob> managedBlob = GetManagedObjectFromNative<SKTextBlob>(blob, h => new SKTextBlob(h, false));
-			using DisposeIfNotOwns<SKPaint> managedPaint = GetManagedObjectFromNative<SKPaint>(paint, h => new SKPaint(h, false));
+			using DisposeIfNotOwns<SKPaint> managedPaint = GetManagedObjectFromNative<SKPaint>(paint, h => new SKPaint(IntPtr.Zero, h));
 			dump.OnDrawText (managedBlob, x, y, managedPaint);
 		}
 
@@ -430,20 +415,27 @@ namespace SkiaSharp
 		{
 			var dump = DelegateProxies.GetUserData<SKCallbackCanvas> ((IntPtr)context, out _);
 			using DisposeIfNotOwns<SKVertices> managedVertices = GetManagedObjectFromNative<SKVertices> (vertices, h => new SKVertices (h, false));
-			using DisposeIfNotOwns<SKPaint> managedPaint = GetManagedObjectFromNative<SKPaint>(paint, h => new SKPaint(h, false));
+			using DisposeIfNotOwns<SKPaint> managedPaint = GetManagedObjectFromNative<SKPaint>(paint, h => new SKPaint(IntPtr.Zero, h));
 			dump.OnDrawVertices (managedVertices, mode, managedPaint);
 		}
 
+		[MonoPInvokeCallback (typeof (SKManagedCallbackCanvasDrawSlugProxyDelegate))]
+		private static void DrawSlugInternal (IntPtr d, void* context, IntPtr slug)
+		{
+			var dump = DelegateProxies.GetUserData<SKCallbackCanvas> ((IntPtr)context, out _);
+			dump.OnDrawSlug (slug);
+		}
+
 		[MonoPInvokeCallback (typeof (SKManagedCallbackCanvasDrawAtlasProxyDelegate))]
-		private static void DrawAtlasInternal (IntPtr d, void* context, IntPtr atlas, SKRotationScaleMatrix* form, SKRect* tex, uint* colors, int count, SKBlendMode mode, SKRect* cullRect, IntPtr paint)
+		private static void DrawAtlasInternal (IntPtr d, void* context, IntPtr atlas, SKRotationScaleMatrix* form, SKRect* tex, uint* colors, int count, SKBlendMode mode, SKSamplingOptions* sampling_options, SKRect* cullRect, IntPtr paint)
 		{
 			var dump = DelegateProxies.GetUserData<SKCallbackCanvas> ((IntPtr)context, out _);
 			using DisposeIfNotOwns<SKImage> managedImage = GetManagedObjectFromNative<SKImage>(atlas, h => new SKImage(h, false));
 			SKRotationScaleMatrix[] managedForm = GetArray<SKRotationScaleMatrix> (count, form);
 			SKRect[] managedTex = GetArray<SKRect> (count, tex);
 			SKColor[] managedColors = GetColorArray (count, colors);
-			using DisposeIfNotOwns<SKPaint> managedPaint = GetManagedObjectFromNative<SKPaint>(paint, h => new SKPaint(h, false));
-			dump.OnDrawAtlas (managedImage, managedTex, managedForm, managedColors, mode, cullRect, managedPaint);
+			using DisposeIfNotOwns<SKPaint> managedPaint = GetManagedObjectFromNative<SKPaint>(paint, h => new SKPaint(IntPtr.Zero, h));
+			dump.OnDrawAtlas (managedImage, managedTex, managedForm, managedColors, mode, sampling_options == default ? new SKSamplingOptions() : *sampling_options, cullRect, managedPaint);
 		}
 
 		[MonoPInvokeCallback (typeof (SKManagedCallbackCanvasDrawAnnotationProxyDelegate))]
@@ -500,7 +492,7 @@ namespace SkiaSharp
 		private static void SaveLayerInternal (IntPtr d, void* context, SKRect* rect, IntPtr paint)
 		{
 			var dump = DelegateProxies.GetUserData<SKCallbackCanvas> ((IntPtr)context, out _);
-			using DisposeIfNotOwns<SKPaint> managedPaint = GetManagedObjectFromNative<SKPaint>(paint, h => new SKPaint(h, false));
+			using DisposeIfNotOwns<SKPaint> managedPaint = GetManagedObjectFromNative<SKPaint>(paint, h => new SKPaint(IntPtr.Zero, h));
 			if (rect == default) {
 				dump.OnSaveLayer (managedPaint);
 			} else {

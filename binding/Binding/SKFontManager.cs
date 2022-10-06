@@ -7,6 +7,7 @@ namespace SkiaSharp
 {
 	public unsafe class SKFontManager : SKObject, ISKReferenceCounted
 	{
+		// Skia's default font manager is now a singleton, there is no static make
 		private static readonly SKFontManager defaultManager;
 
 		static SKFontManager ()
@@ -78,12 +79,7 @@ namespace SkiaSharp
 		{
 			if (face == null)
 				throw new ArgumentNullException (nameof (face));
-			if (style == null)
-				throw new ArgumentNullException (nameof (style));
-
-			var tf = SKTypeface.GetObject (SkiaApi.sk_fontmgr_match_face_style (Handle, face.Handle, style.Handle));
-			tf?.PreventPublicDisposal ();
-			return tf;
+			return MatchFamily (face.FamilyName, style);
 		}
 
 		public SKTypeface CreateTypeface (string path, int index = 0)
@@ -187,15 +183,13 @@ namespace SkiaSharp
 			return tf;
 		}
 
-		public static SKFontManager CreateDefault ()
-		{
-			return GetObject (SkiaApi.sk_fontmgr_create_default ());
-		}
-
 		//
 
 		internal static SKFontManager GetObject (IntPtr handle) =>
 			GetOrAddObject (handle, (h, o) => new SKFontManager (h, o));
+
+		internal static SKFontManager GetObject (IntPtr handle, bool owns) =>
+			GetOrAddObject (handle, owns, (h, o) => new SKFontManager (h, o));
 
 		//
 

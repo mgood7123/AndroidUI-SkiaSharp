@@ -1,0 +1,379 @@
+# Copyright 2016 Google Inc.
+#
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+
+# manually copy parts on skia gn we require to build C bindings
+# we have copied skia's gn directory to this $pwd
+
+import("gn/shared_sources.gni")
+import("gn/skia.gni")
+
+if (defined(skia_settings)) {
+  import(skia_settings)
+}
+
+# Skia public API, generally provided by :skia.
+config("skia_public") {
+  include_dirs = [ ".", "../externals/skia" ]
+
+  defines = []
+  cflags_objcc = []
+  if (is_component_build) {
+    defines += [ "SKIA_DLL" ]
+  }
+  if (is_fuchsia || is_linux) {
+    defines += [ "SK_R32_SHIFT=16" ]
+  }
+  if (skia_enable_flutter_defines) {
+    defines += flutter_defines
+  }
+  if (!skia_enable_gpu) {
+    defines += [ "SK_SUPPORT_GPU=0" ]
+  }
+  if (skia_enable_sksl) {
+    defines += [ "SK_ENABLE_SKSL" ]
+  }
+  if (skia_enable_precompile) {
+    defines += [ "SK_ENABLE_PRECOMPILE" ]
+  }
+  if (is_fuchsia) {
+    defines += fuchsia_defines
+  }
+  if (is_wasm) {
+    defines += wasm_defines
+  }
+  if (skia_gl_standard == "gles") {
+    defines += [ "SK_ASSUME_GL_ES=1" ]
+  } else if (skia_gl_standard == "gl") {
+    defines += [ "SK_ASSUME_GL=1" ]
+  } else if (skia_gl_standard == "webgl") {
+    defines += [
+      "SK_ASSUME_WEBGL=1",
+      "SK_USE_WEBGL",
+    ]
+  }
+  if (!skia_enable_skgpu_v1) {
+    defines += [ "SK_GPU_V1=0" ]
+  }
+  if (skia_use_perfetto) {
+    defines += [ "SK_USE_PERFETTO" ]
+  }
+
+  # Temporary define for flutter to control in their GN build
+  if (skia_use_legacy_layer_bounds) {
+    defines += [ "SK_LEGACY_LAYER_BOUNDS_EXPANSION" ]
+  }
+
+  # Some older versions of the Clang toolchain change the visibility of
+  # symbols decorated with API_AVAILABLE macro to be visible. Users of such
+  # toolchains suppress the use of this macro till toolchain updates are made.
+  if (is_mac || is_ios) {
+    if (skia_enable_api_available_macro) {
+      defines += [ "SK_ENABLE_API_AVAILABLE" ]
+    } else {
+      cflags_objcc += [ "-Wno-unguarded-availability" ]
+    }
+  }
+}
+
+# Skia internal APIs, used by Skia itself and a few test tools.
+config("skia_private") {
+  visibility = [ "./*", "../externals/skia/*" ]
+
+  defines = [ "SK_GAMMA_APPLY_TO_A8" ]
+  if (skia_use_fixed_gamma_text) {
+    defines += [
+      "SK_GAMMA_EXPONENT=1.4",
+      "SK_GAMMA_CONTRAST=0.0",
+    ]
+  }
+  if (is_skia_dev_build && !is_wasm) {
+    defines += [
+      "SK_ALLOW_STATIC_GLOBAL_INITIALIZERS=1",
+      "GR_TEST_UTILS=1",
+    ]
+    if (skia_enable_graphite) {
+      defines += [ "GRAPHITE_TEST_UTILS=1" ]
+    }
+  }
+  if (skia_compare_vm_vs_rp) {
+    defines += [ "SKIA_COMPARE_VM_VS_RP" ]
+  }
+  libs = []
+  lib_dirs = []
+  if (skia_use_gl && skia_use_angle) {
+    defines += [ "SK_ANGLE" ]
+  }
+  if (skia_use_vma) {
+    defines += [ "SK_USE_VMA" ]
+  }
+  if (skia_enable_winuwp) {
+    defines += [ "SK_WINUWP" ]
+  }
+}
+
+# Any code that's linked into Skia-the-library should use this config via += skia_library_configs.
+config("skia_library") {
+  visibility = [ "./*", "../externals/skia/*" ]
+  defines = [ "SKIA_IMPLEMENTATION=1" ]
+}
+
+skia_library_configs = [
+  ":skia_public",
+  ":skia_private",
+  ":skia_library",
+]
+
+# ALL OF THE ABOVE IS FROM SKIA BUILD.gn FILE
+
+# SkiaSharp + HarfBuzzSharp
+
+# SkiaSharp differs depending on the platform
+template("skiasharp_build") {
+  _skiasharp_mode = "shared_library"
+
+  target(_skiasharp_mode, target_name) {
+    forward_variables_from(invoker, "*")
+  }
+}
+
+set_defaults("skiasharp_build") {
+  configs = default_configs
+}
+
+declare_args() {
+    # Skia output directory
+    #   this is where we can find skia.lib and friends
+    SKIA_C_PATH = ""
+}
+
+skiasharp_build("libSkiaSharp") {
+
+  # NOT GOOD ENOUGH!
+  # DIFFERENT PLATFORMS MAY REQUIRE DIFFERENT DEPS
+  # AND DEPS MAY CHANGE BETWEEN SKIA VERSIONS/COMMITS
+  #
+  # additionally different OS's have different link extensions (.lib, .so, .dylib)
+  #
+  #
+  # WINDOWS ONLY!
+  #
+  # opengl32.lib is needed for wgl functions
+  # ole32.lib is needed for COM library - CoCreateGuid
+  # fontsub.lib is needed for CreateFontPackage
+  # user32.lib is needed for SystemParametersInfoW
+  #
+  # SSE ONLY - libwebp_sse41
+
+  libs = [
+    "opengl32.lib",
+    "ole32.lib",
+    "fontsub.lib",
+    "user32.lib",
+
+    "$SKIA_C_PATH/dng_sdk.lib",
+    "$SKIA_C_PATH/expat.lib",
+    "$SKIA_C_PATH/libjpeg.lib",
+    "$SKIA_C_PATH/libpng.lib",
+    "$SKIA_C_PATH/libwebp.lib",
+    "$SKIA_C_PATH/libwebp_sse41.lib",
+    "$SKIA_C_PATH/piex.lib",
+    "$SKIA_C_PATH/skcms.lib",
+    "$SKIA_C_PATH/skia.lib",
+    "$SKIA_C_PATH/skottie.lib",
+    "$SKIA_C_PATH/skresources.lib",
+    "$SKIA_C_PATH/sksg.lib",
+    "$SKIA_C_PATH/skshaper.lib",
+    "$SKIA_C_PATH/zlib.lib",
+  ]
+
+  public_configs = [ ":skia_public" ]
+  configs += skia_library_configs
+
+  defines = [ "SKIA_C_DLL" ]
+
+  if (skia_enable_gpu) {
+    defines += [ "SK_SUPPORT_GPU=1" ]
+  }
+  if (skia_enable_graphite) {
+    defines += [ "SK_GRAPHITE_ENABLED" ]
+  }
+  if (skia_use_gl) {
+    defines += [ "SK_GL" ]
+  }
+  if (skia_use_vulkan) {
+    defines += [ "SK_VULKAN" ]
+  }
+  if (skia_enable_vulkan_debug_layers) {
+    defines += [ "SK_ENABLE_VK_LAYERS" ]
+  }
+  if (skia_use_dawn) {
+    defines += [ "SK_DAWN" ]
+  }
+  if (skia_use_direct3d) {
+    defines += [ "SK_DIRECT3D" ]
+  }
+  if (skia_use_metal) {
+    defines += [ "SK_METAL" ]
+  }
+
+  # Things are easiest for everyone if these source paths are absolute.
+
+  _src = get_path_info("./src", "abspath")
+
+  # on Windows, a dll export WILL NOT be made if a prototype is missing
+  cflags = [
+    "-Werror=missing-prototypes",
+  ]
+
+  sources = [
+    "$_src/c/gr_context.cpp",
+    "$_src/c/sk_bitmap.cpp",
+    "$_src/c/sk_blender.cpp",
+    "$_src/c/sk_canvas.cpp",
+    "$_src/c/sk_codec.cpp",
+    "$_src/c/sk_colorfilter.cpp",
+    "$_src/c/sk_colorspace.cpp",
+    "$_src/c/sk_colortable.cpp",
+    "$_src/c/sk_data.cpp",
+    "$_src/c/sk_document.cpp",
+    "$_src/c/sk_drawable.cpp",
+    "$_src/c/sk_enums.cpp",
+    "$_src/c/sk_font.cpp",
+    "$_src/c/sk_general.cpp",
+    "$_src/c/sk_graphics.cpp",
+    "$_src/c/sk_image.cpp",
+    "$_src/c/sk_imagefilter.cpp",
+    "$_src/c/sk_mask.cpp",
+    "$_src/c/sk_maskfilter.cpp",
+    "$_src/c/sk_matrix.cpp",
+    "$_src/c/sk_paint.cpp",
+    "$_src/c/sk_path.cpp",
+    "$_src/c/sk_patheffect.cpp",
+    "$_src/c/sk_picture.cpp",
+    "$_src/c/sk_pixmap.cpp",
+    "$_src/c/sk_region.cpp",
+    "$_src/c/sk_rrect.cpp",
+    "$_src/c/sk_runtime_effect_builder.cpp",
+    "$_src/c/sk_runtimeeffect.cpp",
+    "$_src/c/sk_shader.cpp",
+    "$_src/c/sk_stream.cpp",
+    "$_src/c/sk_string.cpp",
+    "$_src/c/sk_structs.cpp",
+    "$_src/c/sk_surface.cpp",
+    "$_src/c/sk_svg.cpp",
+    "$_src/c/sk_textblob.cpp",
+    "$_src/c/sk_typeface.cpp",
+    "$_src/c/sk_types_priv.h",
+    "$_src/c/sk_vertices.cpp",
+    "$_src/c/sk_xml.cpp",
+    "$_src/c/sk_testbed.cpp",
+    "$_src/c/skottie_animation.cpp",
+    "$_src/c/sksg_invalidation_controller.cpp",
+    "$_src/xamarin/sk_managedallocator.cpp",
+    "$_src/xamarin/sk_managedcallbackcanvas.cpp",
+    "$_src/xamarin/sk_manageddrawable.cpp",
+    "$_src/xamarin/sk_managedidchangelistener.cpp",
+    "$_src/xamarin/sk_managedidchangelistenerlist.cpp",
+    "$_src/xamarin/sk_managedpixelref.cpp",
+    "$_src/xamarin/sk_managedpngchunkreader.cpp",
+    "$_src/xamarin/sk_managedstream.cpp",
+    "$_src/xamarin/sk_managedtracememorydump.cpp",
+    "$_src/xamarin/sk_paint_extra_info.cpp",
+    "$_src/xamarin/sk_xamarin.cpp",
+    "$_src/xamarin/SkiaKeeper.c",
+    "$_src/xamarin/SkManagedAllocator.cpp",
+    "$_src/xamarin/SkManagedCallbackCanvas.cpp",
+    "$_src/xamarin/SkManagedDrawable.cpp",
+    "$_src/xamarin/SkManagedIDChangeListener.cpp",
+    "$_src/xamarin/SkManagedIDChangeListenerList.cpp",
+    "$_src/xamarin/SkManagedPixelRef.cpp",
+    "$_src/xamarin/SkManagedPngChunkReader.cpp",
+    "$_src/xamarin/SkManagedStream.cpp",
+    "$_src/xamarin/SkManagedTraceMemoryDump.cpp",
+    "$_src/xamarin/SkPaintExtraInfo.cpp",
+    "$_src/xamarin/WinRTCompat.cpp",
+  ]
+}
+
+# this will need to change, for now windows uses msbuild so we alright
+skiasharp_build("HarfBuzzSharp") {
+  cflags = [
+    "-fno-threadsafe-statics",
+  ]
+
+  defines = [
+    "HAVE_ATEXIT",
+    "HAVE_CXX11",
+    "HAVE_GETPAGESIZE",
+    "HAVE_ISATTY",
+    "HAVE_MEMORY_H",
+    "HAVE_MMAP",
+    "HAVE_MPROTECT",
+    "HAVE_PTHREAD",
+    "HAVE_SYS_MMAN_H",
+    "HAVE_SYS_STAT_H",
+    "HAVE_SYS_TYPES_H",
+    "HAVE_SYSCONF",
+    "HAVE_UNISTD_H"
+  ]
+
+  _src = "../externals/skia/third_party/externals/harfbuzz/src"
+  sources = [
+    "$_src/hb-aat-layout.cc",
+    "$_src/hb-aat-map.cc",
+    "$_src/hb-blob.cc",
+    "$_src/hb-buffer-serialize.cc",
+    "$_src/hb-buffer.cc",
+    "$_src/hb-common.cc",
+    "$_src/hb-draw.cc",
+    "$_src/hb-face.cc",
+    "$_src/hb-fallback-shape.cc",
+    "$_src/hb-font.cc",
+    "$_src/hb-map.cc",
+    "$_src/hb-number.cc",
+    "$_src/hb-ot-cff1-table.cc",
+    "$_src/hb-ot-cff2-table.cc",
+    "$_src/hb-ot-color.cc",
+    "$_src/hb-ot-face.cc",
+    "$_src/hb-ot-font.cc",
+    "$_src/hb-ot-layout.cc",
+    "$_src/hb-ot-map.cc",
+    "$_src/hb-ot-math.cc",
+    "$_src/hb-ot-meta.cc",
+    "$_src/hb-ot-metrics.cc",
+    "$_src/hb-ot-name.cc",
+    "$_src/hb-ot-shape-complex-arabic.cc",
+    "$_src/hb-ot-shape-complex-default.cc",
+    "$_src/hb-ot-shape-complex-hangul.cc",
+    "$_src/hb-ot-shape-complex-hebrew.cc",
+    "$_src/hb-ot-shape-complex-indic-table.cc",
+    "$_src/hb-ot-shape-complex-indic.cc",
+    "$_src/hb-ot-shape-complex-khmer.cc",
+    "$_src/hb-ot-shape-complex-myanmar.cc",
+    "$_src/hb-ot-shape-complex-syllabic.cc",
+    "$_src/hb-ot-shape-complex-thai.cc",
+    "$_src/hb-ot-shape-complex-use.cc",
+    "$_src/hb-ot-shape-complex-vowel-constraints.cc",
+    "$_src/hb-ot-shape-fallback.cc",
+    "$_src/hb-ot-shape-normalize.cc",
+    "$_src/hb-ot-shape.cc",
+    "$_src/hb-ot-tag.cc",
+    "$_src/hb-ot-var.cc",
+    "$_src/hb-set.cc",
+    "$_src/hb-shape-plan.cc",
+    "$_src/hb-shape.cc",
+    "$_src/hb-shaper.cc",
+    "$_src/hb-static.cc",
+    "$_src/hb-style.cc",
+    "$_src/hb-subset-cff-common.cc",
+    "$_src/hb-subset-cff1.cc",
+    "$_src/hb-subset-cff2.cc",
+    "$_src/hb-subset-input.cc",
+    "$_src/hb-subset-plan.cc",
+    "$_src/hb-subset.cc",
+    "$_src/hb-ucd.cc",
+    "$_src/hb-unicode.cc",
+  ]
+}

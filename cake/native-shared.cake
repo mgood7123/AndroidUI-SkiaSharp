@@ -10,6 +10,7 @@ if (!string.IsNullOrEmpty(PYTHON_EXE) && FileExists(PYTHON_EXE)) {
 
 DirectoryPath DEPOT_PATH = MakeAbsolute(ROOT_PATH.Combine("externals/depot_tools"));
 DirectoryPath SKIA_PATH = MakeAbsolute(ROOT_PATH.Combine("externals/skia"));
+DirectoryPath SKIA_C_PATH = MakeAbsolute(ROOT_PATH.Combine("binding-native"));
 DirectoryPath HARFBUZZ_PATH = MakeAbsolute(ROOT_PATH.Combine("externals/skia/third_party/externals/harfbuzz"));
 
 var EXE_EXTENSION = IsRunningOnWindows() ? ".exe" : "";
@@ -26,7 +27,7 @@ Task("git-sync-deps")
     // first run some checks to make sure all the versions are in sync
 
     var milestoneFile = SKIA_PATH.CombineWithFilePath("include/core/SkMilestone.h");
-    var incrementFile = SKIA_PATH.CombineWithFilePath("include/c/sk_types.h");
+    var incrementFile = SKIA_C_PATH.CombineWithFilePath("include/c/sk_types.h");
 
     var expectedMilestone = GetVersion("libSkiaSharp", "milestone");
     var expectedIncrement = GetVersion("libSkiaSharp", "increment");
@@ -67,16 +68,62 @@ void GnNinja(DirectoryPath outDir, string target, string skiaArgs)
         $" skia_enable_tools=false " +
         $" is_official_build={CONFIGURATION.ToLower() == "release"} ".ToLower();
 
-    // generate native skia build files
+    Information("Generating build files with commands:");
+    Information($"    cd {quote}{SKIA_PATH.FullPath}{quote};");
+    Information($"    {GN_EXE} gen out/{outDir} --script-executable={quote}{PYTHON_EXE}{quote} --args={quote}{skiaArgs.Replace("'", innerQuote)}{quote};");
     RunProcess(GN_EXE, new ProcessSettings {
         Arguments = $"gen out/{outDir} --script-executable={quote}{PYTHON_EXE}{quote} --args={quote}{skiaArgs.Replace("'", innerQuote)}{quote}",
         WorkingDirectory = SKIA_PATH.FullPath,
     });
 
-    // build native skia
+    Information("Building files with commands:");
+    Information($"    cd {quote}{SKIA_PATH.FullPath}{quote};");
+    Information($"    {NINJA_EXE} -C out/{outDir} {target};");
     RunProcess(NINJA_EXE, new ProcessSettings {
         Arguments = $"-C out/{outDir} {target}",
         WorkingDirectory = SKIA_PATH.FullPath,
+    });
+
+    Information($"    cd {quote}{SKIA_PATH.FullPath}{quote};");
+    Information($"    {NINJA_EXE} -C out/{outDir} skottie;");
+    RunProcess(NINJA_EXE, new ProcessSettings {
+        Arguments = $"-C out/{outDir} skottie",
+        WorkingDirectory = SKIA_PATH.FullPath,
+    });
+}
+
+void GnNinjaCAPI(DirectoryPath outDir, string target, string skiaArgs)
+{
+    var isCore = Context.Environment.Runtime.IsCoreClr;
+
+    var quote = IsRunningOnWindows() || isCore ? "\"" : "'";
+    var innerQuote = IsRunningOnWindows() || isCore ? "\\\"" : "\"";
+
+    // override win_vc with the command line args
+    if (!string.IsNullOrEmpty(VS_INSTALL)) {
+        DirectoryPath win_vc = VS_INSTALL;
+        win_vc = win_vc.Combine("VC");
+        skiaArgs += $" win_vc='{win_vc}' ";
+    }
+
+    skiaArgs += 
+        $" skia_enable_tools=false " +
+        $" is_official_build={CONFIGURATION.ToLower() == "release"} ".ToLower();
+
+    Information("Generating build files with commands:");
+    Information($"    cd {quote}{SKIA_C_PATH.FullPath}{quote};");
+    Information($"    {GN_EXE} gen out/{outDir} --script-executable={quote}{PYTHON_EXE}{quote} --args={quote} SKIA_C_PATH={innerQuote}{SKIA_PATH.FullPath}/out/{outDir}{innerQuote} {skiaArgs.Replace("'", innerQuote)}{quote};");
+    RunProcess(GN_EXE, new ProcessSettings {
+        Arguments = $"gen out/{outDir} --script-executable={quote}{PYTHON_EXE}{quote} --args={quote} SKIA_C_PATH={innerQuote}{SKIA_PATH.FullPath}/out/{outDir}{innerQuote} {skiaArgs.Replace("'", innerQuote)}{quote}",
+        WorkingDirectory = SKIA_C_PATH.FullPath,
+    });
+
+    Information("Building files with commands:");
+    Information($"    cd {quote}{SKIA_C_PATH.FullPath}{quote};");
+    Information($"    {NINJA_EXE} -C out/{outDir} {target};");
+    RunProcess(NINJA_EXE, new ProcessSettings {
+        Arguments = $"-C out/{outDir} {target}",
+        WorkingDirectory = SKIA_C_PATH.FullPath,
     });
 }
 
